@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="text-center" style="margin-top: 200px">
+        {% if manufacturer %}
+            The {{ manufacturer.name }} says
+            {% for device_type in device_types %}
+                {{ device_type.name }}
+            {% endfor %}
+        {% else %}
+            No manufacturers have been created yet!
+        {% endif %}
+    </h2>
+{% endblock %}

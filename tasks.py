@@ -77,7 +77,7 @@ def debug(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
         nautobot_ver (str): Nautobot version to use to build the container
         python_ver (str): Will use the Python version docker image to build from
     """
-    print("Starting Netbox .. ")
+    print("Starting Nautobot .. ")
     context.run(
         f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} up",
         env={"NAUTOBOT_VER": nautobot_ver, "PYTHON_VER": python_ver},
@@ -93,7 +93,7 @@ def start(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
         nautobot_ver (str): Nautobot version to use to build the container
         python_ver (str): Will use the Python version docker image to build from
     """
-    print("Starting Netbox in detached mode.. ")
+    print("Starting Nautobot in detached mode.. ")
     context.run(
         f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} up -d",
         env={"NAUTOBOT_VER": nautobot_ver, "PYTHON_VER": python_ver},
@@ -109,7 +109,7 @@ def stop(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
         nautobot_ver (str): Nautobot version to use to build the container
         python_ver (str): Will use the Python version docker image to build from
     """
-    print("Stopping Netbox .. ")
+    print("Stopping Nautobot .. ")
     context.run(
         f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} down",
         env={"NAUTOBOT_VER": nautobot_ver, "PYTHON_VER": python_ver},
@@ -125,7 +125,7 @@ def restart(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
         nautobot_ver (str): Nautobot version to use to build the container
         python_ver (str): Will use the Python version docker image to build from
     """
-    print("Restarting Netbox in detached mode.. ")
+    print("Restarting Nautobot in detached mode.. ")
     context.run(
         f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} restart",
         env={"NAUTOBOT_VER": nautobot_ver, "PYTHON_VER": python_ver},
