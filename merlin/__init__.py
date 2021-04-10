@@ -19,6 +19,7 @@ class MerlinConfig(PluginConfig):
     max_version = "1.0.0b2"
     default_settings = {}
     caching_config = {}
+    middleware = ["merlin.middleware.Prerequisites"]
 
 
 config = MerlinConfig  # pylint:disable=invalid-name
