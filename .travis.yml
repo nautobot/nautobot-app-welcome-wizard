@@ -8,8 +8,7 @@ env:
   # Each version of Nautobot listed here must have a corresponding directory/configuration file
   # under development/nautobot_<NAUTOBOT_VER>/configuration.py
   matrix:
-  - "NAUTOBOT_VER=v1.0.0b1"
-  - "NAUTOBOT_VER=v2.9.3"
+  - "NAUTOBOT_VER=v1.0.0b2"
 # Add your encrypted secret below, you can encrypt secret using "travis encrypt"
 # https://docs.travis-ci.com/user/environment-variables/#defining-encrypted-variables-in-travisyml
 # global:
