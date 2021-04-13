@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..models import Merlin
+from ..models.merlin import Merlin
 
 
 class MerlinModelTest(TestCase):
@@ -11,3 +11,7 @@ class MerlinModelTest(TestCase):
         self.assertFalse(base.all_completed)
         self.assertFalse(base.device_types)
         self.assertFalse(base.device_roles)
+        self.assertFalse(base.rirs)
+        self.assertFalse(base.cluster_types)
+        self.assertFalse(base.circuit_types)
+        self.assertFalse(base.providers)
