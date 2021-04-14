@@ -19,6 +19,7 @@ services:
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
       - "../merlin:/source/merlin"
+      - "$PWD/.venv"
     tty: true
   worker:
     build:
