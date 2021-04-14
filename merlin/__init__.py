@@ -16,7 +16,7 @@ class MerlinConfig(PluginConfig):
     base_url = "merlin"
     required_settings = []
     min_version = "1.0.0b1"
-    max_version = "1.0.0b2"
+    max_version = "1.0.0b3"
     default_settings = {}
     caching_config = {}
 

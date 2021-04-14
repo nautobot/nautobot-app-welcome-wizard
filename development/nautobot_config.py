@@ -92,6 +92,22 @@ RQ_QUEUES = {
         "SSL": os.getenv("REDIS_SSL", False),
         "DEFAULT_TIMEOUT": 300,
     },
+    "webhooks": {
+        "HOST": os.getenv("REDIS_HOST", "localhost"),
+        "PORT": os.getenv("REDIS_PORT", 6379),
+        "DB": 0,
+        "PASSWORD": os.getenv("REDIS_PASSWORD", ""),
+        "SSL": os.getenv("REDIS_SSL", False),
+        "DEFAULT_TIMEOUT": 300,
+    },
+    "custom_fields": {
+        "HOST": os.getenv("REDIS_HOST", "localhost"),
+        "PORT": os.getenv("REDIS_PORT", 6379),
+        "DB": 0,
+        "PASSWORD": os.getenv("REDIS_PASSWORD", ""),
+        "SSL": os.getenv("REDIS_SSL", False),
+        "DEFAULT_TIMEOUT": 300,
+    },
 }
 
 # Nautobot uses Cacheops for database query caching. These are the following defaults.
