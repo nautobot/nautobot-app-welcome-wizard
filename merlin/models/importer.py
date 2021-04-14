@@ -3,6 +3,7 @@ import string
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import ValidationError
+from django.urls import reverse
 
 from nautobot.core.models import BaseModel
 
@@ -21,6 +22,9 @@ class ManufacturerImport(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("plugins:merlin:manufacturer")
 
 
 class DeviceTypeImport(BaseModel):
