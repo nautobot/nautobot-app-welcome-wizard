@@ -8,6 +8,7 @@ from nautobot.ipam.api.serializers import *
 from nautobot.tenancy.api.serializers import *
 from nautobot.virtualization.api.serializers import *
 
+
 class Prerequisites(object):
     def __init__(self, get_request):
         self.get_request = get_request
@@ -29,6 +30,8 @@ class Prerequisites(object):
                 for field in serial.fields.values():
                     if field.required:
                         if getattr(field, "Meta", False) and not field.Meta.model.objects.all():
-                            messages.error(request, f"You need to configure a {field.label} before you create this item.")
+                            messages.error(
+                                request, f"You need to configure a {field.label} before you create this item."
+                            )
             except Exception as e:
                 print(e)
