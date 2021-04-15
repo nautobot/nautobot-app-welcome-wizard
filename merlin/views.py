@@ -1,5 +1,4 @@
 """Views for Merlin."""
-import logging
 
 from django import forms
 from django.contrib import messages
@@ -21,9 +20,6 @@ from merlin.forms import (
 from merlin.jobs import MerlinImportDeviceType, MerlinImportManufacturer
 from merlin.models.importer import ManufacturerImport, DeviceTypeImport
 from merlin.tables import ManufacturerTable, DeviceTypeTable
-
-
-logger = logging.getLogger(__name__)
 
 
 class ManufacturerListView(generic.ObjectListView):
@@ -97,7 +93,6 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
             return HttpResponseForbidden()
         form = self.form(request.POST)
         if form.is_valid():
-            logger.debug("Form validation was successful")
             pk_list = request.POST.getlist("pk")
             onboarded = []
 
