@@ -15,8 +15,11 @@ class Prerequisites(object):
     def __call__(self, request):
         response = self.get_request(request)
         return response
-    
+
     def process_view(self, request, view_func, view_args, view_kwargs):
+        # If no user or they aren't authenticated, return to hit the default login redirect
+        if not hasattr(request, "user") or not request.user.is_authenticated:
+            return
         if request.path_info.endswith("/add/"):
             # model = view_func.view_class.model_form.Meta.model
             try:
