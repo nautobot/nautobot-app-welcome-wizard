@@ -1,10 +1,7 @@
-from os import access
+"""Tables for Merlin."""
 import django_tables2 as tables
 
-from nautobot.utilities.tables import (
-    BaseTable,
-    ToggleColumn
-)
+from nautobot.utilities.tables import BaseTable, ToggleColumn
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
 
@@ -22,22 +19,31 @@ DEVICE_TYPE_BUTTONS = """
 
 
 class ManufacturerTable(BaseTable):
+    """Table to show the ManufactureImport List."""
+
     pk = ToggleColumn()
     name = tables.Column(accessor="name", verbose_name="Name")
     actions = tables.TemplateColumn(MANUFACTURER_BUTTONS)
 
-    class Meta(BaseTable.Meta):
+    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
+        """Meta for ManufacturerImport Table."""
+
         model = ManufacturerImport
         fields = ("pk", "name", "actions")
         default_columns = ("pk", "name", "actions")
 
+
 class DeviceTypeTable(BaseTable):
+    """Table to show the DeviceTypeImport List."""
+
     pk = ToggleColumn()
     name = tables.Column(accessor="name", verbose_name="Name")
     manufacturer = tables.Column(accessor="manufacturer", verbose_name="Manufacturer")
     actions = tables.TemplateColumn(DEVICE_TYPE_BUTTONS)
 
-    class Meta(BaseTable.Meta):
+    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
+        """Meta for DeviceTypeImport Table."""
+
         model = DeviceTypeImport
         fields = ("pk", "name", "manufacturer", "actions")
         default_columns = ("pk", "name", "manufacturer", "actions")

@@ -355,11 +355,11 @@ def tests(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
     # Sorted loosely from fastest to slowest
     print("Running black...")
     black(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-    # print("Running flake8...")
+    print("Running flake8...")
     flake8(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
     print("Running bandit...")
     bandit(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-    # print("Running pydocstyle...")
+    print("Running pydocstyle...")
     pydocstyle(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
     print("Running pylint...")
     pylint(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
