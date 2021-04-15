@@ -6,9 +6,7 @@ services:
       context: "../"
       dockerfile: "development/Dockerfile"
     image: "merlin/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
-    command: >
-      sh -c "nautobot-server migrate &&
-             nautobot-server runserver 0.0.0.0:8000"
+    command: "nautobot-server runserver 0.0.0.0:8000 --insecure"
     ports:
       - "8000:8000"
     depends_on:
@@ -26,7 +24,7 @@ services:
       context: "../"
       dockerfile: "development/Dockerfile"
     image: "merlin/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
-    command: "sh -c 'nautobot-server rqworker'"
+    entrypoint: "nautobot-server rqworker"
     depends_on:
       - "nautobot"
     env_file:
