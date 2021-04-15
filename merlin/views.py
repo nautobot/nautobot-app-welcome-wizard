@@ -1,11 +1,16 @@
 """Views for Merlin."""
 import logging
 
+from django import forms
 from django.contrib import messages
+from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from nautobot.core.views import generic
+from nautobot.dcim.models import DeviceType, Manufacturer
 from nautobot.extras.models import JobResult
+from nautobot.utilities.permissions import get_permission_for_model
+from nautobot.utilities.views import ObjectPermissionRequiredMixin
 from merlin.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from merlin.forms import (
     DeviceTypeImportFilterForm,
@@ -24,6 +29,7 @@ logger = logging.getLogger(__name__)
 class ManufacturerListView(generic.ObjectListView):
     """Table of all Manufacturers discovered in the Git Repository."""
 
+    permission_required = "merlin.view_manufacturerimport"
     table = ManufacturerTable
     queryset = ManufacturerImport.objects.all()
     action_buttons = None
@@ -38,6 +44,7 @@ class ManufacturerListView(generic.ObjectListView):
 class DeviceTypeListView(generic.ObjectListView):
     """Table of Device Types based on the Manufacturer."""
 
+    permission_required = "merlin.view_devicetypeimport"
     table = DeviceTypeTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
@@ -46,23 +53,24 @@ class DeviceTypeListView(generic.ObjectListView):
     filterset_form = DeviceTypeImportFilterForm
 
 
-class BulkImportView(View):
+class BulkImportView(View, ObjectPermissionRequiredMixin):
     """Generic Bulk Import View."""
 
-    def __init__(self, model, form, return_url, bulk_import_url):
-        """Initializes the required settings for the Bulk Import View.
+    return_url = None
+    model = None
+    form = forms.Form
+    bulk_import_url = None
+    _permission_action = None
 
-        Args:
-            model (django_model): Model to be used for the Import.
-            form (django_form): Form to accept data from the user.
-            return_url (str): Reverse compatible URL to return user to upon form submission.
-            bulk_import_url (str): Reverse compatible URL for the form submission.
-        """
-        super().__init__()
-        self.model = model
-        self.form = form
-        self.return_url = return_url
-        self.bulk_import_url = bulk_import_url
+    def get_required_permission(self):
+        """Return the specific permission necessary to perform the requested action on an object."""
+        return get_permission_for_model(self.queryset.model, self._permission_action)
+
+    def dispatch(self, request, *args, **kwargs):
+        """Ensures User has permission to add."""
+        # Following Nautobot style of adding self._permission_action inside the dispatch.
+        self._permission_action = "add"  # pylint disable=attribute-defined-outside-init
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
         """Single Import Page."""
@@ -85,6 +93,8 @@ class BulkImportView(View):
         """Import Processing."""
         if request.method != "POST":
             return redirect(self.return_url)
+        if not self.has_permission():
+            return HttpResponseForbidden()
         form = self.form(request.POST)
         if form.is_valid():
             logger.debug("Form validation was successful")
@@ -119,12 +129,8 @@ class ManufacturerBulkImportView(BulkImportView):
     form = ManufacturerBulkImportForm
     return_url = "plugins:merlin:manufacturer"
     bulk_import_url = "plugins:merlin:manufacturer_import"
-
-    # I am not sure how to do the cool class declarations like the rest of Nautobot,
-    # so here is a boring init.
-    def __init__(self, model=model, form=form, return_url=return_url, bulk_import_url=bulk_import_url):
-        """Initialize ManufacturerImport Bulk Import View."""
-        BulkImportView.__init__(self, model, form, return_url, bulk_import_url)
+    permission_required = "dcim.add_manufacturer"
+    queryset = Manufacturer.objects.all()
 
 
 class DeviceTypeBulkImportView(BulkImportView):
@@ -134,7 +140,5 @@ class DeviceTypeBulkImportView(BulkImportView):
     form = DeviceTypeBulkImportForm
     return_url = "plugins:merlin:devicetype"
     bulk_import_url = "plugins:merlin:devicetype_import"
-
-    def __init__(self, model=model, form=form, return_url=return_url, bulk_import_url=bulk_import_url):
-        """Initialize DeviceTypeImport Bulk Import View."""
-        BulkImportView.__init__(self, model, form, return_url, bulk_import_url)
+    permission_required = "dcim.add_devicetype"
+    queryset = DeviceType.objects.prefetch_related("manufacturer")
