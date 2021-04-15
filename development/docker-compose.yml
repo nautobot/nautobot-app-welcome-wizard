@@ -16,7 +16,7 @@ services:
       - "./dev.env"
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
-      - "../merlin:/source/merlin"
+      - "../:/source"
       - "$PWD/.venv"
     tty: true
   worker:
@@ -31,7 +31,7 @@ services:
       - "./dev.env"
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
-      - "../merlin:/source/merlin"
+      - "../:/source"
     tty: true
   postgres:
     image: "postgres:10"
