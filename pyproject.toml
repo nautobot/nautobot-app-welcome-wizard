@@ -71,7 +71,6 @@ no-docstring-rgx="^(_|test_|Meta$)"
 disable = """,
     line-too-long,
     bad-continuation,
-    django-not-configured
     """
 
 [tool.pylint.miscellaneous]

@@ -1,9 +1,11 @@
+"""Merlin Tests."""
 from django.test import TestCase
 
 from ..models.merlin import Merlin
 
 
 class MerlinModelTest(TestCase):
+    """Model Test Case."""
     def test_base_setup_all_false(self):
         base = Merlin()
         self.assertFalse(base.manufacturers)
