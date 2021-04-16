@@ -11,9 +11,9 @@ from nautobot.extras.registry import DatasourceContent
 from merlin.models.importer import ManufacturerImport, DeviceTypeImport
 
 
-def refresh_git_device_type_importer(repository_record, job_result, delete=False):
+def refresh_git_import_wizard(repository_record, job_result, delete=False):
     """Callback for GitRepository updates - refresh Device Types managed by it."""
-    if "merlin.device_type_importer" not in repository_record.provided_contents or delete:
+    if "merlin.import_wizard" not in repository_record.provided_contents or delete:
         # TODO Handle delete.
         return
 
@@ -66,10 +66,10 @@ datasource_contents = [
     (
         "extras.gitrepository",  # datasource class we are registering for
         DatasourceContent(
-            name="device type importer",  # human-readable name to display in the UI
-            content_identifier="merlin.device_type_importer",  # internal slug to identify the data type
+            name="Import Wizard",  # human-readable name to display in the UI
+            content_identifier="merlin.import_wizard",  # internal slug to identify the data type
             icon="mdi-wizard-hat",  # Material Design Icons icon to use in UI
-            callback=refresh_git_device_type_importer,  # callback function on GitRepository refresh
+            callback=refresh_git_import_wizard,  # callback function on GitRepository refresh
         ),
     )
 ]

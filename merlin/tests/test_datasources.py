@@ -1,4 +1,3 @@
-import json
 import os
 import tempfile
 from unittest import mock
@@ -16,11 +15,8 @@ from nautobot.extras.choices import JobResultStatusChoices
 from nautobot.extras.datasources.git import pull_git_repository_and_refresh_data
 from nautobot.extras.datasources.registry import get_datasource_contents
 from nautobot.extras.models import (
-    ConfigContext,
-    ExportTemplate,
     GitRepository,
     JobResult,
-    Status,
 )
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
