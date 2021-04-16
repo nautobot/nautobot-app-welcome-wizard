@@ -38,7 +38,9 @@ class MerlinConfig(PluginConfig):
                     name="Devicetype-library",
                     slug="devicetype_library",
                     remote_url="https://github.com/netbox-community/devicetype-library.git",
-                    provided_contents=["merlin.device_type_importer",],
+                    provided_contents=[
+                        "merlin.device_type_importer",
+                    ],
                     branch="master",
                 )
                 repo.save(trigger_resync=False)

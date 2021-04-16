@@ -8,7 +8,8 @@ from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
 
 class ManufacturerImportFilterSet(
-    BaseFilterSet, NameSlugSearchFilterSet,
+    BaseFilterSet,
+    NameSlugSearchFilterSet,
 ):
     """Manufacturer Import Filter Set."""
 
@@ -22,9 +23,13 @@ class ManufacturerImportFilterSet(
 class DeviceTypeImportFilterSet(BaseFilterSet):
     """Device Type Import Filter Set."""
 
-    q = django_filters.CharFilter(method="search", label="Search",)
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
     manufacturer_id = django_filters.ModelMultipleChoiceFilter(
-        queryset=ManufacturerImport.objects.all(), label="Manufacturer (ID)",
+        queryset=ManufacturerImport.objects.all(),
+        label="Manufacturer (ID)",
     )
     manufacturer = django_filters.ModelMultipleChoiceFilter(
         field_name="manufacturer__slug",

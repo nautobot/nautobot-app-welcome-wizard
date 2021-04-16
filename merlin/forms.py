@@ -1,7 +1,7 @@
 """Forms for Merlin."""
 
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin
+from nautobot.utilities.forms import BootstrapMixin, DynamicModelMultipleChoiceField
 from nautobot.extras.forms import CustomFieldFilterForm
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
@@ -18,10 +18,9 @@ class DeviceTypeImportFilterForm(BootstrapMixin, CustomFieldFilterForm):
 
     model = DeviceTypeImport
     q = forms.CharField(required=False, label="Search")
-    # TODO to be added once we use Nautobot develop branch or once 1.0.0 of Nuatobot is released.
-    # manufacturer = DynamicModelMultipleChoiceField(
-    #     queryset=ManufacturerImport.objects.all(), to_field_name="slug", required=False
-    # )
+    manufacturer = DynamicModelMultipleChoiceField(
+        queryset=ManufacturerImport.objects.all(), to_field_name="slug", required=False
+    )
 
 
 class ManufacturerBulkImportForm(forms.Form):

@@ -172,8 +172,8 @@ def unittest(context, keepdb=False, verbosity=1):
 @task
 def pylint(context):
     """Run pylint code analysis."""
-    entrypoint = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile /source/pyproject.toml /source/merlin'
-    command = f"run --entrypoint '{entrypoint}' nautobot"
+    entrypoint = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml merlin'
+    command = f"run --workdir='/source' --entrypoint '{entrypoint}' nautobot"
     docker_compose(
         context,
         command,
@@ -215,15 +215,6 @@ def tests(context):
     """Run all tests for this plugin."""
     # Sorted loosely from fastest to slowest
     print("Running black...")
-<<<<<<< HEAD
-    black(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-    print("Running flake8...")
-    flake8(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-    print("Running bandit...")
-    bandit(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-    print("Running pydocstyle...")
-    pydocstyle(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-=======
     black(context)
     print("Running flake8...")
     flake8(context)
@@ -231,7 +222,6 @@ def tests(context):
     bandit(context)
     print("Running pydocstyle...")
     pydocstyle(context)
->>>>>>> 1481514662528e61a516fcef416cc32479ffda9d
     print("Running pylint...")
     pylint(context)
     print("Running unit tests...")

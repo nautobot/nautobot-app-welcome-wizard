@@ -29,7 +29,11 @@ class DeviceTypeImport(BaseModel):
     filename = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     manufacturer = models.ForeignKey(ManufacturerImport, on_delete=models.PROTECT, related_name="device_types")
-    device_type_data = models.JSONField(encoder=DjangoJSONEncoder, blank=True, null=True,)
+    device_type_data = models.JSONField(
+        encoder=DjangoJSONEncoder,
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         """Meta for DeviceTypeImport."""

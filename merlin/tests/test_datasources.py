@@ -1,3 +1,4 @@
+"""Tests for Merlin Datasources."""
 import os
 import tempfile
 from unittest import mock
@@ -8,8 +9,6 @@ import yaml
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.test import RequestFactory, TestCase
-
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
 
 from nautobot.extras.choices import JobResultStatusChoices
 from nautobot.extras.datasources.git import pull_git_repository_and_refresh_data
@@ -26,10 +25,12 @@ User = get_user_model()
 
 @mock.patch("nautobot.extras.datasources.git.GitRepo")
 class GitTest(TestCase):
+    """Git Tests."""
 
     COMMIT_HEXSHA = "88dd9cd78df89e887ee90a1d209a3e9a04e8c841"
 
     def setUp(self):
+        """Setup tests."""
         self.user = User.objects.create_user(username="testuser")
         self.factory = RequestFactory()
         self.dummy_request = self.factory.get("/no-op/")
@@ -47,57 +48,60 @@ class GitTest(TestCase):
         self.repo.save(trigger_resync=False)
 
         self.job_result = JobResult(
-            name=self.repo.name, obj_type=ContentType.objects.get_for_model(GitRepository), job_id=uuid.uuid4(),
+            name=self.repo.name,
+            obj_type=ContentType.objects.get_for_model(GitRepository),
+            job_id=uuid.uuid4(),
         )
 
-    def test_pull_git_repository_and_refresh_data_with_no_data(self, MockGitRepo):
-        """
-        The test_pull_git_repository_and_refresh_data job should succeeed if the given repo is empty.
-        """
+    def test_pull_git_repository_and_refresh_data_with_no_data(self, mock_git_repo):
+        """The test_pull_git_repository_and_refresh_data job should succeeed if the given repo is empty."""
         with tempfile.TemporaryDirectory() as tempdir:
             with self.settings(GIT_ROOT=tempdir):
 
-                def create_empty_repo(path, url):
+                def create_empty_repo(path, _url):
                     os.makedirs(path)
                     return mock.DEFAULT
 
-                MockGitRepo.side_effect = create_empty_repo
-                MockGitRepo.return_value.checkout.return_value = self.COMMIT_HEXSHA
+                mock_git_repo.side_effect = create_empty_repo
+                mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
 
                 pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result)
 
                 self.assertEqual(
-                    self.job_result.status, JobResultStatusChoices.STATUS_COMPLETED, self.job_result.data,
+                    self.job_result.status,
+                    JobResultStatusChoices.STATUS_COMPLETED,
+                    self.job_result.data,
                 )
                 self.repo.refresh_from_db()
                 self.assertEqual(self.repo.current_head, self.COMMIT_HEXSHA, self.job_result.data)
                 # TODO: inspect the logs in job_result.data?
 
-    def test_pull_git_repository_and_refresh_data_with_valid_data(self, MockGitRepo):
-        """
-        The test_pull_git_repository_and_refresh_data job should succeed if valid data is present in the repo.
-        """
+    def test_pull_git_repository_and_refresh_data_with_valid_data(self, mock_git_repo):
+        """The test_pull_git_repository_and_refresh_data job should succeed if valid data is present in the repo."""
         with tempfile.TemporaryDirectory() as tempdir:
             with self.settings(GIT_ROOT=tempdir):
 
-                def populate_repo(path, url):
+                def populate_repo(path, _url):
                     os.makedirs(path)
                     # Load device-types data for git-repository
                     os.makedirs(os.path.join(path, "device-types"))
                     os.makedirs(os.path.join(path, "device-types", "Cisco"))
-                    with open(os.path.join(path, "device-types", "Cisco", "fake.yaml"), "w") as fd:
+                    with open(os.path.join(path, "device-types", "Cisco", "fake.yaml"), "w") as file:
                         yaml.dump(
-                            {"manufacturer": "Cisco", "model": "Fake Model"}, fd,
+                            {"manufacturer": "Cisco", "model": "Fake Model"},
+                            file,
                         )
                     return mock.DEFAULT
 
-                MockGitRepo.side_effect = populate_repo
-                MockGitRepo.return_value.checkout.return_value = self.COMMIT_HEXSHA
+                mock_git_repo.side_effect = populate_repo
+                mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
 
                 pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result)
 
                 self.assertEqual(
-                    self.job_result.status, JobResultStatusChoices.STATUS_COMPLETED, self.job_result.data,
+                    self.job_result.status,
+                    JobResultStatusChoices.STATUS_COMPLETED,
+                    self.job_result.data,
                 )
 
                 # Make sure ManufacturerImport was successfully loaded from file

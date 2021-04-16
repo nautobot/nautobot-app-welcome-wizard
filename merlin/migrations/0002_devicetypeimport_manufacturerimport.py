@@ -25,7 +25,9 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=100, unique=True)),
                 ("slug", models.CharField(max_length=100, unique=True)),
             ],
-            options={"ordering": ("name",),},
+            options={
+                "ordering": ("name",),
+            },
         ),
         migrations.CreateModel(
             name="DeviceTypeImport",
@@ -51,6 +53,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"ordering": ("name",),},
+            options={
+                "ordering": ("name",),
+            },
         ),
     ]

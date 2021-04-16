@@ -67,7 +67,8 @@ class MerlinImportManufacturer(Job):
         """Tries to import the selected Manufacturer into Nautobot."""
         # Create the new site
         manufacturer = Manufacturer.objects.update_or_create(
-            name=data["manufacturer"], slug=slugify(data["manufacturer"]),
+            name=data["manufacturer"],
+            slug=slugify(data["manufacturer"]),
         )
         self.log_success(obj=manufacturer, message="Created new manufacturer")
 

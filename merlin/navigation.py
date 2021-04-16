@@ -8,7 +8,9 @@ plugin_items = [
         permissions=["merlin.view_manufacturerimport"],
     ),
     PluginMenuItem(
-        link="plugins:merlin:devicetype", link_text="Import Device Types", permissions=["merlin.view_devicetypeimport"],
+        link="plugins:merlin:devicetype",
+        link_text="Import Device Types",
+        permissions=["merlin.view_devicetypeimport"],
     ),
 ]
 
