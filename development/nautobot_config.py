@@ -1,3 +1,4 @@
+"""Nautobot Config."""
 #########################
 #                       #
 #   Required settings   #
