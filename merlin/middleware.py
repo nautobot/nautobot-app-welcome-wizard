@@ -1,5 +1,6 @@
 """Middleware for the Merlin plugin."""
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 
 
 class Prerequisites:
@@ -27,6 +28,8 @@ class Prerequisites:
                     if base_fields[field].required:
                         if hasattr(base_fields[field], "queryset") and not base_fields[field].queryset:
                             name = field.replace("_", " ").title()
-                            messages.error(request, f"You need to configure a {name} before you create this item.")
+                            loc = field.replace("_", "-").title()
+                            loc = loc.lower()
+                            messages.error(request, mark_safe(f"You need to configure a {name} before you create this item. You can create a <a href='/dcim/{loc}s'>{name} here</a>"))
             except Exception as error:  # pylint: disable=broad-except
                 print(error)
