@@ -1,16 +1,21 @@
-import importlib
+"""Middleware for the Merlin plugin."""
 from django.contrib import messages
 
 
-class Prerequisites(object):
+class Prerequisites:
+    """Middleware for determining prerequisites and adding notifications."""
+
     def __init__(self, get_request):
+        """Capture the request on the initialization."""
         self.get_request = get_request
 
     def __call__(self, request):
+        """Capture the response and return it."""
         response = self.get_request(request)
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
+        """Process the view to determine if it's one we want to intercept."""
         # If no user or they aren't authenticated, return to hit the default login redirect
         if not hasattr(request, "user") or not request.user.is_authenticated:
             return
@@ -23,5 +28,5 @@ class Prerequisites(object):
                         if hasattr(base_fields[field], "queryset") and not base_fields[field].queryset:
                             name = field.replace("_", " ").title()
                             messages.error(request, f"You need to configure a {name} before you create this item.")
-            except Exception as e:
-                print(e)
+            except Exception as error:
+                print(error)
