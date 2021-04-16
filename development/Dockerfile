@@ -1,11 +1,6 @@
+FROM nniehoff/nautobot:v0.0.9
 
-ARG python_ver=3.7
-FROM python:${python_ver}
-
-ARG nautobot_ver=v1.0.0b2
-ARG nautobot_root=/opt/nautobot
-ENV PYTHONUNBUFFERED 1
-ENV NAUTOBOT_ROOT ${nautobot_root}
+USER root
 
 WORKDIR $NAUTOBOT_ROOT
 
@@ -15,13 +10,7 @@ RUN pip install --upgrade pip\
     && poetry config virtualenvs.create false
 
 # -------------------------------------------------------------------------------------
-# Install Nautobot
-# -------------------------------------------------------------------------------------
-RUN pip install nautobot==${nautobot_ver} && \
-    nautobot-server init
-
-# -------------------------------------------------------------------------------------
-# Install Netbox Plugin
+# Install Nautobot Plugin
 # -------------------------------------------------------------------------------------
 WORKDIR /source
 

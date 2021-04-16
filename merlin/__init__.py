@@ -15,8 +15,7 @@ class MerlinConfig(PluginConfig):
     description = "Merlin."
     base_url = "merlin"
     required_settings = []
-    min_version = "1.0.0b1"
-    max_version = "1.0.0b3"
+    min_version = "1.0.0b4"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": False,

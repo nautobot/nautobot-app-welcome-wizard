@@ -1,3 +1,4 @@
+"""Merlin Tests."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from ..models.merlin import Merlin
@@ -5,6 +6,7 @@ from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
 
 class MerlinModelTest(TestCase):
+    """Model Test Case."""
     def test_base_setup_all_false(self):
         base = Merlin()
         self.assertFalse(base.manufacturers)
