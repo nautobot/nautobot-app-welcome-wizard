@@ -84,10 +84,12 @@ class MerlinImportDeviceType(Job):
 
     device_type_filename = StringVar()
 
-    def run(self, data={}, commit=None):  # pylint: disable=inconsistent-return-statements
+    def run(self, data=None, commit=None):  # pylint: disable=inconsistent-return-statements
         """Tries to import the selected Device Type into Nautobot."""
-        device_type = data.get("device_type", "none.yaml")
-
+        if data is not None:
+            device_type = data.get("device_type", "none.yaml")
+        else:
+            device_type = "none.yaml"
         data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
 
         if "slug" not in data:
