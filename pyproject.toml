@@ -23,6 +23,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.6"
 nautobot = {git = "https://github.com/nautobot/nautobot", rev = "develop"}
+django-debug-toolbar = "*"
 
 [tool.poetry.dev-dependencies]
 invoke = "*"

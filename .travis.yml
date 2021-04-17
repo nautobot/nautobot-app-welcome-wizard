@@ -1,22 +1,35 @@
 ---
 language: "python"
 python:
-- "3.6"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+env:
+  # Each version of Nautobot listed here must have a corresponding directory/configuration file
+  # under development/nautobot_<NAUTOBOT_VER>/configuration.py
+  matrix:
+    - "NAUTOBOT_VER=v1.0.0b3"
+# Add your encrypted secret below, you can encrypt secret using "travis encrypt"
+# https://docs.travis-ci.com/user/environment-variables/#defining-encrypted-variables-in-travisyml
+# global:
+#   secure: <Add encrypted token>
 services:
-- "docker"
+  - "docker"
 # --------------------------------------------------------------------------
 # Tests
 # --------------------------------------------------------------------------
 before_script:
-- "pip install invoke docker-compose"
-- "curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py > /tmp/get-poetry.py"
-- "python /tmp/get-poetry.py -y"
-- "source $HOME/.poetry/env"
+  - "pip install invoke docker-compose"
+  - "curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py > /tmp/get-poetry.py"
+  - "python /tmp/get-poetry.py -y --version 1.1.6"
+  - "source $HOME/.poetry/env"
 
 script:
-- "invoke build"
-- "invoke tests"
-
+  # If you want to test different versions, it may require updating the poetry definition for Nautobot
+  # as that is where the version is controlled
+  # - "poetry add nautobot=$NAUTOBOT_VER"
+  - "INVOKE_NAUTOBOT_PYTHON_VER=$TRAVIS_PYTHON_VERSION invoke build --nocache"
+  - "INVOKE_NAUTOBOT_PYTHON_VER=$TRAVIS_PYTHON_VERSION invoke tests --failfast"
 # --------------------------------------------------------------------------
 # Deploy
 #  Uncomment the section below if you would like to publish a new release to pypi automatically
