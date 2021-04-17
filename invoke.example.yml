@@ -1,11 +1,4 @@
 ---
 merlin:
-  project_name: "merlin"
-  nautobot_ver: "develop-latest"
-  local: false
-  python_ver: "3.6"
-  compose_dir: "/full/path/to/merlin/development"
   compose_files:
     - "docker-compose.requirements.yml"
-    - "docker-compose.base.yml"
-    - "docker-compose.dev.yml"

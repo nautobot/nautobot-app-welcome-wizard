@@ -59,7 +59,7 @@ The development environment can be used in 2 ways, first with a local poetry env
 #### Local Poetry Development Environment
 
 1.  Copy `development/creds.example.env` to `development/creds.env` (This file will be ignored by git and docker)
-2.  Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_CONFIG` variables in `development/creds.env`
+2.  Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_ROOT` variables in `development/creds.env`
 3.  Create an invoke.yml with the following contents at the root of the repo:
 
 ```shell
@@ -67,7 +67,7 @@ The development environment can be used in 2 ways, first with a local poetry env
 merlin:
   local: true
   compose_files:
-    - "docker-compose.base.yml"
+    - "docker-compose.requirements.yml"
 ```
 
 3.  Run the following commands:
@@ -75,7 +75,7 @@ merlin:
 ```shell
 poetry shell
 poetry install
-export $(cat development/local_dev.env | xargs)
+export $(cat development/dev.env | xargs)
 export $(cat development/creds.env | xargs) 
 ```
 
