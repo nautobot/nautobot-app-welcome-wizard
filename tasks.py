@@ -172,8 +172,8 @@ def unittest(context, keepdb=False, verbosity=1):
 @task
 def pylint(context):
     """Run pylint code analysis."""
-    entrypoint = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile /source/pyproject.toml /source/merlin'
-    command = f"run --entrypoint '{entrypoint}' nautobot"
+    entrypoint = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml merlin'
+    command = f"run --workdir='/source' --entrypoint '{entrypoint}' nautobot"
     docker_compose(
         context,
         command,

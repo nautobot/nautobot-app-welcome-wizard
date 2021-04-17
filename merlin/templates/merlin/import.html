@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Would you like import {{ obj.name }}?</h1>
+    <form action="{% url bulk_import_url %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-info btn-sm" type="submit">
+            <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import
+        </button>
+        <a href="{% url return_url %}" class="btn btn-default">Cancel</a>
+    </form>
+{% endblock %}
