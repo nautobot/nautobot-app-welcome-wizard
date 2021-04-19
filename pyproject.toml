@@ -33,6 +33,7 @@ pylint = "*"
 pylint-django = "*"
 pydocstyle = "*"
 flake8 = "*"
+django-debug-toolbar = "*"
 
 [tool.black]
 line-length = 120

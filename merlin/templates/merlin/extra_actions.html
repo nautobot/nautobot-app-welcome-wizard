@@ -1,0 +1,7 @@
+{% extends 'utilities/obj_table.html' %}
+
+{% block extra_actions %}
+    <button type="submit" name="_import" formaction="{% url bulk_import_url %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">
+        <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import Selected
+    </button>
+{% endblock %}

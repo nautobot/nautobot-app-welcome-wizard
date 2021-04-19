@@ -1,0 +1,4 @@
+---
+merlin:
+  compose_files:
+    - "docker-compose.requirements.yml"
