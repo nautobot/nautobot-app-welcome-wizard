@@ -1,4 +1,5 @@
 """Views for Merlin."""
+from collections import OrderedDict
 
 from django import forms
 from django.contrib import messages
@@ -6,7 +7,11 @@ from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from nautobot.core.views import generic
-from nautobot.dcim.models import DeviceType, Manufacturer
+from nautobot.dcim.models import Site, DeviceType, Manufacturer
+from nautobot.dcim.models.devices import DeviceRole
+from nautobot.circuits.models import CircuitType, Provider
+from nautobot.ipam.models import RIR
+from nautobot.virtualization.models import Cluster, ClusterType
 from nautobot.extras.models import JobResult
 from nautobot.utilities.permissions import get_permission_for_model
 from nautobot.utilities.views import ObjectPermissionRequiredMixin
@@ -19,6 +24,7 @@ from merlin.forms import (
 )
 from merlin.jobs import MerlinImportDeviceType, MerlinImportManufacturer
 from merlin.models.importer import ManufacturerImport, DeviceTypeImport
+from merlin.models.merlin import Merlin
 from merlin.tables import ManufacturerTable, DeviceTypeTable
 
 
@@ -137,3 +143,33 @@ class DeviceTypeBulkImportView(BulkImportView):
     bulk_import_url = "plugins:merlin:devicetype_import"
     permission_required = "dcim.add_devicetype"
     queryset = DeviceType.objects.prefetch_related("manufacturer")
+
+class MerlinDashboard(View):
+    """Merlin dashboard view
+
+    Args:
+        View (View): Django View
+    """
+    def get(self, request):
+        dashboard_info = OrderedDict()
+        # Check the status of each of the Merlin Items
+        for nautobot_object, merlin_object, var_name, success_url, new_url, wizard_url in [
+            (Site, Merlin.sites, "Sites", "dcim:site_list", "dcim:site_add", "plugins:merlin:manufacturer_import"),
+            (Manufacturer, Merlin.manufacturers, "Manufacturers", "dcim:manufacturer_list", "dcim:manufacturer_add", "plugins:merlin:manufacturer_import"),
+            (DeviceType, Merlin.device_types, "Device Types", "dcim:devicetype_list", "dcim:devicetype_add", "plugins:merlin:devicetype_import"),
+            (DeviceRole, Merlin.device_roles, "Device Roles", "dcim:devicerole_list", "dcim:devicerole_add", "plugins:merlin:devicetype_import"),
+            (CircuitType, Merlin.device_types, "Circuit Types", "circuits:circuittype_list", "circuits:circuittype_add", "plugins:merlin:devicetype_import"),
+            (Provider, Merlin.providers, "Circuit Providers", "circuits:provider_list", "circuits:provider_add", "plugins:merlin:devicetype_import"),
+            (RIR, Merlin.rirs, "RIRS", "ipam:rir_list", "ipam:rir_add", "plugins:merlin:devicetype_import"),
+            (ClusterType, Merlin.cluster_types, "VM Cluster Types", "virtualization:clustertype_list", "virtualization:clustertype_add", "plugins:merlin:devicetype_import"),
+        ]:
+            print(nautobot_object.objects.count())
+            if nautobot_object.objects.count() > 0:
+                merlin_object = True
+                dashboard_info[var_name] = {"exists": True, "next_url": success_url, "nb_app": success_url.split(":")[0]}
+            else:
+                merlin_object = False
+                dashboard_info[var_name] = {"exists": False, "next_url": new_url, "nb_app": new_url.split(":")[0], "wizard_url": wizard_url}
+
+        template_name = "merlin/merlindashboard.html"
+        return render(request, template_name, {"dashboard_data": dashboard_info})

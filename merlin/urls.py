@@ -6,6 +6,7 @@ from . import views
 app_name = "merlin"
 
 urlpatterns = [
+    path("merlindashboard/", views.MerlinDashboard.as_view(), name="merlindashboard"),
     path("manufacturers/", views.ManufacturerListView.as_view(), name="manufacturer"),
     path("devicetypes/", views.DeviceTypeListView.as_view(), name="devicetype"),
     path(

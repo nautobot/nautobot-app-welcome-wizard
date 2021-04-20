@@ -216,7 +216,7 @@ def createsuperuser(context, user="admin"):
 )
 def makemigrations(context, name=""):
     """Perform makemigrations operation in Django."""
-    command = "nautobot-server makemigrations"
+    command = "nautobot-server makemigrations merlin"
 
     if name:
         command += f" --name {name}"
