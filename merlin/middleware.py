@@ -35,7 +35,7 @@ class Prerequisites:
                             )
                             reverse_name = field.replace("_", "")
                             reverse_link = reverse(f"{request.resolver_match.app_names[0]}:{reverse_name}_add")
-                            msg = f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item."
+                            msg = f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item."  # nosec
                             messages.error(request, mark_safe(msg))
             except Exception as error:  # pylint: disable=broad-except
                 print(error)
