@@ -27,8 +27,9 @@ class Prerequisites:
         if not hasattr(request, "user") or not request.user.is_authenticated:
             return
         if request.path == "/":
-            merlin_msg = (f"<a href='https://en.wikipedia.org/wiki/Merlin_(2008_TV_series)'>Future Link</a> for Merlin can help you get started with Nautobot!")
-            messages.info(request, mark_safe(merlin_msg))
+            merlin_url = "<a href='https://en.wikipedia.org/wiki/Merlin_(2008_TV_series)'>Merlin can</a>"
+            merlin_msg = f"{merlin_url} help you get started with Nautobot!"
+            messages.info(request, mark_safe(merlin_msg))  # nosec
         elif request.path.endswith("/add/"):
             # model = view_func.view_class.model_form.Meta.model
             base_fields = view_func.view_class.model_form.base_fields
