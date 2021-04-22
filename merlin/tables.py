@@ -12,7 +12,7 @@ MANUFACTURER_BUTTONS = """
 """
 
 DEVICE_TYPE_BUTTONS = """
-<a href="{% url 'plugins:merlin:devicetype_import' %}?pk={{ record.pk }}&return_url=test" class="btn btn-xs btn-info" title="Import Device Type">
+<a href="{% url 'plugins:merlin:devicetype_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Device Type">
     <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
 </a>
 """

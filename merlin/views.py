@@ -87,8 +87,6 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
 
     def post(self, request):
         """Import Processing."""
-        if request.method != "POST":
-            return redirect(self.return_url)
         if not self.has_permission():
             return HttpResponseForbidden()
         form = self.form(request.POST)
