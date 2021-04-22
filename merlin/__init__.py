@@ -21,6 +21,7 @@ class MerlinConfig(PluginConfig):
         "enable_devicetype-library": False,
     }
     caching_config = {}
+    middleware = ["merlin.middleware.Prerequisites"]
 
     def ready(self):
         """If enable_devicetype-library is true, create the Git Repository."""
