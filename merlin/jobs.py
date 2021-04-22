@@ -84,26 +84,24 @@ class MerlinImportDeviceType(Job):
 
     device_type_filename = StringVar()
 
-    def run(self, data=None, commit=None):  # pylint: disable=inconsistent-return-statements
+    def run(self, data, commit=None):  # pylint: disable=inconsistent-return-statements
         """Tries to import the selected Device Type into Nautobot."""
-        if data is not None:
-            device_type = data.get("device_type", "none.yaml")
-        else:
-            device_type = "none.yaml"
+        device_type = data.get("device_type", "none.yaml")
+
         data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
 
-        if "slug" not in data:
-            self.log_failure("The data returned is not valid, it should be a valid DeviceType in YAML format")
-            return False
-
         slug = data.get("slug")
+        manufacturer = data.get("manufacturer")
+        Manufacturer.objects.update_or_create(
+            name=manufacturer,
+            slug=slugify(manufacturer),
+        )
+
         try:
             devtype = import_device_type(data)
         except ValueError as exc:
-            if "already exist" not in str(exc):
-                raise
             self.log_warning(
-                message=f"Unable to import {device_type}, a DeviceType with this slug ({slug}) already exist."
+                message=f"Unable to import {device_type}, a DeviceType with this slug ({slug}) already exist. {exc}"
             )
 
             return False

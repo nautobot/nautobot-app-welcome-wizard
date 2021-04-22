@@ -216,7 +216,7 @@ def createsuperuser(context, user="admin"):
 )
 def makemigrations(context, name=""):
     """Perform makemigrations operation in Django."""
-    command = "nautobot-server makemigrations"
+    command = "nautobot-server makemigrations merlin"
 
     if name:
         command += f" --name {name}"
@@ -339,7 +339,15 @@ def unittest(context, keepdb=False, label="merlin", failfast=False, buffer=True)
 @task
 def unittest_coverage(context):
     """Report on code test coverage as measured by 'invoke unittest'."""
-    command = "coverage report --skip-covered --include 'merlin/*' --omit *migrations*"
+    command = "coverage report --skip-covered --include 'merlin/*' --omit *migrations*,merlin/tests*"
+
+    run_command(context, command)
+
+
+@task
+def unittest_report(context):
+    """Report on code test coverage through html as measured by 'invoke unittest'."""
+    command = "coverage html --include 'merlin/*' --omit *migrations*"
 
     run_command(context, command)
 

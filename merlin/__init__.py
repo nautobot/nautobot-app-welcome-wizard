@@ -2,7 +2,10 @@
 
 __version__ = "0.1.0"
 
+# from django.db.models.signals import post_migrate
 from nautobot.extras.plugins import PluginConfig
+
+# from merlin.signals import merlin_devicetype
 
 
 class MerlinConfig(PluginConfig):
@@ -18,33 +21,16 @@ class MerlinConfig(PluginConfig):
     min_version = "1.0.0b4"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
-        "enable_devicetype-library": False,
+        "enable_devicetype-library": True,
     }
     caching_config = {}
     middleware = ["merlin.middleware.Prerequisites"]
 
-    def ready(self):
-        """If enable_devicetype-library is true, create the Git Repository."""
-        super().ready()
-        # pylint: disable=import-outside-toplevel
-        from django.conf import settings
+    # def ready(self):
+    #     """If enable_devicetype-library is true, create the Git Repository."""
+    #     super().ready()
 
-        if settings.PLUGINS_CONFIG["merlin"].get("enable_devicetype-library"):
-            from nautobot.extras.models import GitRepository
-
-            try:
-                repo = GitRepository.objects.get(name="Devicetype-library")
-            except GitRepository.DoesNotExist:
-                repo = GitRepository(
-                    name="Devicetype-library",
-                    slug="devicetype_library",
-                    remote_url="https://github.com/netbox-community/devicetype-library.git",
-                    provided_contents=[
-                        "merlin.device_type_importer",
-                    ],
-                    branch="master",
-                )
-                repo.save(trigger_resync=False)
+    # post_migrate.connect(merlin_devicetype, sender=self)
 
 
 config = MerlinConfig  # pylint:disable=invalid-name

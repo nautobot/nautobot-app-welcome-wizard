@@ -1,8 +1,12 @@
 """Middleware for the Merlin plugin."""
+
+import logging
 from django.contrib import messages
-from django.urls import reverse, NoReverseMatch
-# from django.urls import request
+from django.urls import reverse
+from django.urls.exceptions import NoReverseMatch
 from django.utils.safestring import mark_safe
+
+logger = logging.getLogger("merlin.middleware")
 
 
 class Prerequisites:
@@ -36,7 +40,9 @@ class Prerequisites:
                         try:
                             reverse_link = reverse(f"{request.resolver_match.app_names[0]}:{reverse_name}_add")
                         except NoReverseMatch as error:
-                            print(error)
+                            logger.warning("No Reverse Match was found for %s. %s", reverse_name, error)
                             reverse_link = ""
-                        msg = (f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item.")
-                        messages.error(request, mark_safe(msg)) # nosec
+                        msg = (
+                            f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item."
+                        )
+                        messages.error(request, mark_safe(msg))  # nosec
