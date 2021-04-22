@@ -20,17 +20,17 @@ DEVICE_TYPE_BUTTONS = """
 
 IMPORT_BUTTONS = """
 {% if not record.completed %}
-<a href="{% url record.nautobot_add_link %}"><button class="btn btn-xs"><span class="mdi mdi-checkbox-marked-outline"></span></button></a>
+<a href="{% url record.nautobot_add_link %}" class="btn btn-xs" > <span class="mdi mdi-checkbox-marked-outline"></span> </a>
 {% else %}
-<a href="{% url record.nautobot_add_link %}"><button class="btn btn-small"><span class="mdi mdi-checkbox-blank-outline"></span></button></a>
+<a href="{% url record.nautobot_add_link %}" class="btn btn-small" > <span class="mdi mdi-checkbox-blank-outline"></span> </a>
 {% endif %}
 """
 
 COMPLETED_INFO = """
 {% if record.completed %}
-<button class="btn btn-small btn-success"><span class="mdi mdi-checkbox-marked-outline"></span></button>
+<span class="mdi mdi-checkbox-marked-outline"></span>
 {% else %}
-<button class="btn btn-small btn-info"><span class="mdi mdi-checkbox-blank-outline"></span></button>
+<span class="mdi mdi-checkbox-blank-outline"></span>
 {% endif %}
 """
 
@@ -76,12 +76,12 @@ class DashboardTable(BaseTable):
     """Table for the Dashboard."""
 
     name = tables.Column(accessor="name", verbose_name="Name")
-    imports = tables.TemplateColumn(verbose_name="Actions", template_code=IMPORT_BUTTONS)
+    actions = tables.TemplateColumn(IMPORT_BUTTONS)
     completed_info = tables.TemplateColumn(verbose_name="Completed", template_code=COMPLETED_INFO)
 
     class Meta(BaseTable.Meta):
         """Meta for Dashboard Table."""
 
         model = Merlin
-        fields = ("name", "completed_info", "ignored", "imports")
-        default_columns = ("name", "completed_info", "ignored", "imports")
+        fields = ("name", "completed_info", "ignored", "actions")
+        default_columns = ("name", "completed_info", "ignored", "actions")
