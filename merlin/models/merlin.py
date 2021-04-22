@@ -1,8 +1,10 @@
 """Models definition for Merlin."""
 from django.db import models
 
+from nautobot.core.models import BaseModel
 
-class Merlin(models.Model):
+
+class Merlin(BaseModel):
     """Base model for Merlin Start.
 
     Args:

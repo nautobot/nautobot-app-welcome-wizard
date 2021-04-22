@@ -3,6 +3,7 @@ import django_tables2 as tables
 
 from nautobot.utilities.tables import BaseTable, ToggleColumn
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
+from merlin.models.merlin import Merlin
 
 
 MANUFACTURER_BUTTONS = """
@@ -17,6 +18,28 @@ DEVICE_TYPE_BUTTONS = """
 </a>
 """
 
+IMPORT_BUTTONS = """
+{% if not record.completed %}
+<a href="{% url record.nautobot_add_link %}"><button class="btn btn-xs"><span class="mdi mdi-checkbox-marked-outline"></span></button></a>
+{% else %}
+<a href="{% url record.nautobot_add_link %}"><button class="btn btn-small"><span class="mdi mdi-checkbox-blank-outline"></span></button></a>
+{% endif %}
+"""
+
+COMPLETED_INFO = """
+{% if record.completed %}
+<button class="btn btn-small btn-success"><span class="mdi mdi-checkbox-marked-outline"></span></button>
+{% else %}
+<button class="btn btn-small btn-info"><span class="mdi mdi-checkbox-blank-outline"></span></button>
+{% endif %}
+"""
+
+
+
+                        # {% else %}
+                        #     <a href="{% url value.next_url %}"><button class="btn btn-large"><span class="mdi mdi-checkbox-blank-outline"></span></button></a>
+                        #     <a href="{% url value.wizard_url %}"><button class="btn btn-large"><span class="mdi mdi-wizard-hat"></span></button></a>
+                        # {% endif %}
 
 class ManufacturerTable(BaseTable):
     """Table to show the ManufactureImport List."""
@@ -47,3 +70,18 @@ class DeviceTypeTable(BaseTable):
         model = DeviceTypeImport
         fields = ("pk", "name", "manufacturer", "actions")
         default_columns = ("pk", "name", "manufacturer", "actions")
+
+
+class DashboardTable(BaseTable):
+    """Table for the Dashboard."""
+
+    name = tables.Column(accessor="name", verbose_name="Name")
+    imports = tables.TemplateColumn(verbose_name="Actions", template_code=IMPORT_BUTTONS)
+    completed_info = tables.TemplateColumn(verbose_name="Completed", template_code=COMPLETED_INFO)
+
+    class Meta(BaseTable.Meta):
+        """Meta for Dashboard Table."""
+
+        model = Merlin
+        fields = ("name", "completed_info", "ignored", "imports")
+        default_columns = ("name", "completed_info", "ignored", "imports")
