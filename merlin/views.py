@@ -208,14 +208,12 @@ class MerlinDashboard(View):
             ),
         ]:
             if nautobot_object.objects.count() > 0:
-                merlin_object = True
                 dashboard_info[var_name] = {
                     "exists": True,
                     "next_url": success_url,
                     "nb_app": success_url.split(":")[0],
                 }
             else:
-                merlin_object = False
                 dashboard_info[var_name] = {
                     "exists": False,
                     "next_url": new_url,
