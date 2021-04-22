@@ -5,21 +5,21 @@ from merlin.models.merlin import Merlin
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
 
-class MerlinModelTest(TestCase):
-    """Model Test Case."""
+# class MerlinModelTest(TestCase):
+#     """Model Test Case."""
 
-    def test_base_setup_all_false(self):
-        """Validate empty Merlin model"""
-        base = Merlin()
-        self.assertFalse(base.manufacturers)
-        self.assertFalse(base.platforms)
-        self.assertFalse(base.all_completed)
-        self.assertFalse(base.device_types)
-        self.assertFalse(base.device_roles)
-        self.assertFalse(base.rirs)
-        self.assertFalse(base.cluster_types)
-        self.assertFalse(base.circuit_types)
-        self.assertFalse(base.providers)
+#     def test_base_setup_all_false(self):
+#         """Validate empty Merlin model"""
+#         base = Merlin()
+#         self.assertFalse(base.manufacturers)
+#         self.assertFalse(base.platforms)
+#         self.assertFalse(base.all_completed)
+#         self.assertFalse(base.device_types)
+#         self.assertFalse(base.device_roles)
+#         self.assertFalse(base.rirs)
+#         self.assertFalse(base.cluster_types)
+#         self.assertFalse(base.circuit_types)
+#         self.assertFalse(base.providers)
 
 
 class ManufacturerImportModelTest(TestCase):

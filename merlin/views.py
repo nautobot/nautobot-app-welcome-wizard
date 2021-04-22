@@ -163,11 +163,10 @@ class MerlinDashboard(View):
         """
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
-        for nautobot_object, merlin_object, var_name, success_url, new_url, wizard_url in [
+        for nautobot_object, var_name, success_url, new_url, wizard_url in [
             (Site, Merlin.sites, "Sites", "dcim:site_list", "dcim:site_add", "plugins:merlin:manufacturer_import"),
             (
                 Manufacturer,
-                Merlin.manufacturers,
                 "Manufacturers",
                 "dcim:manufacturer_list",
                 "dcim:manufacturer_add",
@@ -175,7 +174,6 @@ class MerlinDashboard(View):
             ),
             (
                 DeviceType,
-                Merlin.device_types,
                 "Device Types",
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
@@ -183,7 +181,6 @@ class MerlinDashboard(View):
             ),
             (
                 DeviceRole,
-                Merlin.device_roles,
                 "Device Roles",
                 "dcim:devicerole_list",
                 "dcim:devicerole_add",
@@ -191,7 +188,6 @@ class MerlinDashboard(View):
             ),
             (
                 CircuitType,
-                Merlin.device_types,
                 "Circuit Types",
                 "circuits:circuittype_list",
                 "circuits:circuittype_add",
@@ -199,7 +195,6 @@ class MerlinDashboard(View):
             ),
             (
                 Provider,
-                Merlin.providers,
                 "Circuit Providers",
                 "circuits:provider_list",
                 "circuits:provider_add",
@@ -208,7 +203,6 @@ class MerlinDashboard(View):
             (RIR, Merlin.rirs, "RIRS", "ipam:rir_list", "ipam:rir_add", "plugins:merlin:devicetype_import"),
             (
                 ClusterType,
-                Merlin.cluster_types,
                 "VM Cluster Types",
                 "virtualization:clustertype_list",
                 "virtualization:clustertype_add",
