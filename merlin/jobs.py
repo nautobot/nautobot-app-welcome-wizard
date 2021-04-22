@@ -91,6 +91,12 @@ class MerlinImportDeviceType(Job):
         data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
 
         slug = data.get("slug")
+        manufacturer = data.get("manufacturer")
+        Manufacturer.objects.update_or_create(
+            name=manufacturer,
+            slug=slugify(manufacturer),
+        )
+
         try:
             devtype = import_device_type(data)
         except ValueError as exc:
