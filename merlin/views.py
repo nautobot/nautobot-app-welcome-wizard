@@ -146,13 +146,21 @@ class DeviceTypeBulkImportView(BulkImportView):
 
 
 class MerlinDashboard(View):
-    """Merlin dashboard view
+    """Merlin dashboard view.
 
     Args:
         View (View): Django View
     """
 
     def get(self, request):
+        """Get request for dashboard.
+
+        Args:
+            request (Reqeust method): Request incoming to the View
+
+        Returns:
+            Render: Template render
+        """
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
         for nautobot_object, merlin_object, var_name, success_url, new_url, wizard_url in [
