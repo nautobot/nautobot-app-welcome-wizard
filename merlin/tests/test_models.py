@@ -1,7 +1,7 @@
 """Merlin Tests."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from merlin.models.merlin import Merlin
+# from merlin.models.merlin import Merlin
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
 
