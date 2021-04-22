@@ -8,6 +8,7 @@ class Merlin(models.Model):
     Args:
         models (model): Django model
     """
+
     name = models.CharField()
     completed = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
