@@ -1,17 +1,8 @@
-FROM nniehoff/nautobot:v0.0.9
 
-USER root
+ARG PYTHON_VER
+ARG NAUTOBOT_VER
+FROM nniehoff/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER}
 
-WORKDIR $NAUTOBOT_ROOT
-
-# Upgrade pip and install poetry as well as configure poetry
-RUN pip install --upgrade pip\
-    && pip install poetry \
-    && poetry config virtualenvs.create false
-
-# -------------------------------------------------------------------------------------
-# Install Nautobot Plugin
-# -------------------------------------------------------------------------------------
 WORKDIR /source
 
 # Copy in only pyproject.toml/poetry.lock to help with caching this layer if no updates to dependencies
@@ -24,4 +15,4 @@ RUN poetry install --no-interaction --no-ansi --no-root
 COPY . /source
 RUN poetry install --no-interaction --no-ansi
 
-WORKDIR $NAUTOBOT_ROOT
+COPY development/nautobot_config.py /opt/nautobot/nautobot_config.py
