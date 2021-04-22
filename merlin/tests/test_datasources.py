@@ -113,3 +113,6 @@ class GitTest(TestCase):
                 self.assertIsNotNone(device_type)
                 self.assertEqual(device_type.name, "Fake Model")
                 self.assertEqual(device_type.manufacturer, manufacturer_import)
+
+                # Delete the GitRepository (this is a noop)
+                self.repo.delete()
