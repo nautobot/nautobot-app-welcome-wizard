@@ -12,8 +12,8 @@ class Merlin(models.Model):
     name = models.CharField(max_length=100, default="")
     completed = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
-    nautobot_model = models.CharField(verbose_name="Related Nautobot Model", default="", max_length=48)
-    nautobot_add_link = models.CharField(verbose_name="Nautobot Add One Link", default="", max_length=48)
+    nautobot_model = models.CharField(verbose_name="Related Nautobot Model", default="", max_length=255)
+    nautobot_add_link = models.CharField(verbose_name="Nautobot Add One Link", default="", max_length=255)
     merlin_link = models.CharField(max_length=200, default="")
 
     def __str__(self):
