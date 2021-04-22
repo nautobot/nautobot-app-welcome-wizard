@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('merlin', '0002_devicetypeimport_manufacturerimport'),
+        ("merlin", "0002_devicetypeimport_manufacturerimport"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='merlin',
-            name='sites',
+            model_name="merlin",
+            name="sites",
             field=models.BooleanField(default=False),
         ),
     ]

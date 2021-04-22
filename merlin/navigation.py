@@ -3,9 +3,7 @@ from nautobot.extras.plugins import PluginMenuItem
 
 plugin_items = [
     PluginMenuItem(
-        link="plugins:merlin:merlindashboard",
-        link_text="Merlin Dashboard",
-        permissions=["merlin.view_merlindashboard"]
+        link="plugins:merlin:merlindashboard", link_text="Merlin Dashboard", permissions=["merlin.view_merlindashboard"]
     ),
     PluginMenuItem(
         link="plugins:merlin:manufacturer",

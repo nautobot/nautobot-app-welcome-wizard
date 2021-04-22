@@ -3,8 +3,12 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from nautobot.dcim.models import Manufacturer, DeviceType
+from nautobot.circuits.models import CircuitType, Provider
+from nautobot.dcim.models import Manufacturer, DeviceType, DeviceRole
+from nautobot.dcim.models.sites import Site
+from nautobot.ipam.models import RIR
 from nautobot.utilities.testing.views import TestCase
+from nautobot.virtualization.models import ClusterType
 
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
@@ -121,3 +125,50 @@ class DeviceTypeTestCase(TestCase):
         """Tests the DeviceTypeImport List View with no pemissions."""
         response = self.client.get(reverse("plugins:merlin:devicetype"))
         self.assertHttpStatus(response, 403)
+
+
+class DashboardView(TestCase):
+    """Tests for dashboard view.
+
+    Args:
+        TestCase (TestCase): Generic Test Case
+    """
+
+    def test_dashboard_view_no_entries(self):
+        url = reverse("plugins:merlin:merlindashboard")
+        resp = self.client.get(url)
+        self.assertHttpStatus(resp, 200)
+        self.assertContains(resp, "Merlin Import Dashboard")
+        self.assertContains(resp, "mdi-wizard-hat", 9)
+        self.assertContains(resp, "mdi-checkbox-marked-outline", 1)  # Only the Legend will be present
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 9)
+
+    def test_dashboard_view_with_content(self):
+        # Setup a site and manufacturer
+        Manufacturer.objects.create(name="Manufacturer1", slug="manufacturer1")
+        Site.objects.create(name="site01", slug="site01")
+        url = reverse("plugins:merlin:merlindashboard")
+        resp = self.client.get(url)
+        self.assertHttpStatus(resp, 200)
+        self.assertContains(resp, "Merlin Import Dashboard")
+        self.assertContains(resp, "mdi-wizard-hat", 7)
+        self.assertContains(resp, "mdi-checkbox-marked-outline", 3)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 7)
+
+    def test_dashboard_view_with_content_completed(self):
+        # Setup a site and manufacturer
+        manufacturer = Manufacturer.objects.create(name="Manufacturer1", slug="manufacturer1")
+        Site.objects.create(name="site01", slug="site01")
+        DeviceType.objects.create(manufacturer=manufacturer, model="DeviceType1", slug="devicetype1")
+        DeviceRole.objects.create(name="Device Role", slug="device-role-1")
+        CircuitType.objects.create(name="T1", slug="t1")
+        Provider.objects.create(name="Starlink", slug="starlink")
+        RIR.objects.create(name="RFC1918", slug="rfc1918")
+        ClusterType.objects.create(name="ClusterType1", slug="clustertype1")
+        url = reverse("plugins:merlin:merlindashboard")
+        resp = self.client.get(url)
+        self.assertHttpStatus(resp, 200)
+        self.assertContains(resp, "Merlin Import Dashboard")
+        self.assertContains(resp, "mdi-wizard-hat", 1)
+        self.assertContains(resp, "mdi-checkbox-marked-outline", 9)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 1)
