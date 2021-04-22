@@ -1,5 +1,6 @@
 """Middleware for the Merlin plugin."""
 from django.contrib import messages
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 
@@ -20,16 +21,21 @@ class Prerequisites:
         # If no user or they aren't authenticated, return to hit the default login redirect
         if not hasattr(request, "user") or not request.user.is_authenticated:
             return
-        if request.path_info.endswith("/add/"):
+        if request.path.endswith("/add/"):
             # model = view_func.view_class.model_form.Meta.model
             try:
                 base_fields = view_func.view_class.model_form.base_fields
                 for field in base_fields:
                     if base_fields[field].required:
                         if hasattr(base_fields[field], "queryset") and not base_fields[field].queryset:
-                            name = field.replace("_", " ").title()
-                            loc = field.replace("_", "-").title()
-                            loc = loc.lower()
-                            messages.error(request, mark_safe(f"You need to configure a {name} before you create this item. You can create a <a href='/dcim/{loc}s'>{name} here</a>"))
+                            name = (
+                                base_fields[field].label
+                                if base_fields[field].label
+                                else field.replace("_", " ").title()
+                            )
+                            reverse_name = field.replace("_", "")
+                            reverse_link = reverse(f"{request.resolver_match.app_names[0]}:{reverse_name}_add")
+                            msg = f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item."
+                            messages.error(request, mark_safe(msg))  # nosec
             except Exception as error:  # pylint: disable=broad-except
                 print(error)
