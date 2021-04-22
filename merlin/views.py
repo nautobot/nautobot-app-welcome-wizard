@@ -11,7 +11,7 @@ from nautobot.dcim.models import Site, DeviceType, Manufacturer
 from nautobot.dcim.models.devices import DeviceRole
 from nautobot.circuits.models import CircuitType, Provider
 from nautobot.ipam.models import RIR
-from nautobot.virtualization.models import Cluster, ClusterType
+from nautobot.virtualization.models import ClusterType
 from nautobot.extras.models import JobResult
 from nautobot.utilities.permissions import get_permission_for_model
 from nautobot.utilities.views import ObjectPermissionRequiredMixin
