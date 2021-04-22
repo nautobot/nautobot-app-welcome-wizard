@@ -24,7 +24,8 @@ from merlin.forms import (
 )
 from merlin.jobs import MerlinImportDeviceType, MerlinImportManufacturer
 from merlin.models.importer import ManufacturerImport, DeviceTypeImport
-from merlin.models.merlin import Merlin
+
+# from merlin.models.merlin import Merlin
 from merlin.tables import ManufacturerTable, DeviceTypeTable
 
 
