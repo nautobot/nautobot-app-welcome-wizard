@@ -94,10 +94,8 @@ class MerlinImportDeviceType(Job):
         try:
             devtype = import_device_type(data)
         except ValueError as exc:
-            if "already exist" not in str(exc):
-                raise
             self.log_warning(
-                message=f"Unable to import {device_type}, a DeviceType with this slug ({slug}) already exist."
+                message=f"Unable to import {device_type}, a DeviceType with this slug ({slug}) already exist. {exc}"
             )
 
             return False
