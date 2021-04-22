@@ -164,7 +164,7 @@ class MerlinDashboard(View):
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
         for nautobot_object, var_name, success_url, new_url, wizard_url in [
-            (Site, Merlin.sites, "Sites", "dcim:site_list", "dcim:site_add", "plugins:merlin:manufacturer_import"),
+            (Site, "Sites", "dcim:site_list", "dcim:site_add", "plugins:merlin:manufacturer_import"),
             (
                 Manufacturer,
                 "Manufacturers",
