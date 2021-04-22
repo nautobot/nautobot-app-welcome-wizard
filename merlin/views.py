@@ -200,7 +200,7 @@ class MerlinDashboard(View):
                 "circuits:provider_add",
                 "plugins:merlin:devicetype_import",
             ),
-            (RIR, Merlin.rirs, "RIRS", "ipam:rir_list", "ipam:rir_add", "plugins:merlin:devicetype_import"),
+            (RIR, "RIRS", "ipam:rir_list", "ipam:rir_add", "plugins:merlin:devicetype_import"),
             (
                 ClusterType,
                 "VM Cluster Types",
