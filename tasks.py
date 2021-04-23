@@ -349,7 +349,7 @@ def unittest_coverage(context):
 @task
 def unittest_report(context):
     """Report on code test coverage through html as measured by 'invoke unittest'."""
-    command = "coverage html --include 'merlin/*' --omit *migrations*"
+    command = "coverage html --include 'merlin/*' --omit *migrations*,merlin/tests*"
 
     run_command(context, command)
 
