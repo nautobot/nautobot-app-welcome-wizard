@@ -8,7 +8,7 @@ Import Wizard uses the file and folder structure of [devicetype-library](https:/
 
 In order to setup this repository, go to Nautobot and navigate to the Data Sources Git integration. `Extensibility -> Git Repositories`.
 
-![Backup Git Navigation](./img/git-step1.png)
+![Import Wizard Git Navigation](./img/merlin_gitrepo.png)
 
 From the Git Repositories page we can add the **Import Wizard** repository.
 
