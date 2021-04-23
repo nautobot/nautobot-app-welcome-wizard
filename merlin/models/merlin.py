@@ -20,6 +20,7 @@ class Merlin(BaseModel):
 
     class Meta:
         """Meta definition."""
+
         verbose_name_plural = "merlin"
 
     def __str__(self):
