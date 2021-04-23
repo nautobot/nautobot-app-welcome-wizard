@@ -22,3 +22,4 @@ markdown_extensions:
       permalink: true
 nav:
   - Introduction: 'index.md'
+  - 'Import Wizard': 'import_wizard.md'

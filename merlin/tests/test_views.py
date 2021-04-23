@@ -259,7 +259,7 @@ class MiddlewareTestCase(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(
             str(messages[0]),
-            "<a href=/plugins/merlin/dashboard/>Merlin</a> can help you get started with Nautobot!",
+            "<a href=/plugins/merlin/dashboard/>Merlin can help you get started with Nautobot!</a>",
         )
         self.assertHttpStatus(response, 200)
 

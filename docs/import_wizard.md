@@ -1,5 +1,21 @@
 # Import Wizard
 
+## Import Manufacturers
+
+You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nuatobot.
+
+![Import Manufacturers](./img/merlin_import_manufacturers.png)
+
+If the `enable_devicetype-library` setting is choosen, an automatic refresh will happen on page load. You may need to refresh the page in order see the manufacturers.
+
+![Refresh Manufacturers](./img/merlin_import_manufacturers_refresh.png)
+
+## Import Device Types
+
+You can browse to the `Import Device Types` page to easily import selected device types into Nuatobot.
+
+![Import Device Types](./img/merlin_import_device_type.png)
+
 ## Git Settings
 
 The plugin makes heavy use of the nautobot git data sources feature. This set of instructions will walk an operator through setting up the Import Wizard repository.  
@@ -8,7 +24,7 @@ Import Wizard uses the file and folder structure of [devicetype-library](https:/
 
 In order to setup this repository, go to Nautobot and navigate to the Data Sources Git integration. `Extensibility -> Git Repositories`.
 
-![Backup Git Navigation](./img/git-step1.png)
+![Import Wizard Git Navigation](./img/merlin_gitrepo.png)
 
 From the Git Repositories page we can add the **Import Wizard** repository.
 
@@ -28,11 +44,9 @@ Parameters:
 |Provides|Valid providers for Git Repo.|
 <br>
 
-![Example Git Backups](./img/backup-git-step2.png)
-
 Select `Import Wizard` and click on `[Create]`.
 
 Once you click `[Create]` and the repository syncs, the main page will now show the repo along with its status.
-![Git Backup Repo Status](./img/backup-git-step3.png)
+![Git Backup Repo Status](./img/merlin_gitrepo_syncd.png)
 
 For their respective features, the "Provides" field could be `Import Wizard` and jinja templates.
