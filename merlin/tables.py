@@ -1,6 +1,7 @@
 """Tables for Merlin."""
 import django_tables2 as tables
 
+from django.conf import settings
 from nautobot.utilities.tables import BaseTable, ToggleColumn
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 from merlin.models.merlin import Merlin
@@ -47,7 +48,10 @@ class ManufacturerTable(BaseTable):
         model = ManufacturerImport
         fields = ("pk", "name", "actions")
         default_columns = ("pk", "name", "actions")
-        empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
+        if settings.PLUGINS_CONFIG["merlin"].get("enable_devicetype-library"):
+            empty_text = "Adding data from GitRepository, please refresh"
+        else:
+            empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
 
 
 class DeviceTypeTable(BaseTable):
