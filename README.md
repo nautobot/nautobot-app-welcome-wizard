@@ -1,3 +1,6 @@
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+![Coverage](coverage.svg)
+
 # Merlin
 
 A plugin for [Nautobot](https://github.com/nautobot/nautobot).
