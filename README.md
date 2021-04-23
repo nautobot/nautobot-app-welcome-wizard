@@ -15,7 +15,7 @@ The plugin is available as a Python package in pypi and can be installed with pi
 pip install merlin
 ```
 
-> The plugin is compatible with Nautobot 1.0.0b3 and higher
+> The plugin is compatible with Nautobot 1.0.0b4 and higher
 
 To ensure Merlin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `merlin` package:
 
@@ -31,20 +31,18 @@ PLUGINS = ["merlin"]
 
 # PLUGINS_CONFIG = {
 #   "merlin": {
-#     ADD YOUR SETTINGS HERE
+#     "enable_devicetype-library": True
 #   }
 # }
 ```
 
 The plugin behavior can be controlled with the following list of settings
 
-- TODO
+- `enable_devicetype-library`: If enabled the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
 
 ## Usage
 
-### API
-
-TODO
+Log in to Nautobot and you will be guided through Banners on the top of the pages.
 
 ## Contributing
 
