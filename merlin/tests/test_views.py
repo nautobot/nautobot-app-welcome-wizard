@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from nautobot.dcim.models import Manufacturer, DeviceType
+from nautobot.dcim.models.sites import Site
 from nautobot.utilities.testing.views import TestCase
 
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
@@ -15,7 +16,7 @@ class ManufacturerTestCase(TestCase):
     """Tests the ManufacturerImport Views."""
 
     def test_manufacturer_bulk_import_permission_denied(self):
-        """Tests the ManufacturerImport Bulk Import View with no pemissions."""
+        """Tests the ManufacturerImport Bulk Import View with no permissions."""
         ManufacturerImport.objects.create(name="Acme", slug="acme")
         self.add_permissions("merlin.view_manufacturerimport")
         data = {"pk": [ManufacturerImport.objects.first().pk]}
@@ -28,7 +29,7 @@ class ManufacturerTestCase(TestCase):
             pass
 
     def test_manufacturer_bulk_import(self):
-        """Tests the ManufacturerImport Bulk Import View with correct pemissions."""
+        """Tests the ManufacturerImport Bulk Import View with correct permissions."""
         ManufacturerImport.objects.create(name="Acme", slug="acme")
         # Ensure we can add a new manufacturer
         self.add_permissions("dcim.add_manufacturer", "dcim.view_manufacturer", "merlin.view_manufacturerimport")
@@ -54,13 +55,13 @@ class ManufacturerTestCase(TestCase):
         self.assertRedirects(response, reverse("plugins:merlin:manufacturer"), status_code=302)
 
     def test_manufacturer_list(self):
-        """Tests the ManufacturerImport List View with correct pemissions."""
+        """Tests the ManufacturerImport List View with correct permissions."""
         self.add_permissions("merlin.view_manufacturerimport")
         response = self.client.get(reverse("plugins:merlin:manufacturer"))
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_list_permission_denied(self):
-        """Tests the ManufacturerImport List View with no pemissions."""
+        """Tests the ManufacturerImport List View with no permissions."""
         response = self.client.get(reverse("plugins:merlin:manufacturer"))
         self.assertHttpStatus(response, 403)
 
@@ -193,6 +194,45 @@ class DeviceTypeTestCase(TestCase):
 
         devicetype = DeviceType.objects.get(model="MX80")
         self.assertIsNotNone(devicetype)
+
+
+class DashboardView(TestCase):
+    """Tests for dashboard view.
+
+    Args:
+        TestCase (TestCase): Generic Test Case
+    """
+
+    def test_dashboard_view_no_entries(self):
+        self.add_permissions("merlin.view_merlin")
+        url = reverse("plugins:merlin:dashboard")
+        resp = self.client.get(url)
+        self.assertHttpStatus(resp, 200)
+        self.assertContains(resp, "Dashboard")
+        self.assertContains(resp, "mdi-wizard-hat", 2)
+        self.assertContains(resp, "mdi-plus-thick", 8)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 8)
+        self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
+
+    def test_dashboard_view_with_content(self):
+        # Setup a site and manufacturer
+        self.add_permissions("merlin.view_merlin")
+        Manufacturer.objects.create(name="Manufacturer1", slug="manufacturer1")
+        Site.objects.create(name="site01", slug="site01")
+        url = reverse("plugins:merlin:dashboard")
+        resp = self.client.get(url)
+        self.assertHttpStatus(resp, 200)
+        self.assertContains(resp, "Dashboard")
+        self.assertContains(resp, "mdi-wizard-hat", 2)
+        self.assertContains(resp, "mdi-plus-thick", 8)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
+        self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
+
+    def test_dashboard_view_permission_denied(self):
+        """Test failed connection."""
+        url = reverse("plugins:merlin:dashboard")
+        resp = self.client.get(url)
+        self.assertHttpStatus(resp, 403)
 
 
 class MiddlewareTestCase(TestCase):

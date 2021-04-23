@@ -1,6 +1,7 @@
 """Merlin Tests."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+
 from merlin.models.merlin import Merlin
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
@@ -8,18 +9,33 @@ from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 class MerlinModelTest(TestCase):
     """Model Test Case."""
 
-    def test_base_setup_all_false(self):
-        """Validate empty Merlin model"""
-        base = Merlin()
-        self.assertFalse(base.manufacturers)
-        self.assertFalse(base.platforms)
-        self.assertFalse(base.all_completed)
-        self.assertFalse(base.device_types)
-        self.assertFalse(base.device_roles)
-        self.assertFalse(base.rirs)
-        self.assertFalse(base.cluster_types)
-        self.assertFalse(base.circuit_types)
-        self.assertFalse(base.providers)
+    def test_base_setup_only_name_supplied(self):
+        """Validate empty Merlin model."""
+        merlin = Merlin.objects.create(name="Sites")
+        self.assertEqual(merlin.name, "Sites")
+        self.assertFalse(merlin.completed)
+        self.assertFalse(merlin.ignored)
+        self.assertEqual(merlin.nautobot_model, "")
+        self.assertEqual(merlin.nautobot_add_link, "")
+        self.assertEqual(merlin.merlin_link, "")
+        self.assertEqual(str(merlin), "Sites")
+
+    def test_base_setup_complete(self):
+        """Validate empty Merlin model."""
+        merlin = Merlin.objects.create(
+            name="Sites",
+            completed=True,
+            ignored=False,
+            nautobot_model="dcim:sites_list",
+            nautobot_add_link="dcim:sites_add",
+            merlin_link="plugins:merlin:devicetype_import",
+        )
+        self.assertEqual(merlin.name, "Sites")
+        self.assertTrue(merlin.completed)
+        self.assertFalse(merlin.ignored)
+        self.assertEqual(merlin.nautobot_model, "dcim:sites_list")
+        self.assertEqual(merlin.nautobot_add_link, "dcim:sites_add")
+        self.assertEqual(merlin.merlin_link, "plugins:merlin:devicetype_import")
 
 
 class ManufacturerImportModelTest(TestCase):

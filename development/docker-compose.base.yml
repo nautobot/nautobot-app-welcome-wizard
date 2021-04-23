@@ -6,6 +6,7 @@ x-nautobot-build: &nautobot-build
       PYTHON_VER: "${PYTHON_VER}"
     context: "../"
     dockerfile: "development/Dockerfile"
+    target: "merlin-dev"
 x-nautobot-base: &nautobot-base
   image: "merlin/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
   env_file:
@@ -30,3 +31,13 @@ services:
     healthcheck:
       disable: true
     <<: *nautobot-base
+  docs:
+    build:
+      args:
+        NAUTOBOT_VER: "${NAUTOBOT_VER}"
+        PYTHON_VER: "${PYTHON_VER}"
+      context: "../"
+      dockerfile: "development/Dockerfile"
+      target: "docs"
+    ports:
+      - "8001:8080"

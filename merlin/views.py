@@ -1,4 +1,5 @@
 """Views for Merlin."""
+from collections import OrderedDict
 
 from django import forms
 from django.conf import settings
@@ -6,12 +7,16 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
+from nautobot.circuits.models import CircuitType, Provider
 from nautobot.core.views import generic
-from nautobot.dcim.models import DeviceType, Manufacturer
+from nautobot.dcim.models import Site, DeviceType, Manufacturer
+from nautobot.dcim.models.devices import DeviceRole
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.models import JobResult, GitRepository
+from nautobot.ipam.models import RIR
 from nautobot.utilities.permissions import get_permission_for_model
 from nautobot.utilities.views import ObjectPermissionRequiredMixin
+from nautobot.virtualization.models import ClusterType
 from merlin.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from merlin.forms import (
     DeviceTypeImportFilterForm,
@@ -21,7 +26,8 @@ from merlin.forms import (
 )
 from merlin.jobs import MerlinImportDeviceType, MerlinImportManufacturer
 from merlin.models.importer import ManufacturerImport, DeviceTypeImport
-from merlin.tables import ManufacturerTable, DeviceTypeTable
+from merlin.models.merlin import Merlin
+from merlin.tables import ManufacturerTable, DeviceTypeTable, DashboardTable
 
 
 class ManufacturerListView(generic.ObjectListView):
@@ -156,3 +162,104 @@ class DeviceTypeBulkImportView(BulkImportView):
     bulk_import_url = "plugins:merlin:devicetype_import"
     permission_required = "dcim.add_devicetype"
     queryset = DeviceType.objects.prefetch_related("manufacturer")
+
+
+class MerlinDashboard(generic.ObjectListView):
+    """Merlin dashboard view.
+
+    Args:
+        View (View): Django View
+    """
+
+    @classmethod
+    def check_data(cls):
+        """Check data and update the Merlin database."""
+        dashboard_info = OrderedDict()
+        # Check the status of each of the Merlin Items
+        # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
+        # wise.
+        for nautobot_object, var_name, success_url, new_url, wizard_url in [
+            (Site, "Sites", "dcim:site_list", "dcim:site_add", ""),
+            (
+                Manufacturer,
+                "Manufacturers",
+                "dcim:manufacturer_list",
+                "dcim:manufacturer_add",
+                "plugins:merlin:manufacturer_import",
+            ),
+            (
+                DeviceType,
+                "Device Types",
+                "dcim:devicetype_list",
+                "dcim:devicetype_add",
+                "plugins:merlin:devicetype_import",
+            ),
+            (
+                DeviceRole,
+                "Device Roles",
+                "dcim:devicerole_list",
+                "dcim:devicerole_add",
+                "",
+            ),
+            (
+                CircuitType,
+                "Circuit Types",
+                "circuits:circuittype_list",
+                "circuits:circuittype_add",
+                "",
+            ),
+            (
+                Provider,
+                "Circuit Providers",
+                "circuits:provider_list",
+                "circuits:provider_add",
+                "",
+            ),
+            (RIR, "RIRs", "ipam:rir_list", "ipam:rir_add", ""),
+            (
+                ClusterType,
+                "VM Cluster Types",
+                "virtualization:clustertype_list",
+                "virtualization:clustertype_add",
+                "",
+            ),
+        ]:
+            completed = nautobot_object.objects.exists()
+            if completed:
+                dashboard_info[var_name] = {
+                    "exists": True,
+                    "next_url": success_url,
+                    "nb_app": success_url.split(":")[0],
+                }
+            else:
+                dashboard_info[var_name] = {
+                    "exists": False,
+                    "next_url": new_url,
+                    "nb_app": new_url.split(":")[0],
+                    "wizard_url": wizard_url,
+                }
+            try:
+                merlin_id = Merlin.objects.get(name=var_name)
+                Merlin.objects.filter(name=var_name).update(completed=completed)
+            except Merlin.DoesNotExist:
+                merlin_id = None
+
+            if merlin_id is None:
+                Merlin.objects.create(
+                    name=var_name,
+                    completed=completed,
+                    ignored=False,
+                    nautobot_model=nautobot_object,
+                    nautobot_add_link=new_url,
+                    merlin_link=wizard_url,
+                )
+
+    def get(self, request, *args, **kwargs):
+        """Get request."""
+        self.check_data()
+        return super().get(request, *args, **kwargs)
+
+    permission_required = "merlin.view_merlin"
+    queryset = Merlin.objects.all()
+    template_name = "merlin/dashboard.html"
+    table = DashboardTable
