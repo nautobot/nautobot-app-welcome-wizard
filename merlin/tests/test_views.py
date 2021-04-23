@@ -238,6 +238,17 @@ class DashboardView(TestCase):
 class MiddlewareTestCase(TestCase):
     """Tests the Middleware."""
 
+    def test_middleware_home_view(self):
+        """Test middleware message on home view."""
+        response = self.client.get(reverse("home"))
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "<a href=/plugins/merlin/dashboard/>Merlin</a> can help you get started with Nautobot!",
+        )
+        self.assertHttpStatus(response, 200)
+
     def test_middleware_missing_required(self):
         """Test middleware when dcim:devicetype is missing required fields."""
         self.add_permissions(
