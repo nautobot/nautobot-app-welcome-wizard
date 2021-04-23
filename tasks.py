@@ -345,6 +345,14 @@ def unittest_coverage(context):
 
 
 @task
+def unittest_report(context):
+    """Report on code test coverage through html as measured by 'invoke unittest'."""
+    command = "coverage html --include 'merlin/*' --omit *migrations*"
+
+    run_command(context, command)
+
+
+@task
 def integration_tests(context):
     """Some very generic high level integration tests."""
     session = requests.Session()
