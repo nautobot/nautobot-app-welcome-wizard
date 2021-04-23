@@ -66,6 +66,7 @@ class DeviceTypeTable(BaseTable):
         default_columns = ("pk", "name", "manufacturer", "actions")
         empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
 
+
 class DashboardTable(BaseTable):
     """Table for the Dashboard."""
 

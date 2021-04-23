@@ -198,6 +198,7 @@ class DeviceTypeTestCase(TestCase):
         devicetype = DeviceType.objects.get(model="MX80")
         self.assertIsNotNone(devicetype)
 
+
 class DashboardView(TestCase):
     """Tests for dashboard view.
 
@@ -235,6 +236,7 @@ class DashboardView(TestCase):
         url = reverse("plugins:merlin:dashboard")
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 403)
+
 
 class MiddlewareTestCase(TestCase):
     """Tests the Middleware."""
