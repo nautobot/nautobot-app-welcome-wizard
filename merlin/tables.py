@@ -74,7 +74,7 @@ class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods
     imports = tables.TemplateColumn(verbose_name="Actions", template_code=IMPORT_BUTTONS)
     completed_info = tables.TemplateColumn(verbose_name="Completed", template_code=COMPLETED_INFO)
 
-    class Meta(BaseTable.Meta):
+    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
         """Meta for Dashboard Table."""
 
         model = Merlin
