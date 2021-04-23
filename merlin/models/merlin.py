@@ -19,6 +19,7 @@ class Merlin(BaseModel):
     merlin_link = models.CharField(max_length=200, default="")
 
     class Meta:
+        """Meta definition."""
         verbose_name_plural = "merlin"
 
     def __str__(self):

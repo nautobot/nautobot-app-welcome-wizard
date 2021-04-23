@@ -152,6 +152,7 @@ class MerlinDashboard(generic.ObjectListView):
 
     @classmethod
     def check_data(self):
+        """Check data and update the Merlin database."""
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
@@ -233,6 +234,7 @@ class MerlinDashboard(generic.ObjectListView):
                 )
 
     def get(self, request, *args, **kwargs):
+        """Get request."""
         self.check_data()
         return super().get(request, *args, **kwargs)
 
