@@ -1,5 +1,21 @@
 # Import Wizard
 
+## Import Manufacturers
+
+You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nuatobot.
+
+![Import Manufacturers](./img/merlin_import_manufacturers.png)
+
+If the `enable_devicetype-library` setting is choosen, an automatic refresh will happen on page load. You may need to refresh the page in order see the manufacturers.
+
+![Refresh Manufacturers](./img/merlin_import_manufacturers_refresh.png)
+
+## Import Device Types
+
+You can browse to the `Import Device Types` page to easily import selected device types into Nuatobot.
+
+![Import Device Types](./img/merlin_import_device_type.png)
+
 ## Git Settings
 
 The plugin makes heavy use of the nautobot git data sources feature. This set of instructions will walk an operator through setting up the Import Wizard repository.  
@@ -27,8 +43,6 @@ Parameters:
 |Username|The Git username that corresponds with the personal access token above.|
 |Provides|Valid providers for Git Repo.|
 <br>
-
-![Example Git Backups](./img/backup-git-step2.png)
 
 Select `Import Wizard` and click on `[Create]`.
 
