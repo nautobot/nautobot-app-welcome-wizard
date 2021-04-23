@@ -17,3 +17,4 @@ services:
   docs:
     volumes:
       - "../docs:/opt/merlin/docs"
+      - "../mkdocs.yml:/opt/merlin/mkdocs.yml"
