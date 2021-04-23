@@ -27,7 +27,7 @@ class Prerequisites:
         if not hasattr(request, "user") or not request.user.is_authenticated:
             return
         if request.path == "/":
-            merlin_url = f"<a href={reverse('plugins.merlin.dashboard')}>Merlin</a>"
+            merlin_url = f"<a href={reverse('plugins:merlin:dashboard')}>Merlin</a>"
             merlin_msg = f"{merlin_url} can help you get started with Nautobot!"
             messages.info(request, mark_safe(merlin_msg))  # nosec
         elif request.path.endswith("/add/"):
