@@ -31,6 +31,7 @@ class ManufacturerTable(BaseTable):
         model = ManufacturerImport
         fields = ("pk", "name", "actions")
         default_columns = ("pk", "name", "actions")
+        empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
 
 
 class DeviceTypeTable(BaseTable):
@@ -47,3 +48,4 @@ class DeviceTypeTable(BaseTable):
         model = DeviceTypeImport
         fields = ("pk", "name", "manufacturer", "actions")
         default_columns = ("pk", "name", "manufacturer", "actions")
+        empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
