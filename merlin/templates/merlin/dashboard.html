@@ -6,11 +6,8 @@
 {% block content %}
 <h1>{% block title %}Dashboard{% endblock %}</h1>
 <div class="row">
-    <div class="col-md-9">
-        {% include 'merlin/extra_actions.html' with bulk_import_url="plugins:merlin:manufacturer_import" %}
-    </div>
-    <div class="col-md-3 noprint">
-        {% include 'inc/search_panel.html' %}
+    <div class="col-md-4">
+        {% include 'utilities/obj_table.html' %}
     </div>
 </div>
 {% endblock %}

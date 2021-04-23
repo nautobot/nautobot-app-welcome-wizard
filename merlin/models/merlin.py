@@ -18,6 +18,9 @@ class Merlin(BaseModel):
     nautobot_add_link = models.CharField(verbose_name="Nautobot Add One Link", default="", max_length=255)
     merlin_link = models.CharField(max_length=200, default="")
 
+    class Meta:
+        verbose_name_plural = "merlin"
+
     def __str__(self):
         """Return name."""
         return self.name

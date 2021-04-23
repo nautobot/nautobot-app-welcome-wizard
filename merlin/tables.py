@@ -13,16 +13,15 @@ MANUFACTURER_BUTTONS = """
 """
 
 DEVICE_TYPE_BUTTONS = """
-<a href="{% url 'plugins:merlin:devicetype_import' %}?pk={{ record.pk }}&return_url=test" class="btn btn-xs btn-info" title="Import Device Type">
+<a href="{% url 'plugins:merlin:devicetype_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Device Type">
     <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
 </a>
 """
 
 IMPORT_BUTTONS = """
-{% if not record.completed %}
-<a href="{% url record.nautobot_add_link %}" class="btn btn-xs" > <span class="mdi mdi-checkbox-marked-outline"></span> </a>
-{% else %}
-<a href="{% url record.nautobot_add_link %}" class="btn btn-small" > <span class="mdi mdi-checkbox-blank-outline"></span> </a>
+<a href="{% url record.nautobot_add_link %}" class="btn btn-xs btn-success" title="Add"><i class="mdi mdi-plus-thick"></i></a>
+{% if record.merlin_link %}
+<a href="{% url record.merlin_link %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-database-import-outline"></i></a>
 {% endif %}
 """
 
@@ -35,11 +34,11 @@ COMPLETED_INFO = """
 """
 
 
+# {% else %}
+#     <a href="{% url value.next_url %}"><button class="btn btn-large"><span class="mdi mdi-checkbox-blank-outline"></span></button></a>
+#     <a href="{% url value.wizard_url %}"><button class="btn btn-large"><span class="mdi mdi-wizard-hat"></span></button></a>
+# {% endif %}
 
-                        # {% else %}
-                        #     <a href="{% url value.next_url %}"><button class="btn btn-large"><span class="mdi mdi-checkbox-blank-outline"></span></button></a>
-                        #     <a href="{% url value.wizard_url %}"><button class="btn btn-large"><span class="mdi mdi-wizard-hat"></span></button></a>
-                        # {% endif %}
 
 class ManufacturerTable(BaseTable):
     """Table to show the ManufactureImport List."""
@@ -76,12 +75,12 @@ class DashboardTable(BaseTable):
     """Table for the Dashboard."""
 
     name = tables.Column(accessor="name", verbose_name="Name")
-    actions = tables.TemplateColumn(IMPORT_BUTTONS)
+    imports = tables.TemplateColumn(verbose_name="Actions", template_code=IMPORT_BUTTONS)
     completed_info = tables.TemplateColumn(verbose_name="Completed", template_code=COMPLETED_INFO)
 
     class Meta(BaseTable.Meta):
         """Meta for Dashboard Table."""
 
         model = Merlin
-        fields = ("name", "completed_info", "ignored", "actions")
-        default_columns = ("name", "completed_info", "ignored", "actions")
+        fields = ("name", "completed_info", "ignored", "imports")
+        default_columns = ("name", "completed_info", "ignored", "imports")

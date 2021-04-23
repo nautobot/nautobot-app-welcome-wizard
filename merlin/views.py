@@ -93,8 +93,6 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
 
     def post(self, request):
         """Import Processing."""
-        if request.method != "POST":
-            return redirect(self.return_url)
         if not self.has_permission():
             return HttpResponseForbidden()
         form = self.form(request.POST)
@@ -154,11 +152,10 @@ class MerlinDashboard(generic.ObjectListView):
 
     @classmethod
     def check_data(self):
-        print("Hi")
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
         for nautobot_object, var_name, success_url, new_url, wizard_url in [
-            (Site, "Sites", "dcim:site_list", "dcim:site_add", "plugins:merlin:manufacturer_import"),
+            (Site, "Sites", "dcim:site_list", "dcim:site_add", ""),
             (
                 Manufacturer,
                 "Manufacturers",
@@ -178,33 +175,33 @@ class MerlinDashboard(generic.ObjectListView):
                 "Device Roles",
                 "dcim:devicerole_list",
                 "dcim:devicerole_add",
-                "plugins:merlin:devicetype_import",
+                "",
             ),
             (
                 CircuitType,
                 "Circuit Types",
                 "circuits:circuittype_list",
                 "circuits:circuittype_add",
-                "plugins:merlin:devicetype_import",
+                "",
             ),
             (
                 Provider,
                 "Circuit Providers",
                 "circuits:provider_list",
                 "circuits:provider_add",
-                "plugins:merlin:devicetype_import",
+                "",
             ),
-            (RIR, "RIRS", "ipam:rir_list", "ipam:rir_add", "plugins:merlin:devicetype_import"),
+            (RIR, "RIRs", "ipam:rir_list", "ipam:rir_add", ""),
             (
                 ClusterType,
                 "VM Cluster Types",
                 "virtualization:clustertype_list",
                 "virtualization:clustertype_add",
-                "plugins:merlin:devicetype_import",
+                "",
             ),
         ]:
             completed = nautobot_object.objects.exists()
-            if nautobot_object.objects.exists():
+            if completed:
                 dashboard_info[var_name] = {
                     "exists": True,
                     "next_url": success_url,
@@ -219,7 +216,7 @@ class MerlinDashboard(generic.ObjectListView):
                 }
             try:
                 merlin_id = Merlin.objects.get(name=var_name)
-                print(merlin_id)
+                Merlin.objects.filter(name=var_name).update(completed=completed)
             except Merlin.DoesNotExist:
                 merlin_id = None
 
