@@ -239,8 +239,8 @@ class MerlinDashboard(generic.ObjectListView):
                     "wizard_url": wizard_url,
                 }
             try:
-                merlin_id = Merlin.objects.get(name=var_name)
                 Merlin.objects.filter(name=var_name).update(completed=completed)
+                merlin_id = Merlin.objects.get(name=var_name)
             except Merlin.DoesNotExist:
                 merlin_id = None
 

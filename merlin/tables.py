@@ -48,10 +48,9 @@ class ManufacturerTable(BaseTable):
         model = ManufacturerImport
         fields = ("pk", "name", "actions")
         default_columns = ("pk", "name", "actions")
+        empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
         if settings.PLUGINS_CONFIG["merlin"].get("enable_devicetype-library"):
             empty_text = "Adding data from GitRepository, please refresh"
-        else:
-            empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
 
 
 class DeviceTypeTable(BaseTable):
@@ -69,6 +68,8 @@ class DeviceTypeTable(BaseTable):
         fields = ("pk", "name", "manufacturer", "actions")
         default_columns = ("pk", "name", "manufacturer", "actions")
         empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
+        if settings.PLUGINS_CONFIG["merlin"].get("enable_devicetype-library"):
+            empty_text = "Adding data from GitRepository, please refresh"
 
 
 class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods
