@@ -14,3 +14,7 @@ services:
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
       - "../:/source"
+  docs:
+    volumes:
+      - "../docs:/opt/merlin/docs"
+      - "../mkdocs.yml:/opt/merlin/mkdocs.yml"

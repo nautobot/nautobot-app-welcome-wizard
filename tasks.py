@@ -340,8 +340,10 @@ def unittest(context, keepdb=False, label="merlin", failfast=False, buffer=True)
 def unittest_coverage(context):
     """Report on code test coverage as measured by 'invoke unittest'."""
     command = "coverage report --skip-covered --include 'merlin/*' --omit *migrations*,merlin/tests*"
-
     run_command(context, command)
+    run_command(context, "rm -f coverage.svg")
+    badge_command = "coverage-badge -o coverage.svg"
+    run_command(context, badge_command)
 
 
 @task

@@ -1,20 +1,28 @@
 """Models definition for Merlin."""
 from django.db import models
 
+from nautobot.core.models import BaseModel
 
-class Merlin(models.Model):
+
+class Merlin(BaseModel):
     """Base model for Merlin Start.
 
     Args:
         models (model): Django model
     """
 
-    all_completed = models.BooleanField(default=False)
-    manufacturers = models.BooleanField(default=False)
-    device_types = models.BooleanField(default=False)
-    platforms = models.BooleanField(default=False)
-    device_roles = models.BooleanField(default=False)
-    rirs = models.BooleanField(default=False)
-    cluster_types = models.BooleanField(default=False)
-    circuit_types = models.BooleanField(default=False)
-    providers = models.BooleanField(default=False)
+    name = models.CharField(max_length=100, default="")
+    completed = models.BooleanField(default=False)
+    ignored = models.BooleanField(default=False)
+    nautobot_model = models.CharField(verbose_name="Related Nautobot Model", default="", max_length=255)
+    nautobot_add_link = models.CharField(verbose_name="Nautobot Add One Link", default="", max_length=255)
+    merlin_link = models.CharField(max_length=200, default="")
+
+    class Meta:
+        """Meta definition."""
+
+        verbose_name_plural = "merlin"
+
+    def __str__(self):
+        """Return name."""
+        return self.name
