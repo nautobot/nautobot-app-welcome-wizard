@@ -1,6 +1,7 @@
 """Tests for Merlin Views."""
 
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.urls import reverse
 
 from nautobot.dcim.models import Manufacturer, DeviceType
@@ -132,6 +133,19 @@ class DeviceTypeTestCase(TestCase):
 
     def test_devicetype_list(self):
         """Tests the DeviceTypeImport List View with correct pemissions."""
+        self.add_permissions("merlin.view_devicetypeimport")
+        response = self.client.get(reverse("plugins:merlin:devicetype"))
+        self.assertHttpStatus(response, 200)
+
+    @override_settings(
+        PLUGINS_CONFIG={
+            "merlin": {
+                "enable_devicetype-library": False,
+            }
+        },
+    )
+    def test_devicetype_list_override(self):
+        """Tests the DeviceTypeImport List View with enable_devicetype-library False."""
         self.add_permissions("merlin.view_devicetypeimport")
         response = self.client.get(reverse("plugins:merlin:devicetype"))
         self.assertHttpStatus(response, 200)
