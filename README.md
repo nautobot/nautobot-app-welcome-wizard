@@ -150,4 +150,5 @@ Sign up [here](http://slack.networktocode.com/)
 
 ![Merlin Banner](docs/img/merlin_banner.png)  
 ![Merlin Middleware](docs/img/merlin_middleware_x3.png)  
-docs/img/merlin_dashboard.png)  
+![Merlin Dashboard](docs/img/merlin_dashboard.png)  
+![Merlin Import Device Types](docs/img/merlin_import_device_type.png)  
