@@ -1,7 +1,7 @@
 
 ARG PYTHON_VER
 ARG NAUTOBOT_VER
-FROM nniehoff/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER}
+FROM nniehoff/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER} as merlin-dev
 
 WORKDIR /source
 
@@ -16,3 +16,29 @@ COPY . /source
 RUN poetry install --no-interaction --no-ansi
 
 COPY development/nautobot_config.py /opt/nautobot/nautobot_config.py
+
+FROM python:${PYTHON_VER}-slim as docs
+
+ENV PYTHONUNBUFFERED=1
+
+# Install all OS package upgrades and dependencies
+# hadolint ignore=DL3005,DL3008,DL3013
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git && \
+    apt-get autoremove -y && \
+    apt-get clean all && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip --no-cache-dir install --upgrade pip wheel
+
+RUN useradd --system --shell /bin/bash --create-home --home-dir /opt/merlin docs
+WORKDIR /opt/merlin
+
+COPY docs /opt/merlin/docs
+COPY mkdocs.yml /opt/merlin
+
+RUN pip install -r /opt/merlin/docs/requirements.txt
+
+USER docs
+
+CMD mkdocs serve -v -a 0.0.0.0:8080
