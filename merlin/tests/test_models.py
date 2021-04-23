@@ -18,6 +18,7 @@ class MerlinModelTest(TestCase):
         self.assertEqual(merlin.nautobot_model, "")
         self.assertEqual(merlin.nautobot_add_link, "")
         self.assertEqual(merlin.merlin_link, "")
+        self.assertEqual(str(merlin), "Sites")
 
     def test_base_setup_complete(self):
         """Validate empty Merlin model."""

@@ -67,7 +67,7 @@ class DeviceTypeTable(BaseTable):
         empty_text = "Add or Sync a Merlin Import Wizard GitRepository"
 
 
-class DashboardTable(BaseTable):
+class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods
     """Table for the Dashboard."""
 
     name = tables.Column(accessor="name", verbose_name="Name")

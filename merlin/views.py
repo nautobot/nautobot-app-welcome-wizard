@@ -151,7 +151,7 @@ class MerlinDashboard(generic.ObjectListView):
     """
 
     @classmethod
-    def check_data(self):
+    def check_data(cls):
         """Check data and update the Merlin database."""
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
