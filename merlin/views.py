@@ -154,6 +154,8 @@ class MerlinDashboard(generic.ObjectListView):
     def check_data(self):
         dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
+        # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
+        # wise.
         for nautobot_object, var_name, success_url, new_url, wizard_url in [
             (Site, "Sites", "dcim:site_list", "dcim:site_add", ""),
             (
@@ -238,105 +240,3 @@ class MerlinDashboard(generic.ObjectListView):
     queryset = Merlin.objects.all()
     template_name = "merlin/dashboard.html"
     table = DashboardTable
-
-    # def get(self, request):
-    #     """Get request for dashboard.
-
-    #     Args:
-    #         request (Reqeust method): Request incoming to the View
-
-    #     Returns:
-    #         Render: Template render
-    #     """
-    #     dashboard_info = OrderedDict()
-    #     # Check the status of each of the Merlin Items
-    #     for nautobot_object, var_name, success_url, new_url, wizard_url in [
-    #         (Site, "Sites", "dcim:site_list", "dcim:site_add", "plugins:merlin:manufacturer_import"),
-    #         (
-    #             Manufacturer,
-    #             "Manufacturers",
-    #             "dcim:manufacturer_list",
-    #             "dcim:manufacturer_add",
-    #             "plugins:merlin:manufacturer_import",
-    #         ),
-    #         (
-    #             DeviceType,
-    #             "Device Types",
-    #             "dcim:devicetype_list",
-    #             "dcim:devicetype_add",
-    #             "plugins:merlin:devicetype_import",
-    #         ),
-    #         (
-    #             DeviceRole,
-    #             "Device Roles",
-    #             "dcim:devicerole_list",
-    #             "dcim:devicerole_add",
-    #             "plugins:merlin:devicetype_import",
-    #         ),
-    #         (
-    #             CircuitType,
-    #             "Circuit Types",
-    #             "circuits:circuittype_list",
-    #             "circuits:circuittype_add",
-    #             "plugins:merlin:devicetype_import",
-    #         ),
-    #         (
-    #             Provider,
-    #             "Circuit Providers",
-    #             "circuits:provider_list",
-    #             "circuits:provider_add",
-    #             "plugins:merlin:devicetype_import",
-    #         ),
-    #         (RIR, "RIRS", "ipam:rir_list", "ipam:rir_add", "plugins:merlin:devicetype_import"),
-    #         (
-    #             ClusterType,
-    #             "VM Cluster Types",
-    #             "virtualization:clustertype_list",
-    #             "virtualization:clustertype_add",
-    #             "plugins:merlin:devicetype_import",
-    #         ),
-    #     ]:
-    #         completed = nautobot_object.objects.count() > 0
-    #         if nautobot_object.objects.count() > 0:
-    #             dashboard_info[var_name] = {
-    #                 "exists": True,
-    #                 "next_url": success_url,
-    #                 "nb_app": success_url.split(":")[0],
-    #             }
-    #         else:
-    #             dashboard_info[var_name] = {
-    #                 "exists": False,
-    #                 "next_url": new_url,
-    #                 "nb_app": new_url.split(":")[0],
-    #                 "wizard_url": wizard_url,
-    #             }
-    #         try:
-    #             merlin_id = Merlin.objects.get(name=var_name)
-    #             print(merlin_id)
-    #         except Merlin.DoesNotExist:
-    #             merlin_id = None
-    #         if merlin_id is None:
-    #             Merlin.objects.create(
-    #                 name=var_name,
-    #                 completed=completed,
-    #                 ignored=False,
-    #                 nautobot_model=nautobot_object,
-    #                 nautobot_add_link=new_url,
-    #                 merlin_link=wizard_url,
-    #             )
-
-    #     template_name = "merlin/dashboard.html"
-    #     # template_name = "merlin/merlindashboard.html"
-
-    #     #
-    #     #
-    #     #
-
-    #     # permission_required = "merlin.view_manufacturerimport"
-    #     # table = ManufacturerTable
-    #     # action_buttons = None
-    #     # template_name = "merlin/manufacturer.html"
-    #     # filterset = ManufacturerImportFilterSet
-    #     # filterset_form = ManufacturerImportFilterForm
-
-    #     # return render(request, template_name, {"dashboard_data": dashboard_info})

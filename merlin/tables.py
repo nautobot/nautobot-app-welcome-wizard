@@ -21,7 +21,7 @@ DEVICE_TYPE_BUTTONS = """
 IMPORT_BUTTONS = """
 <a href="{% url record.nautobot_add_link %}" class="btn btn-xs btn-success" title="Add"><i class="mdi mdi-plus-thick"></i></a>
 {% if record.merlin_link %}
-<a href="{% url record.merlin_link %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-database-import-outline"></i></a>
+<a href="{% url record.merlin_link %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
 {% endif %}
 """
 
@@ -32,12 +32,6 @@ COMPLETED_INFO = """
 <span class="mdi mdi-checkbox-blank-outline"></span>
 {% endif %}
 """
-
-
-# {% else %}
-#     <a href="{% url value.next_url %}"><button class="btn btn-large"><span class="mdi mdi-checkbox-blank-outline"></span></button></a>
-#     <a href="{% url value.wizard_url %}"><button class="btn btn-large"><span class="mdi mdi-wizard-hat"></span></button></a>
-# {% endif %}
 
 
 class ManufacturerTable(BaseTable):
