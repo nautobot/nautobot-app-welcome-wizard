@@ -3,12 +3,9 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from nautobot.circuits.models import CircuitType, Provider
-from nautobot.dcim.models import Manufacturer, DeviceType, DeviceRole
+from nautobot.dcim.models import Manufacturer, DeviceType
 from nautobot.dcim.models.sites import Site
-from nautobot.ipam.models import RIR
 from nautobot.utilities.testing.views import TestCase
-from nautobot.virtualization.models import ClusterType
 
 from merlin.models.importer import DeviceTypeImport, ManufacturerImport
 
