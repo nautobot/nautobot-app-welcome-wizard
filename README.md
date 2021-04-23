@@ -1,7 +1,7 @@
+# Merlin
+
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 ![Coverage](coverage.svg)
-
-# Merlin
 
 A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
@@ -148,4 +148,6 @@ Sign up [here](http://slack.networktocode.com/)
 
 ## Screenshots
 
-TODO
+![Merlin Banner](docs/img/merlin_banner.png)  
+![Merlin Middleware](docs/img/merlin_middleware_x3.png)  
+docs/img/merlin_dashboard.png)  

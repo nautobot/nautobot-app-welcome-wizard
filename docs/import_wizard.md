@@ -33,6 +33,6 @@ Parameters:
 Select `Import Wizard` and click on `[Create]`.
 
 Once you click `[Create]` and the repository syncs, the main page will now show the repo along with its status.
-![Git Backup Repo Status](./img/backup-git-step3.png)
+![Git Backup Repo Status](./img/merlin_gitrepo_syncd.png)
 
 For their respective features, the "Provides" field could be `Import Wizard` and jinja templates.
