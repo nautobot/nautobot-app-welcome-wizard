@@ -5,6 +5,8 @@
 
 A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
+![Merlin GIF](docs/img/merlin.gif)
+
 ## Installation
 
 The plugin is available as a Python package in pypi and can be installed with pip
