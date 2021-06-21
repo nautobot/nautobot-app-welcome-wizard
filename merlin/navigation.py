@@ -3,17 +3,7 @@ from nautobot.extras.plugins import PluginMenuItem
 
 plugin_items = [
     PluginMenuItem(
-        link="plugins:merlin:dashboard", link_text="Merlin Dashboard", permissions=["merlin.view_dashboard"]
-    ),
-    PluginMenuItem(
-        link="plugins:merlin:manufacturer",
-        link_text="Import Manufacturers",
-        permissions=["merlin.view_manufacturerimport"],
-    ),
-    PluginMenuItem(
-        link="plugins:merlin:devicetype",
-        link_text="Import Device Types",
-        permissions=["merlin.view_devicetypeimport"],
+        link="plugins:merlin:dashboard", link_text="Getting Started Wizard", permissions=["merlin.view_dashboard"]
     ),
 ]
 

@@ -30,7 +30,7 @@ class Prerequisites:
             merlin_msg = (
                 f"<a href={reverse('plugins:merlin:dashboard')}>Merlin can help you get started with Nautobot!</a>"
             )
-            messages.info(request, mark_safe(merlin_msg))  # nosec
+            messages.success(request, mark_safe(merlin_msg))  # nosec
         elif request.path.endswith("/add/"):
             # model = view_func.view_class.model_form.Meta.model
             base_fields = view_func.view_class.model_form.base_fields
