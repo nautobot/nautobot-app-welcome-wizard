@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "merlin"
+name = "nautobot-welcome-wizard"
 version = "0.1.0"
-description = "Merlin"
+description = "Nautobot's Welcome Wizard"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 
 license = "Apache-2.0"
@@ -17,12 +17,12 @@ include = [
     "README.md",
 ]
 packages = [
-    { include = "merlin" },
+    { include = "welcome_wizard" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-nautobot = {git = "https://github.com/nautobot/nautobot", rev = "develop"}
+nautobot = "*"
 
 [tool.poetry.dev-dependencies]
 invoke = "*"

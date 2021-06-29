@@ -36,13 +36,13 @@ def is_truthy(arg):
 
 
 # Use pyinvoke configuration for default values, see http://docs.pyinvoke.org/en/stable/concepts/configuration.html
-# Variables may be overwritten in invoke.yml or by the environment variables INVOKE_MERLIN_xxx
-namespace = Collection("merlin")
+# Variables may be overwritten in invoke.yml or by the environment variables INVOKE_WELCOME_WIZARD_xxx
+namespace = Collection("welcome_wizard")
 namespace.configure(
     {
-        "merlin": {
+        "welcome_wizard": {
             "nautobot_ver": "develop-latest",
-            "project_name": "merlin",
+            "project_name": "welcome_wizard",
             "python_ver": "3.6",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development/"),
@@ -79,10 +79,10 @@ def docker_compose(context, command, **kwargs):
         command (str): Command string to append to the "docker-compose ..." command, such as "build", "up", etc.
         **kwargs: Passed through to the context.run() call.
     """
-    build_env = {"NAUTOBOT_VER": context.merlin.nautobot_ver, "PYTHON_VER": context.merlin.python_ver}
-    compose_command = f'docker-compose --project-name {context.merlin.project_name} --project-directory "{context.merlin.compose_dir}"'
-    for compose_file in context.merlin.compose_files:
-        compose_file_path = os.path.join(context.merlin.compose_dir, compose_file)
+    build_env = {"NAUTOBOT_VER": context.welcome_wizard.nautobot_ver, "PYTHON_VER": context.welcome_wizard.python_ver}
+    compose_command = f'docker-compose --project-name {context.welcome_wizard.project_name} --project-directory "{context.welcome_wizard.compose_dir}"'
+    for compose_file in context.welcome_wizard.compose_files:
+        compose_file_path = os.path.join(context.welcome_wizard.compose_dir, compose_file)
         compose_command += f' -f "{compose_file_path}"'
     compose_command += f" {command}"
     print(f'Running docker-compose command "{command}"')
@@ -91,7 +91,7 @@ def docker_compose(context, command, **kwargs):
 
 def run_command(context, command, **kwargs):
     """Wrapper to run a command locally or inside the nautobot container."""
-    if is_truthy(context.merlin.local):
+    if is_truthy(context.welcome_wizard.local):
         context.run(command, **kwargs)
     else:
         # Check if netbox is running, no need to start another netbox container to run a command
@@ -123,7 +123,7 @@ def build(context, force_rm=False, cache=True):
     if force_rm:
         command += " --force-rm"
 
-    print(f"Building Nautobot with Python {context.merlin.python_ver}...")
+    print(f"Building Nautobot with Python {context.welcome_wizard.python_ver}...")
     docker_compose(context, command)
 
 
@@ -216,7 +216,7 @@ def createsuperuser(context, user="admin"):
 )
 def makemigrations(context, name=""):
     """Perform makemigrations operation in Django."""
-    command = "nautobot-server makemigrations merlin"
+    command = "nautobot-server makemigrations welcome_wizard"
 
     if name:
         command += f" --name {name}"
@@ -288,7 +288,7 @@ def hadolint(context):
 @task
 def pylint(context):
     """Run pylint code analysis."""
-    command = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml merlin'
+    command = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml welcome_wizard'
     run_command(context, command)
 
 
@@ -323,7 +323,7 @@ def check_migrations(context):
         "buffer": "Discard output from passing tests",
     }
 )
-def unittest(context, keepdb=False, label="merlin", failfast=False, buffer=True):
+def unittest(context, keepdb=False, label="welcome_wizard", failfast=False, buffer=True):
     """Run Nautobot unit tests."""
     command = f"coverage run --module nautobot.core.cli test {label}"
 
@@ -339,7 +339,7 @@ def unittest(context, keepdb=False, label="merlin", failfast=False, buffer=True)
 @task
 def unittest_coverage(context):
     """Report on code test coverage as measured by 'invoke unittest'."""
-    command = "coverage report --skip-covered --include 'merlin/*' --omit *migrations*,merlin/tests*"
+    command = "coverage report --skip-covered --include 'welcome_wizard/*' --omit *migrations*,welcome_wizard/tests*"
     run_command(context, command)
     run_command(context, "rm -f coverage.svg")
     badge_command = "coverage-badge -o coverage.svg"
@@ -349,7 +349,7 @@ def unittest_coverage(context):
 @task
 def unittest_report(context):
     """Report on code test coverage through html as measured by 'invoke unittest'."""
-    command = "coverage html --include 'merlin/*' --omit *migrations*,merlin/tests*"
+    command = "coverage html --include 'welcome_wizard/*' --omit *migrations*,welcome_wizard/tests*"
 
     run_command(context, command)
 
@@ -387,7 +387,7 @@ def integration_tests(context):
 def tests(context, failfast=False):
     """Run all tests for this plugin."""
     # If we are not running locally, start the docker containers so we don't have to for each test
-    if not is_truthy(context.merlin.local):
+    if not is_truthy(context.welcome_wizard.local):
         print("Starting Docker Containers...")
         start(context)
     # Sorted loosely from fastest to slowest
