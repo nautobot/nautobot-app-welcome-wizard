@@ -1,4 +1,4 @@
 ---
-merlin:
+welcome_wizard:
   compose_files:
     - "docker-compose.requirements.yml"

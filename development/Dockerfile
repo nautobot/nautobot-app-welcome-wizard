@@ -1,7 +1,7 @@
 
 ARG PYTHON_VER
 ARG NAUTOBOT_VER
-FROM nniehoff/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER} as merlin-dev
+FROM nniehoff/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER} as welcome_wizard-dev
 
 WORKDIR /source
 
@@ -31,13 +31,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     pip --no-cache-dir install --upgrade pip wheel
 
-RUN useradd --system --shell /bin/bash --create-home --home-dir /opt/merlin docs
-WORKDIR /opt/merlin
+RUN useradd --system --shell /bin/bash --create-home --home-dir /opt/welcome_wizard docs
+WORKDIR /opt/welcome_wizard
 
-COPY docs /opt/merlin/docs
-COPY mkdocs.yml /opt/merlin
+COPY docs /opt/welcome_wizard/docs
+COPY mkdocs.yml /opt/welcome_wizard
 
-RUN pip install -r /opt/merlin/docs/requirements.txt
+RUN pip install -r /opt/welcome_wizard/docs/requirements.txt
 
 USER docs
 

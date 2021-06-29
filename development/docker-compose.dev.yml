@@ -16,5 +16,5 @@ services:
       - "../:/source"
   docs:
     volumes:
-      - "../docs:/opt/merlin/docs"
-      - "../mkdocs.yml:/opt/merlin/mkdocs.yml"
+      - "../docs:/opt/welcome_wizard/docs"
+      - "../mkdocs.yml:/opt/welcome_wizard/mkdocs.yml"

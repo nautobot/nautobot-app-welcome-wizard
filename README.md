@@ -1,4 +1,4 @@
-# Merlin
+# Welcome Wizard
 
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 ![Coverage](coverage.svg)
@@ -12,25 +12,25 @@ A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 The plugin is available as a Python package in pypi and can be installed with pip
 
 ```shell
-pip install merlin
+pip install nautobot-welcome-wizard
 ```
 
 > The plugin is compatible with Nautobot 1.0.0b4 and higher
 
-To ensure Merlin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `merlin` package:
+To ensure Welcome Wizard is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-welcome-wizard` package:
 
 ```no-highlight
-# echo merlin >> local_requirements.txt
+# echo nautobot-welcome-wizard >> local_requirements.txt
 ```
 
 Once installed, the plugin needs to be enabled in your `configuration.py`
 
 ```python
 # In your configuration.py
-PLUGINS = ["merlin"]
+PLUGINS = ["welcome_wizard"]
 
 # PLUGINS_CONFIG = {
-#   "merlin": {
+#   "welcome_wizard": {
 #     "enable_devicetype-library": True
 #   }
 # }
@@ -67,7 +67,7 @@ The development environment can be used in 2 ways, first with a local poetry env
 
 ```shell
 ---
-merlin:
+welcome_wizard:
   local: true
   compose_files:
     - "docker-compose.requirements.yml"
@@ -107,7 +107,7 @@ invoke start
 
 The project is coming with a CLI helper based on [invoke](http://www.pyinvoke.org/) to help setup the development environment. The commands are listed below in 3 categories `dev environment`, `utility` and `testing`. 
 
-Each command can be executed with `invoke <command>`. Environment variables `INVOKE_MERLIN_PYTHON_VER` and `INVOKE_MERLIN_NAUTOBOT_VER` may be specified to override the default versions. Each command also has its own help `invoke <command> --help`
+Each command can be executed with `invoke <command>`. Environment variables `INVOKE_WELCOME_WIZARD_PYTHON_VER` and `INVOKE_WELCOME_WIZARD_NAUTOBOT_VER` may be specified to override the default versions. Each command also has its own help `invoke <command> --help`
 
 #### Docker dev environment
 
