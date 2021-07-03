@@ -1,7 +1,20 @@
 {% extends 'base.html' %}
 {% load buttons %}
-{% load static %}
+{% load custom_links %}
 {% load helpers %}
+{% load plugins %}
+{% load static %}
+{% load tz %}
+
+{% block header %}
+    <div class="row noprint">
+        <div class="col-sm-8 col-md-9">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'plugins:welcome_wizard:dashboard' %}">Dashboard</a></li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
 
 {% block content %}
 <h1>{% block title %}Getting Started Dashboard{% endblock %}</h1>

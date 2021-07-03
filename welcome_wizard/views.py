@@ -83,6 +83,7 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
     model = None
     form = forms.Form
     bulk_import_url = None
+    breadcrumb_name = None
     _permission_action = None
 
     def get_required_permission(self):
@@ -109,7 +110,13 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
         return render(
             request,
             "welcome_wizard/import.html",
-            {"form": form, "obj": obj, "return_url": self.return_url, "bulk_import_url": self.bulk_import_url},
+            {
+                "form": form,
+                "obj": obj,
+                "return_url": self.return_url,
+                "bulk_import_url": self.bulk_import_url,
+                "breadcrumb_name": self.breadcrumb_name,
+            },
         )
 
     def post(self, request):
@@ -151,6 +158,7 @@ class ManufacturerBulkImportView(BulkImportView):
     bulk_import_url = "plugins:welcome_wizard:manufacturer_import"
     permission_required = "dcim.add_manufacturer"
     queryset = Manufacturer.objects.all()
+    breadcrumb_name = "Import Manufacturers"
 
 
 class DeviceTypeBulkImportView(BulkImportView):
@@ -162,6 +170,7 @@ class DeviceTypeBulkImportView(BulkImportView):
     bulk_import_url = "plugins:welcome_wizard:devicetype_import"
     permission_required = "dcim.add_devicetype"
     queryset = DeviceType.objects.prefetch_related("manufacturer")
+    breadcrumb_name = "Import Device Types"
 
 
 class GettingStartedDashboard(generic.ObjectListView):
