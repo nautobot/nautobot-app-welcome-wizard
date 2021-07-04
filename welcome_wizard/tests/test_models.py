@@ -1,6 +1,7 @@
 """Welcome Wizard Tests."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from nautobot.dcim.models import Site
 
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
@@ -18,6 +19,7 @@ class MerlinModelTest(TestCase):
         self.assertEqual(merlin.nautobot_model, "")
         self.assertEqual(merlin.nautobot_add_link, "")
         self.assertEqual(merlin.merlin_link, "")
+        self.assertEqual(merlin.nautobot_list_link, "")
         self.assertEqual(str(merlin), "Sites")
 
     def test_base_setup_complete(self):
@@ -26,16 +28,18 @@ class MerlinModelTest(TestCase):
             name="Sites",
             completed=True,
             ignored=False,
-            nautobot_model="dcim:sites_list",
+            nautobot_model=Site,
             nautobot_add_link="dcim:sites_add",
             merlin_link="plugins:welcome_wizard:devicetype_import",
+            nautobot_list_link="dcim:sites_list",
         )
         self.assertEqual(merlin.name, "Sites")
         self.assertTrue(merlin.completed)
         self.assertFalse(merlin.ignored)
-        self.assertEqual(merlin.nautobot_model, "dcim:sites_list")
+        self.assertEqual(merlin.nautobot_model, Site)
         self.assertEqual(merlin.nautobot_add_link, "dcim:sites_add")
         self.assertEqual(merlin.merlin_link, "plugins:welcome_wizard:devicetype_import")
+        self.assertEqual(merlin.nautobot_list_link, "dcim:sites_list")
 
 
 class ManufacturerImportModelTest(TestCase):

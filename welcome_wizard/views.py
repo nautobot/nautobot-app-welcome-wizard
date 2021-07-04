@@ -1,6 +1,4 @@
 """Views for Welcome Wizard."""
-from collections import OrderedDict
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -183,11 +181,10 @@ class GettingStartedDashboard(generic.ObjectListView):
     @classmethod
     def check_data(cls):
         """Check data and update the Merlin database."""
-        dashboard_info = OrderedDict()
         # Check the status of each of the Merlin Items
         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
         # wise.
-        for nautobot_object, var_name, success_url, new_url, wizard_url in [
+        for nautobot_object, var_name, list_url, new_url, wizard_url in [
             (Site, "Sites", "dcim:site_list", "dcim:site_add", ""),
             (
                 Manufacturer,
@@ -234,19 +231,6 @@ class GettingStartedDashboard(generic.ObjectListView):
             ),
         ]:
             completed = nautobot_object.objects.exists()
-            if completed:
-                dashboard_info[var_name] = {
-                    "exists": True,
-                    "next_url": success_url,
-                    "nb_app": success_url.split(":")[0],
-                }
-            else:
-                dashboard_info[var_name] = {
-                    "exists": False,
-                    "next_url": new_url,
-                    "nb_app": new_url.split(":")[0],
-                    "wizard_url": wizard_url,
-                }
             try:
                 Merlin.objects.filter(name=var_name).update(completed=completed)
                 merlin_id = Merlin.objects.get(name=var_name)
@@ -261,6 +245,7 @@ class GettingStartedDashboard(generic.ObjectListView):
                     nautobot_model=nautobot_object,
                     nautobot_add_link=new_url,
                     merlin_link=wizard_url,
+                    nautobot_list_link=list_url,
                 )
 
     def get(self, request, *args, **kwargs):

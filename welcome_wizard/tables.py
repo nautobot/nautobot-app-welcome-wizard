@@ -34,6 +34,10 @@ COMPLETED_INFO = """
 {% endif %}
 """
 
+DASHBOARD_LINK = """
+<a href="{% url record.nautobot_list_link %}">{{ record.name }}</a>
+"""
+
 
 class ManufacturerTable(BaseTable):
     """Table to show the ManufactureImport List."""
@@ -75,7 +79,7 @@ class DeviceTypeTable(BaseTable):
 class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods
     """Table for the Dashboard."""
 
-    name = tables.Column(accessor="name", verbose_name="Name")
+    name = tables.TemplateColumn(verbose_name="Name", template_code=DASHBOARD_LINK)
     imports = tables.TemplateColumn(verbose_name="Actions", template_code=IMPORT_BUTTONS)
     completed_info = tables.TemplateColumn(verbose_name="Completed", template_code=COMPLETED_INFO)
 
