@@ -4,7 +4,7 @@ from nautobot.extras.plugins import PluginMenuItem
 plugin_items = [
     PluginMenuItem(
         link="plugins:welcome_wizard:dashboard",
-        link_text="Getting Started Wizard",
+        link_text="Getting Started Dashboard",
         permissions=["welcome_wizard.view_dashboard"],
     ),
 ]
