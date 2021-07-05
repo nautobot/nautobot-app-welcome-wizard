@@ -8,7 +8,7 @@
 
 {% block header %}
     <div class="row noprint">
-        <div class="col-sm-8 col-md-9">
+        <div class="col-sm-9">
             <ol class="breadcrumb">
                 <li><a href="{% url 'plugins:welcome_wizard:dashboard' %}">Dashboard</a></li>
             </ol>
@@ -19,7 +19,7 @@
 {% block content %}
 <h1>{% block title %}Getting Started Dashboard{% endblock %}</h1>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-9">
         {% include 'utilities/obj_table.html' %}
     </div>
 </div>
