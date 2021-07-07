@@ -2,51 +2,34 @@
 
 ## Import Manufacturers
 
-You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nuatobot.
+You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nautobot.
 
 ![Import Manufacturers](./img/merlin_import_manufacturers.png)
 
-If the `enable_devicetype-library` setting is choosen, an automatic refresh will happen on page load. You may need to refresh the page in order see the manufacturers.
+If the `enable_devicetype-library` setting is enabled, an automatic sync of the repository will happen on page load. You may need to refresh the page in order see the manufacturers.
 
 ![Refresh Manufacturers](./img/merlin_import_manufacturers_refresh.png)
 
+Manufactures on this page are not automatically loaded into Nautobot, this is to keep the Nautobot Manufactures page from being bloated with Manufactures you may not need. Instead, you can choose to import the Manufactures from here. To import a single Manufacturer, you can click on the blue import button in the actions column of the chosen Manufacturer. In the below example we click the import button for Cisco. A confirmation page will load, asking to confirm importing the selected Manufacturer. Click `[Import]` to confirm.
+
+![Import Cisco](./img/import_cisco.png)
+
+Alternatively, you can choose to bulk import Manufacturers. Select the Manufacturers you would like to import by placing a checkmark next to their names. Then select the blue `[Import Selected]` button at the bottom of the page.
+
+![Bulk Manufacturers Import](./img/bulk_import_manufacturer.png)
+
+![Bulk Manfufacturers Import Complete](./img/bulk_import_manufactures_complete.png)
+
+Navigating to Manufacturers inside Nautobot will confirm these manufacturers were imported.
+
+![Nautobot Manufacturers](./img/manufacturers_confirmed.png)
+
 ## Import Device Types
 
-You can browse to the `Import Device Types` page to easily import selected device types into Nuatobot.
+You can browse to the `Import Device Types` page to easily import selected device types into Nautobot.
 
 ![Import Device Types](./img/merlin_import_device_type.png)
 
-## Git Settings
+Importing Device Types happens the same way as Manufacturers. Device Types can also be filtered by Manufacturer by using the search function or the Manufacturer dropdown.
 
-The plugin makes heavy use of the nautobot git data sources feature. This set of instructions will walk an operator through setting up the Import Wizard repository.  
-
-Import Wizard uses the file and folder structure of [devicetype-library](https://github.com/netbox-community/devicetype-library).  Currently Import Wizard looks for a folder in the root directory called `device-types`.  Convention has folders for manufacturers and the device type yaml files underneath the manufacturers folder.  The [readme](https://github.com/netbox-community/devicetype-library/blob/master/README.md) for the [devicetype-library](https://github.com/netbox-community/devicetype-library) goes into the details of what is required in the yaml files.
-
-In order to setup this repository, go to Nautobot and navigate to the Data Sources Git integration. `Extensibility -> Git Repositories`.
-
-![Import Wizard Git Navigation](./img/merlin_gitrepo.png)
-
-From the Git Repositories page we can add the **Import Wizard** repository.
-
-Click on `[+ADD]`.
-
-You will now be presented with a page to fill in the repository details.
-
-Parameters:
-|Field|Explanation|
-|:--|:--|
-|Name|User friendly name for the backup repo.|
-|Slug|Auto-generated based on the `name` provided.|
-|Remote URL|The URL pointing to the Git repo that stores the backup configuration files. Current git url usage is limited to `http` or `https`.|
-|Branch|The branch in the Git repo to use. Defaults to `main`.|
-|Token|The token is a personal access token for the `username` provided.  For more information on generating a personal access token. [Github Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
-|Username|The Git username that corresponds with the personal access token above.|
-|Provides|Valid providers for Git Repo.|
-<br>
-
-Select `Import Wizard` and click on `[Create]`.
-
-Once you click `[Create]` and the repository syncs, the main page will now show the repo along with its status.
-![Git Backup Repo Status](./img/merlin_gitrepo_syncd.png)
-
-For their respective features, the "Provides" field could be `Import Wizard` and jinja templates.
+![Device Type Filtered](./img/merlin_import_device_type_filtered.png)

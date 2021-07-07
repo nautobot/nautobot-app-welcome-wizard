@@ -20,4 +20,6 @@ markdown_extensions:
       permalink: true
 nav:
   - Introduction: 'index.md'
+  - 'Getting Started Dashboard': 'dashboard.md'
   - 'Import Wizard': 'import_wizard.md'
+  - 'Middleware': 'middleware.md'

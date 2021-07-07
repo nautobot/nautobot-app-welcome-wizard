@@ -61,9 +61,9 @@ The development environment can be used in 2 ways, first with a local poetry env
 
 #### Local Poetry Development Environment
 
-1.  Copy `development/creds.example.env` to `development/creds.env` (This file will be ignored by git and docker)
-2.  Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_ROOT` variables in `development/creds.env`
-3.  Create an invoke.yml with the following contents at the root of the repo:
+1. Copy `development/creds.example.env` to `development/creds.env` (This file will be ignored by git and docker)
+2. Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_ROOT` variables in `development/creds.env`
+3. Create an invoke.yml with the following contents at the root of the repo:
 
 ```shell
 ---
@@ -73,7 +73,7 @@ welcome_wizard:
     - "docker-compose.requirements.yml"
 ```
 
-3.  Run the following commands:
+4. Run the following commands:
 
 ```shell
 poetry shell
@@ -82,7 +82,7 @@ export $(cat development/dev.env | xargs)
 export $(cat development/creds.env | xargs) 
 ```
 
-4.  You can now run nautobot-server commands as you would from the [Nautobot documentation](https://nautobot.readthedocs.io/en/latest/) for example to start the development server:
+5. You can now run nautobot-server commands as you would from the [Nautobot documentation](https://nautobot.readthedocs.io/en/latest/) for example to start the development server:
 
 ```shell
 nautobot-server runserver 0.0.0.0:8080 --insecure
@@ -92,8 +92,8 @@ nautobot-server runserver 0.0.0.0:8080 --insecure
 
 This project is managed by [Python Poetry](https://python-poetry.org/) and has a few requirements to setup your development environment:
 
-1.  Install Poetry, see the [Poetry Documentation](https://python-poetry.org/docs/#installation) for your operating system.
-2.  Install Docker, see the [Docker documentation](https://docs.docker.com/get-docker/) for your operating system.
+1. Install Poetry, see the [Poetry Documentation](https://python-poetry.org/docs/#installation) for your operating system.
+2. Install Docker, see the [Docker documentation](https://docs.docker.com/get-docker/) for your operating system.
 
 Once you have Poetry and Docker installed you can run the following commands to install all other development dependencies in an isolated python virtual environment:
 
