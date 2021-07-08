@@ -6,10 +6,9 @@ The Nautobot Welcome Wizard makes use of the [Git™ as a Data Source](https://n
 
 This set of instructions will walk an operator through setting up the Import Wizard repository.  
 
-Import Wizard uses the file and folder structure of [devicetype-library](https://github.com/netbox-community/devicetype-library).  Currently Import Wizard looks for a folder in the root directory called `device-types`.  Convention has folders for manufacturers and the device type yaml files underneath the manufacturers folder.  The [readme](https://github.com/netbox-community/devicetype-library/blob/master/README.md) for the [devicetype-library](https://github.com/netbox-community/devicetype-library) goes into the details of what is required in the yaml files.
+Import Wizard uses the file and folder structure of [devicetype-library](https://github.com/netbox-community/devicetype-library).  Currently, Import Wizard looks for a folder in the root directory called `device-types`.  Convention has folders for manufacturers and the device type yaml files underneath the manufacturers folder.  The [readme](https://github.com/netbox-community/devicetype-library/blob/master/README.md) for the [devicetype-library](https://github.com/netbox-community/devicetype-library) goes into the details of what is required in the yaml files.
 
-!!! info
-    The [devicetype-library](https://github.com/netbox-community/devicetype-library) is not required to be used, you can swap it with your own repo, it just needs to follow the same structure.
+>The [devicetype-library](https://github.com/netbox-community/devicetype-library) is not required to be used. You can swap it with your own repo as long as it follows the same structure.
 
 In order to setup this repository, go to Nautobot and navigate to the Data Sources Git integration. `Extensibility -> Git Repositories`.
 

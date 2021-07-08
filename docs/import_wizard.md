@@ -10,15 +10,15 @@ If the `enable_devicetype-library` setting is enabled, an automatic sync of the 
 
 ![Refresh Manufacturers](./img/merlin_import_manufacturers_refresh.png)
 
-Manufactures on this page are not automatically loaded into Nautobot, this is to keep the Nautobot Manufactures page from being bloated with Manufactures you may not need. Instead, you can choose to import the Manufactures from here. To import a single Manufacturer, you can click on the blue import button in the actions column of the chosen Manufacturer. In the below example we click the import button for Cisco. A confirmation page will load, asking to confirm importing the selected Manufacturer. Click `[Import]` to confirm.
+Manufactures on this page are not automatically loaded into Nautobot. This is to keep the Nautobot Manufactures page from being bloated with Manufactures you may not need. Instead, you can choose to import the Manufactures from here. To import a single Manufacturer click on the blue import button in the actions column of the chosen Manufacturer. In the below example we click the import button for Cisco. A confirmation page will load asking to confirm importing the selected Manufacturer. Click `[Import]` to confirm.
 
 ![Import Cisco](./img/import_cisco.png)
 
-Alternatively, you can choose to bulk import Manufacturers. Select the Manufacturers you would like to import by placing a checkmark next to their names. Then select the blue `[Import Selected]` button at the bottom of the page.
+Alternatively, you can choose to bulk import Manufacturers. Select the Manufacturers you would like to import by placing a check mark next to their names. Then select the blue `[Import Selected]` button at the bottom of the page.
 
 ![Bulk Manufacturers Import](./img/bulk_import_manufacturer.png)
 
-![Bulk Manfufacturers Import Complete](./img/bulk_import_manufactures_complete.png)
+![Bulk Manufacturers Import Complete](./img/bulk_import_manufactures_complete.png)
 
 Navigating to Manufacturers inside Nautobot will confirm these manufacturers were imported.
 
