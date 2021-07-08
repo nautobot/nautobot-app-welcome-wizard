@@ -18,7 +18,7 @@ class Merlin(BaseModel):
     ignored = models.BooleanField(default=False)
     nautobot_model = models.CharField(verbose_name="Related Nautobot Model", default="", max_length=255)
     nautobot_add_link = models.CharField(verbose_name="Nautobot Model Add One Link", default="", max_length=255)
-    merlin_link = models.CharField(max_length=200, default="")
+    merlin_link = models.CharField(max_length=200, default="", blank=True)
     nautobot_list_link = models.CharField(verbose_name="Nautobot Model List Link", default="", max_length=255)
 
     class Meta:

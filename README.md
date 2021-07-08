@@ -36,7 +36,7 @@ PLUGINS = ["welcome_wizard"]
 # }
 ```
 
-The plugin behavior can be controlled with the following list of settings
+The plugin behavior can be controlled with the following list of settings:
 
 - `enable_devicetype-library`: If enabled the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
 
@@ -46,24 +46,24 @@ Log in to Nautobot and you will be guided through Banners on the top of the page
 
 ## Contributing
 
-Pull requests are welcomed and automatically built and tested against multiple version of Python and multiple version of Nautobot through TravisCI.
+Pull Requests are welcome and automatically built and tested against multiple versions of Python and Nautobot through TravisCI.
 
 The project is packaged with a light development environment based on `docker-compose` to help with the local development of the project and to run the tests within TravisCI.
 
-The project is following Network to Code software development guideline and is leveraging:
+The project is following Network to Code's software development guideline and is leveraging:
 
 - Black, Pylint, Bandit and pydocstyle for Python linting and formatting.
 - Django unit test to ensure the plugin is working properly.
 
 ### Development Environment
 
-The development environment can be used in 2 ways, first with a local poetry environment if you wish to develop outside of docker.  Second inside of a docker container.  The below commands will star the nautobot server listening on port 8080.
+The development environment can be used in 2 ways. First, with a local poetry environment if you wish to develop outside of docker, and second, inside of a docker container. The below commands will start the Nautobot server listening on port 8080.
 
 #### Local Poetry Development Environment
 
-1.  Copy `development/creds.example.env` to `development/creds.env` (This file will be ignored by git and docker)
-2.  Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_ROOT` variables in `development/creds.env`
-3.  Create an invoke.yml with the following contents at the root of the repo:
+1. Copy `development/creds.example.env` to `development/creds.env` (This file will be ignored by git and docker)
+2. Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_ROOT` variables in `development/creds.env`
+3. Create an invoke.yml with the following contents at the root of the repo:
 
 ```shell
 ---
@@ -73,16 +73,16 @@ welcome_wizard:
     - "docker-compose.requirements.yml"
 ```
 
-3.  Run the following commands:
+4. Run the following commands:
 
 ```shell
 poetry shell
 poetry install
 export $(cat development/dev.env | xargs)
-export $(cat development/creds.env | xargs) 
+export $(cat development/creds.env | xargs)
 ```
 
-4.  You can now run nautobot-server commands as you would from the [Nautobot documentation](https://nautobot.readthedocs.io/en/latest/) for example to start the development server:
+5. You can now run nautobot-server commands as you would from the [Nautobot documentation](https://nautobot.readthedocs.io/en/latest/). For example, to start the development server:
 
 ```shell
 nautobot-server runserver 0.0.0.0:8080 --insecure
@@ -92,8 +92,8 @@ nautobot-server runserver 0.0.0.0:8080 --insecure
 
 This project is managed by [Python Poetry](https://python-poetry.org/) and has a few requirements to setup your development environment:
 
-1.  Install Poetry, see the [Poetry Documentation](https://python-poetry.org/docs/#installation) for your operating system.
-2.  Install Docker, see the [Docker documentation](https://docs.docker.com/get-docker/) for your operating system.
+1. Install Poetry, see the [Poetry Documentation](https://python-poetry.org/docs/#installation) for your operating system.
+2. Install Docker, see the [Docker documentation](https://docs.docker.com/get-docker/) for your operating system.
 
 Once you have Poetry and Docker installed you can run the following commands to install all other development dependencies in an isolated python virtual environment:
 
@@ -105,7 +105,7 @@ invoke start
 
 ### CLI Helper Commands
 
-The project is coming with a CLI helper based on [invoke](http://www.pyinvoke.org/) to help setup the development environment. The commands are listed below in 3 categories `dev environment`, `utility` and `testing`. 
+The project includes a CLI helper based on [invoke](http://www.pyinvoke.org/) to help setup the development environment. The commands are listed below in 3 categories `dev environment`, `utility` and `testing`.
 
 Each command can be executed with `invoke <command>`. Environment variables `INVOKE_WELCOME_WIZARD_PYTHON_VER` and `INVOKE_WELCOME_WIZARD_NAUTOBOT_VER` may be specified to override the default versions. Each command also has its own help `invoke <command> --help`
 
@@ -144,11 +144,11 @@ Each command can be executed with `invoke <command>`. Environment variables `INV
 ## Questions
 
 For any questions or comments, please check the [FAQ](FAQ.md) first and feel free to swing by the [Network to Code slack channel](https://networktocode.slack.com/) (channel #networktocode).
-Sign up [here](http://slack.networktocode.com/)
+Sign up [here](https://slack.networktocode.com/)
 
 ## Screenshots
 
-![Merlin Banner](docs/img/merlin_banner.png)  
-![Merlin Middleware](docs/img/merlin_middleware_x3.png)  
-![Merlin Dashboard](docs/img/merlin_dashboard.png)  
-![Merlin Import Device Types](docs/img/merlin_import_device_type.png)  
+![Welcome Wizard Banner](docs/img/merlin_banner.png)  
+![Welcome Wizard Middleware](docs/img/merlin_middleware_x3.png)  
+![Welcome Wizard Dashboard](docs/img/getting_started_dashboard.png)  
+![Welcome Wizard Import Device Types](docs/img/merlin_import_device_type.png)
