@@ -5,7 +5,7 @@
 
 A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
-![Merlin GIF](docs/img/merlin.gif)
+![Wecome Wizard GIF](docs/img/WelcomeWizard.gif)
 
 ## Installation
 
