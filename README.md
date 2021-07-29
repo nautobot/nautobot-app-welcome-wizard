@@ -150,5 +150,6 @@ Sign up [here](https://slack.networktocode.com/)
 
 ![Welcome Wizard Banner](docs/img/merlin_banner.png)  
 ![Welcome Wizard Middleware](docs/img/merlin_middleware_x3.png)  
-![Welcome Wizard Dashboard](docs/img/getting_started_dashboard.png)  
+![Welcome Wizard Dashboard](docs/img/welcome_wizard.png)  
+![Welcome Wizard Completions](docs/img/dashboard_with_completions.png)
 ![Welcome Wizard Import Device Types](docs/img/merlin_import_device_type.png)
