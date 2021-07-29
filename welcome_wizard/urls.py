@@ -6,7 +6,7 @@ from . import views
 app_name = "welcome_wizard"
 
 urlpatterns = [
-    path("dashboard/", views.GettingStartedDashboard.as_view(), name="dashboard"),
+    path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),
     path("manufacturers/", views.ManufacturerListView.as_view(), name="manufacturer"),
     path("devicetypes/", views.DeviceTypeListView.as_view(), name="devicetype"),
     path(

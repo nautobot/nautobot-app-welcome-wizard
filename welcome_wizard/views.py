@@ -171,7 +171,7 @@ class DeviceTypeBulkImportView(BulkImportView):
     breadcrumb_name = "Import Device Types"
 
 
-class GettingStartedDashboard(generic.ObjectListView):
+class WelcomeWizardDashboard(generic.ObjectListView):
     """Welcome Wizard dashboard view.
 
     Args:
