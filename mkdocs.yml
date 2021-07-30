@@ -2,7 +2,7 @@ dev_addr: '127.0.0.1:8001'
 edit_uri: edit/main/welcome_wizard/docs
 site_name: Nautobot Welcome Wizard Documentation
 site_url: https://nautobot-welcome-wizard.readthedocs.io/
-repo_url: https://github.com/networktocode-llc/merlin
+repo_url: https://github.com/nautobot/nautobot-plugin-welcome-wizard
 python:
   install:
     - requirements: docs/requirements.txt
