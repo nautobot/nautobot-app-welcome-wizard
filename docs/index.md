@@ -14,7 +14,7 @@ The Welcome Wizard adds four (4) key features:
 
 3. [**Helpful Middleware**](middleware.md) - Welcome Wizard includes middleware banners to assist with Nautobot resource creation.
 
-4. [**Getting Started Dashboard**](dashboard.md) - The Getting Started Dashboard contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them. This ties all of the features together.
+4. [**Dashboard**](dashboard.md) - The Welcome Wizard Dashboard contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them. This ties all of the features together.
 
 ## Supported Python Versions
 
