@@ -9,6 +9,8 @@ A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
 ## Installation
 
+Installing the Nautobot Welcome Wizard follows the [Plugin Installation](https://nautobot.readthedocs.io/en/stable/plugins/#installing-plugins).
+
 The plugin is available as a Python package in pypi and can be installed with pip
 
 ```shell
@@ -23,10 +25,10 @@ To ensure Welcome Wizard is automatically re-installed during future upgrades, c
 # echo nautobot-welcome-wizard >> local_requirements.txt
 ```
 
-Once installed, the plugin needs to be enabled in your `configuration.py`
+Once installed, the plugin needs to be enabled in your `nautobot_config.py`
 
 ```python
-# In your configuration.py
+# In your nautobot_config.py
 PLUGINS = ["welcome_wizard"]
 
 # PLUGINS_CONFIG = {
@@ -39,6 +41,8 @@ PLUGINS = ["welcome_wizard"]
 The plugin behavior can be controlled with the following list of settings:
 
 - `enable_devicetype-library`: If enabled the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
+
+After updating nautobot_config.py, you will need to run `nautobot-server migrate` and then reload the nautobot service and the nautobot-worker service.
 
 ## Usage
 
