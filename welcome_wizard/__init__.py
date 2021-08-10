@@ -1,6 +1,6 @@
 """Plugin declaration for Welcome Wizard."""
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from django.db.models.signals import post_migrate
 from nautobot.extras.plugins import PluginConfig
@@ -15,7 +15,7 @@ class WelcomeWizardConfig(PluginConfig):
     verbose_name = "Nautobot Welcome Wizard"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Nautobot's Geting Started Wizard."
+    description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
     required_settings = []
     min_version = "1.0.0b4"

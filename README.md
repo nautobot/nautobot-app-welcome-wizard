@@ -7,6 +7,28 @@ A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
 ![Wecome Wizard GIF](docs/img/WelcomeWizard.gif)
 
+## Overview
+
+The Welcome Wizard is an open-source Nautobot Plugin with the goal to assist users with the necessary initial steps in populating data within Nautobot.
+
+The Welcome Wizard adds four (4) key features:
+
+### Import Wizard
+
+Welcome Wizard uses the `Import Wizard` to allow ease of adding community defined Device Types and Manufacturers into Nautobot. This is built upon the [git datasources](https://nautobot.readthedocs.io/en/stable/user-guides/git-data-source/#git-as-a-data-source) feature of Nautobot.
+
+### Quick-Start Settings
+
+Welcome Wizard includes by default the [DeviceType-library](https://github.com/netbox-community/devicetype-library), but this can be disabled and a custom library can be used instead.
+
+### Helpful Middleware
+
+Welcome Wizard includes banners in forms to alert the user when required form fields have no associated resources in Nautobot.
+
+### Welcome Wizard Dashboard
+
+The Welcome Wizard Dashboard contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them. This ties all of the features together.1
+
 ## Installation
 
 Installing the Nautobot Welcome Wizard follows the [Plugin Installation](https://nautobot.readthedocs.io/en/stable/plugins/#installing-plugins).
