@@ -71,7 +71,7 @@ After updating nautobot_config.py, you will need to run `nautobot-server migrate
 After installing the plugin and modifying `nautobot_config.py`, as the `nautobot` user, run the server migration:
 
 ```no-highlight
-$ nautobot-server migrate
+$ nautobot-server post_upgrade
 ```
 
 Finally, as root, restart Nautobot and the Nautobot worker.
