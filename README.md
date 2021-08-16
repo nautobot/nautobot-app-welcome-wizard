@@ -64,7 +64,7 @@ The plugin behavior can be controlled with the following list of settings:
 
 - `enable_devicetype-library`: If enabled the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
 
-After updating nautobot_config.py, you will need to run `nautobot-server migrate` and then reload the nautobot service and the nautobot-worker service as shown below.
+After updating nautobot_config.py, you will need to run `nautobot-server post_upgrade` and then reload the nautobot service and the nautobot-worker service as shown below.
 
 ### Final Configuration Steps
 
