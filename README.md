@@ -82,7 +82,7 @@ $ sudo systemctl restart nautobot nautobot-worker
 
 ## Upgrades
 
-When a new release comes out it may be necessary to run a migration of the database to account for any changes in the data models used by this plugin. Execute the command `nautobot-server migrate` from the Nautobot install `nautobot/` directory after updating the package.
+When upgrading to a new version of this plugin, it may be necessary to run database migrations, copy new static files, and so forth. These will all be handled by executing the command `nautobot-server post_upgrade` from the Nautobot install `nautobot/` directory after updating the plugin package.
 
 
 ## Usage
