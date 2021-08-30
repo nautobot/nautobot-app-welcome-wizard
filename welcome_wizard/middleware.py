@@ -29,6 +29,9 @@ class Prerequisites:
         if request.path == "/":
             merlin_msg = f"<a href={reverse('plugins:welcome_wizard:dashboard')}>The Nautobot Welcome Wizard can help you get started with Nautobot!</a>"
             messages.success(request, mark_safe(merlin_msg))  # nosec
+        elif request.path.startswith("/admin/"):
+            # Ignore admin pages in middleware
+            pass
         elif request.path.endswith("/add/"):
             # model = view_func.view_class.model_form.Meta.model
             base_fields = view_func.view_class.model_form.base_fields
