@@ -41,7 +41,7 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "develop-latest",
+            "nautobot_ver": "1.0.1",
             "project_name": "welcome_wizard",
             "python_ver": "3.6",
             "local": False,
@@ -304,6 +304,17 @@ def pydocstyle(context):
 def bandit(context):
     """Run bandit to validate basic static code security analysis."""
     command = "bandit --recursive . --configfile .bandit.yml"
+    run_command(context, command)
+
+
+@task
+def yamllint(context):
+    """Run yamllint to validate formating adheres to NTC defined YAML standards.
+
+    Args:
+        context (obj): Used to run specific commands
+    """
+    command = "yamllint . --format standard"
     run_command(context, command)
 
 

@@ -1,7 +1,7 @@
 
 ARG PYTHON_VER
 ARG NAUTOBOT_VER
-FROM nniehoff/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER} as welcome_wizard-dev
+FROM ghcr.io/nautobot/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER} as welcome_wizard-dev
 
 WORKDIR /source
 
