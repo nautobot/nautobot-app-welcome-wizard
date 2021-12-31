@@ -413,6 +413,8 @@ def tests(context, failfast=False):
     flake8(context)
     print("Running bandit...")
     bandit(context)
+    print("Running yamllint...")
+    yamllint(context)
     print("Running pydocstyle...")
     pydocstyle(context)
     print("Running pylint...")
