@@ -1,7 +1,10 @@
 """Views for Welcome Wizard."""
+import uuid
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
@@ -127,22 +130,28 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
             onboarded = []
 
             for obj in self.model.objects.filter(pk__in=pk_list):
+                job_result = JobResult.objects.create(
+                    name="welcome_wizard_import",
+                    obj_type=ContentType.objects.get(app_label="extras", model="job"),
+                    user=None,
+                    job_id=uuid.uuid4(),
+                )
                 if self.model == ManufacturerImport:
                     data = {"manufacturer": obj.name}
                     job = WelcomeWizardImportManufacturer()
-                    job.job_result = JobResult()
+                    job.job_result = job_result
                     job.run(data, commit=True)
                     onboarded.append(obj.name)
 
                 elif self.model == DeviceTypeImport:
                     job = WelcomeWizardImportDeviceType()
                     data = {"device_type": obj.filename}
-                    job.job_result = JobResult()
+                    job.job_result = job_result
                     job.run(data, commit=True)
                     onboarded.append(obj.name)
 
             # Currently treat everything as a success...
-            messages.success(request, "Onboarded {} objects.".format(len(onboarded)))
+            messages.success(request, f"Onboarded {len(onboarded)} objects.")
 
         return redirect(self.return_url)
 
