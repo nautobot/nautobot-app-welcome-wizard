@@ -24,7 +24,7 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
     # /animals/ directory at the repository root.
     device_type_path = os.path.join(repository_record.filesystem_path, "device-types")
     for filename in Path(device_type_path).rglob("*.yaml"):
-        with open(filename) as file:
+        with open(filename, encoding="utf8") as file:
             data = yaml.safe_load(file)
 
         manufacturers.add(data["manufacturer"])

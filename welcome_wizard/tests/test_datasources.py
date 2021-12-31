@@ -13,16 +13,25 @@ from django.test import RequestFactory, TestCase
 from nautobot.extras.choices import JobResultStatusChoices
 from nautobot.extras.datasources.git import pull_git_repository_and_refresh_data
 from nautobot.extras.datasources.registry import get_datasource_contents
-from nautobot.extras.models import (
-    GitRepository,
-    JobResult,
-)
+from nautobot.extras.models import GitRepository, JobResult, models
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 # Use the proper swappable User model
 User = get_user_model()
 
 
+def nautobot_jobs_logs_decorator():
+    """Decorator for mock patch if < Nautobot 1.2."""
+
+    def decorator(func):
+        if not hasattr(models, "JOB_LOGS"):
+            return func
+        return mock.patch("nautobot.extras.models.models.JOB_LOGS", None)(func)
+
+    return decorator
+
+
+@nautobot_jobs_logs_decorator()
 @mock.patch("nautobot.extras.datasources.git.GitRepo")
 class GitTest(TestCase):
     """Git Tests."""
@@ -47,9 +56,10 @@ class GitTest(TestCase):
         )
         self.repo.save(trigger_resync=False)
 
-        self.job_result = JobResult(
+        self.job_result = JobResult.objects.create(
             name=self.repo.name,
             obj_type=ContentType.objects.get_for_model(GitRepository),
+            user=None,
             job_id=uuid.uuid4(),
         )
 
@@ -65,7 +75,9 @@ class GitTest(TestCase):
                 mock_git_repo.side_effect = create_empty_repo
                 mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
 
-                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result)
+                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result.pk)
+
+                self.job_result.refresh_from_db()
 
                 self.assertEqual(
                     self.job_result.status,
@@ -86,7 +98,7 @@ class GitTest(TestCase):
                     # Load device-types data for git-repository
                     os.makedirs(os.path.join(path, "device-types"))
                     os.makedirs(os.path.join(path, "device-types", "Cisco"))
-                    with open(os.path.join(path, "device-types", "Cisco", "fake.yaml"), "w") as file:
+                    with open(os.path.join(path, "device-types", "Cisco", "fake.yaml"), "w", encoding="utf8") as file:
                         yaml.dump(
                             {"manufacturer": "Cisco", "model": "Fake Model"},
                             file,
@@ -96,7 +108,9 @@ class GitTest(TestCase):
                 mock_git_repo.side_effect = populate_repo
                 mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
 
-                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result)
+                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result.pk)
+
+                self.job_result.refresh_from_db()
 
                 self.assertEqual(
                     self.job_result.status,

@@ -9,10 +9,12 @@ from nautobot.dcim.models.sites import Site
 from nautobot.utilities.testing.views import TestCase
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.tests.test_datasources import nautobot_jobs_logs_decorator
 
 User = get_user_model()
 
 
+@nautobot_jobs_logs_decorator()
 class ManufacturerTestCase(TestCase):
     """Tests the ManufacturerImport Views."""
 
@@ -73,6 +75,7 @@ class ManufacturerTestCase(TestCase):
         self.assertHttpStatus(response, 403)
 
 
+@nautobot_jobs_logs_decorator()
 class DeviceTypeTestCase(TestCase):
     """Tests the DeviceTypeImport Views."""
 

@@ -41,12 +41,17 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "1.0.1",
+            "nautobot_ver": "1.2.2",
             "project_name": "welcome_wizard",
             "python_ver": "3.6",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development/"),
-            "compose_files": ["docker-compose.requirements.yml", "docker-compose.base.yml", "docker-compose.dev.yml"],
+            "compose_files": [
+                "docker-compose.requirements.yml",
+                "docker-compose.base.yml",
+                "docker-compose.dev.yml",
+                "docker-compose.docs.yml",
+            ],
         }
     }
 )
