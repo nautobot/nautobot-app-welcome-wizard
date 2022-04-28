@@ -28,14 +28,14 @@ from welcome_wizard.forms import (
 from welcome_wizard.jobs import WelcomeWizardImportDeviceType, WelcomeWizardImportManufacturer
 from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
 from welcome_wizard.models.merlin import Merlin
-from welcome_wizard.tables import ManufacturerTable, DeviceTypeTable, DashboardTable
+from welcome_wizard.tables import ManufacturerWizardTable, DeviceTypeWizardTable, DashboardTable
 
 
 class ManufacturerListView(generic.ObjectListView):
     """Table of all Manufacturers discovered in the Git Repository."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
-    table = ManufacturerTable
+    table = ManufacturerWizardTable
     queryset = ManufacturerImport.objects.all()
     action_buttons = None
     template_name = "welcome_wizard/manufacturer.html"
@@ -58,7 +58,7 @@ class DeviceTypeListView(generic.ObjectListView):
     """Table of Device Types based on the Manufacturer."""
 
     permission_required = "welcome_wizard.view_devicetypeimport"
-    table = DeviceTypeTable
+    table = DeviceTypeWizardTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
     action_buttons = None
