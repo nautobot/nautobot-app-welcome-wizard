@@ -39,7 +39,7 @@ DASHBOARD_LINK = """
 """
 
 
-class ManufacturerTable(BaseTable):
+class ManufacturerWizardTable(BaseTable):
     """Table to show the ManufactureImport List."""
 
     pk = ToggleColumn()
@@ -57,7 +57,7 @@ class ManufacturerTable(BaseTable):
             empty_text = "Adding data from GitRepository, please refresh"
 
 
-class DeviceTypeTable(BaseTable):
+class DeviceTypeWizardTable(BaseTable):
     """Table to show the DeviceTypeImport List."""
 
     pk = ToggleColumn()

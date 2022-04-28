@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nautobot-welcome-wizard"
-version = "1.0.3"
+version = "1.0.4"
 description = "Nautobot's Welcome Wizard"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 
@@ -35,7 +35,7 @@ pydocstyle = "*"
 flake8 = "*"
 django-debug-toolbar = "*"
 coverage = "*"
-mkdocs = "^1.1.2"
+mkdocs = "^1.2.3"
 coverage-badge = "^1.0.1"
 
 [tool.black]
