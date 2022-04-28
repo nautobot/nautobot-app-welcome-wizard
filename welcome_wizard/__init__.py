@@ -1,6 +1,6 @@
 """Plugin declaration for Welcome Wizard."""
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 
 from django.db.models.signals import post_migrate
 from nautobot.extras.plugins import PluginConfig
