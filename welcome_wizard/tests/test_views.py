@@ -30,7 +30,7 @@ class WizardTestCaseMixin:
         """Setup shared testuser, statuses and client."""
 
         # Create the test user and assign permissions
-        self.user = User.objects.create_user(username="testuser")
+        self.user = User.objects.create_user(username="wizard_testuser")
         self.add_permissions(*self.user_permissions)
 
         if client:
