@@ -18,7 +18,7 @@ def banner(context, *args, **kwargs) -> Optional[PluginBanner]:
     """
     content = format_html(
         "<a href={}>The Nautobot Welcome Wizard can help you get started with Nautobot!</a>",
-        reverse('plugins:welcome_wizard:dashboard'),
+        reverse("plugins:welcome_wizard:dashboard"),
     )
 
     required_permission = "welcome_wizard.view_merlin"
