@@ -41,9 +41,9 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "1.2.2",
+            "nautobot_ver": "1.3.3",
             "project_name": "welcome_wizard",
-            "python_ver": "3.6",
+            "python_ver": "3.8",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development/"),
             "compose_files": [
@@ -331,6 +331,13 @@ def check_migrations(context):
     run_command(context, command)
 
 
+@task
+def build_and_check_docs(context):
+    """Build documentation to be available within Nautobot."""
+    command = "mkdocs build --no-directory-urls --strict"
+    run_command(context, command)
+
+
 @task(
     help={
         "keepdb": "save and re-use test database between test runs for faster re-testing.",
@@ -419,6 +426,8 @@ def tests(context, failfast=False):
     pydocstyle(context)
     print("Running pylint...")
     pylint(context)
+    print("Running mkdocs...")
+    build_and_check_docs(context)
     print("Running unit tests...")
     unittest(context, failfast=failfast)
     print("All tests have passed!")

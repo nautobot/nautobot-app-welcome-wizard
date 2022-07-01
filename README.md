@@ -39,7 +39,7 @@ The plugin is available as a Python package in pypi and can be installed with pi
 pip install nautobot-welcome-wizard
 ```
 
-> The plugin is compatible with Nautobot 1.0.0b4 and higher
+> The plugin is compatible with Nautobot 1.2.0 and higher
 
 To ensure Welcome Wizard is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-welcome-wizard` package:
 

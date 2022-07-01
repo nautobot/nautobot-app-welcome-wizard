@@ -8,33 +8,24 @@ import yaml
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory
 
 from nautobot.extras.choices import JobResultStatusChoices
 from nautobot.extras.datasources.git import pull_git_repository_and_refresh_data
 from nautobot.extras.datasources.registry import get_datasource_contents
-from nautobot.extras.models import GitRepository, JobResult, models
+from nautobot.extras.models import GitRepository, JobResult
+from nautobot.utilities.testing import TransactionTestCase
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 # Use the proper swappable User model
 User = get_user_model()
 
 
-def nautobot_jobs_logs_decorator():
-    """Decorator for mock patch if < Nautobot 1.2."""
-
-    def decorator(func):
-        if not hasattr(models, "JOB_LOGS"):
-            return func
-        return mock.patch("nautobot.extras.models.models.JOB_LOGS", None)(func)
-
-    return decorator
-
-
-@nautobot_jobs_logs_decorator()
 @mock.patch("nautobot.extras.datasources.git.GitRepo")
-class GitTest(TestCase):
+class GitTest(TransactionTestCase):
     """Git Tests."""
+
+    databases = ("default", "job_logs")
 
     COMMIT_HEXSHA = "88dd9cd78df89e887ee90a1d209a3e9a04e8c841"
 

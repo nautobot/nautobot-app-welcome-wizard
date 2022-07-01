@@ -31,6 +31,26 @@ from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import ManufacturerWizardTable, DeviceTypeWizardTable, DashboardTable
 
 
+def check_sync(instance, request):
+    """If Device Type Library is enabled and no data in queryset, run the sync."""
+    if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not instance.queryset.exists():
+        try:
+            repo = GitRepository.objects.get(slug="devicetype_library")
+        except GitRepository.DoesNotExist:
+            repo = GitRepository(
+                name="Devicetype-library",
+                slug="devicetype_library",
+                remote_url="https://github.com/netbox-community/devicetype-library.git",
+                provided_contents=[
+                    "welcome_wizard.import_wizard",
+                ],
+                branch="master",
+            )
+            repo.save(trigger_resync=False)
+
+        enqueue_pull_git_repository_and_refresh_data(repo, request)
+
+
 class ManufacturerListView(generic.ObjectListView):
     """Table of all Manufacturers discovered in the Git Repository."""
 
@@ -42,15 +62,9 @@ class ManufacturerListView(generic.ObjectListView):
     filterset = ManufacturerImportFilterSet
     filterset_form = ManufacturerImportFilterForm
 
-    def check_sync(self, request):
-        """If Device Type Library is enabled and no data in queryset, run the sync."""
-        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not self.queryset.exists():
-            repo = GitRepository.objects.get(slug="devicetype_library")
-            enqueue_pull_git_repository_and_refresh_data(repo, request)
-
     def get(self, request, *args, **kwargs):
         """Add Check Sync to Get."""
-        self.check_sync(request=request)
+        check_sync(instance=self, request=request)
         return super().get(request, *args, **kwargs)
 
 
@@ -65,15 +79,9 @@ class DeviceTypeListView(generic.ObjectListView):
     template_name = "welcome_wizard/devicetype.html"
     filterset_form = DeviceTypeImportFilterForm
 
-    def check_sync(self, request):
-        """If Device Type Library is enabled and no data in queryset, run the sync."""
-        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not self.queryset.exists():
-            repo = GitRepository.objects.get(slug="devicetype_library")
-            enqueue_pull_git_repository_and_refresh_data(repo, request)
-
     def get(self, request, *args, **kwargs):
         """Add Check Sync to Get."""
-        self.check_sync(request=request)
+        check_sync(instance=self, request=request)
         return super().get(request, *args, **kwargs)
 
 
