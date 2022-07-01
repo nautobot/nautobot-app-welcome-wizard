@@ -16,11 +16,6 @@ def banner(context, *args, **kwargs) -> Optional[PluginBanner]:
     - If User has permissions to the Welcome Wizard Dashboard (merlin)
     - On the Nautobot Home Page
     """
-    content = format_html(
-        '<a href="{}">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
-        reverse("plugins:welcome_wizard:dashboard"),
-    )
-
     required_permission = "welcome_wizard.view_merlin"
 
     if (
@@ -28,5 +23,9 @@ def banner(context, *args, **kwargs) -> Optional[PluginBanner]:
         and context.request.user.is_authenticated
         and context.request.user.has_perms((required_permission,))
     ):
+        content = format_html(
+            '<a href="{}">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
+            reverse("plugins:welcome_wizard:dashboard"),
+        )
         return PluginBanner(content=content, banner_class=BannerClassChoices.CLASS_SUCCESS)
     return None

@@ -432,12 +432,12 @@ class BannerTestCase(TestCase):
         response = self.client.get(reverse("home"))
         self.assertContains(
             response,
-            "<a href=/plugins/welcome_wizard/dashboard/>The Nautobot Welcome Wizard can help you get started with Nautobot!</a>",
+            '<a href="/plugins/welcome_wizard/dashboard/">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
         )
 
     def test_banner_no_permissions(self):
         response = self.client.get(reverse("home"))
         self.assertNotContains(
             response,
-            "<a href=/plugins/welcome_wizard/dashboard/>The Nautobot Welcome Wizard can help you get started with Nautobot!</a>",
+            '<a href="/plugins/welcome_wizard/dashboard/">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
         )
