@@ -1,5 +1,7 @@
 """Django urlpatterns declaration for Welcome Wizard plugin."""
+from django.templatetags.static import static
 from django.urls import path
+from django.views.generic import RedirectView
 
 from . import views
 
@@ -18,5 +20,10 @@ urlpatterns = [
         "devicetypes/import/",
         views.DeviceTypeBulkImportView.as_view(),
         name="devicetype_import",
+    ),
+    path(
+        "docs/",
+        RedirectView.as_view(url=static("welcome_wizard/docs/index.html")),
+        name="docs",
     ),
 ]
