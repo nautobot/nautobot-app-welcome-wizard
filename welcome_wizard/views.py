@@ -195,6 +195,8 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         View (View): Django View
     """
 
+    action_buttons = ()
+
     @classmethod
     def check_data(cls):
         """Check data and update the Merlin database."""
