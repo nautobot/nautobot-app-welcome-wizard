@@ -44,7 +44,7 @@ pip install nautobot-welcome-wizard
 To ensure Welcome Wizard is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-welcome-wizard` package:
 
 ```no-highlight
-# echo nautobot-welcome-wizard >> local_requirements.txt
+echo nautobot-welcome-wizard >> local_requirements.txt
 ```
 
 Once installed, the plugin needs to be enabled in your `nautobot_config.py`
@@ -71,7 +71,7 @@ After updating nautobot_config.py, you will need to run `nautobot-server post_up
 After installing the plugin and modifying `nautobot_config.py`, as the `nautobot` user, run the server migration:
 
 ```no-highlight
-$ nautobot-server post_upgrade
+nautobot-server post_upgrade
 ```
 
 Finally, as root, restart Nautobot and the Nautobot worker.
