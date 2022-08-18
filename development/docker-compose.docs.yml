@@ -4,6 +4,8 @@ services:
   docs:
     image: "welcome_wizard/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
     entrypoint: "mkdocs serve -v -a 0.0.0.0:8080"
+    healthcheck:
+      disable: true
     volumes:
       - "../docs:/source/docs:ro"
       - "../mkdocs.yml:/source/mkdocs.yml:ro"
