@@ -57,7 +57,7 @@ class ManufacturerListView(generic.ObjectListView):
     permission_required = "welcome_wizard.view_manufacturerimport"
     table = ManufacturerWizardTable
     queryset = ManufacturerImport.objects.all()
-    action_buttons = None
+    action_buttons = ()
     template_name = "welcome_wizard/manufacturer.html"
     filterset = ManufacturerImportFilterSet
     filterset_form = ManufacturerImportFilterForm
@@ -75,7 +75,7 @@ class DeviceTypeListView(generic.ObjectListView):
     table = DeviceTypeWizardTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
-    action_buttons = None
+    action_buttons = ()
     template_name = "welcome_wizard/devicetype.html"
     filterset_form = DeviceTypeImportFilterForm
 
