@@ -41,12 +41,17 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "develop-latest",
+            "nautobot_ver": "1.3.3",
             "project_name": "welcome_wizard",
-            "python_ver": "3.6",
+            "python_ver": "3.8",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development/"),
-            "compose_files": ["docker-compose.requirements.yml", "docker-compose.base.yml", "docker-compose.dev.yml"],
+            "compose_files": [
+                "docker-compose.requirements.yml",
+                "docker-compose.base.yml",
+                "docker-compose.dev.yml",
+                "docker-compose.docs.yml",
+            ],
         }
     }
 )
@@ -308,10 +313,28 @@ def bandit(context):
 
 
 @task
+def yamllint(context):
+    """Run yamllint to validate formating adheres to NTC defined YAML standards.
+
+    Args:
+        context (obj): Used to run specific commands
+    """
+    command = "yamllint . --format standard"
+    run_command(context, command)
+
+
+@task
 def check_migrations(context):
     """Check for missing migrations."""
     command = "nautobot-server --config=nautobot/core/tests/nautobot_config.py makemigrations --dry-run --check"
 
+    run_command(context, command)
+
+
+@task
+def build_and_check_docs(context):
+    """Build documentation to be available within Nautobot."""
+    command = "mkdocs build --no-directory-urls --strict"
     run_command(context, command)
 
 
@@ -397,10 +420,14 @@ def tests(context, failfast=False):
     flake8(context)
     print("Running bandit...")
     bandit(context)
+    print("Running yamllint...")
+    yamllint(context)
     print("Running pydocstyle...")
     pydocstyle(context)
     print("Running pylint...")
     pylint(context)
+    print("Running mkdocs...")
+    build_and_check_docs(context)
     print("Running unit tests...")
     unittest(context, failfast=failfast)
     print("All tests have passed!")

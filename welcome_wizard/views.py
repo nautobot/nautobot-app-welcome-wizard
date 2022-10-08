@@ -1,7 +1,10 @@
 """Views for Welcome Wizard."""
+import uuid
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.shortcuts import render, redirect
@@ -25,29 +28,43 @@ from welcome_wizard.forms import (
 from welcome_wizard.jobs import WelcomeWizardImportDeviceType, WelcomeWizardImportManufacturer
 from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
 from welcome_wizard.models.merlin import Merlin
-from welcome_wizard.tables import ManufacturerTable, DeviceTypeTable, DashboardTable
+from welcome_wizard.tables import ManufacturerWizardTable, DeviceTypeWizardTable, DashboardTable
+
+
+def check_sync(instance, request):
+    """If Device Type Library is enabled and no data in queryset, run the sync."""
+    if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not instance.queryset.exists():
+        try:
+            repo = GitRepository.objects.get(slug="devicetype_library")
+        except GitRepository.DoesNotExist:
+            repo = GitRepository(
+                name="Devicetype-library",
+                slug="devicetype_library",
+                remote_url="https://github.com/netbox-community/devicetype-library.git",
+                provided_contents=[
+                    "welcome_wizard.import_wizard",
+                ],
+                branch="master",
+            )
+            repo.save(trigger_resync=False)
+
+        enqueue_pull_git_repository_and_refresh_data(repo, request)
 
 
 class ManufacturerListView(generic.ObjectListView):
     """Table of all Manufacturers discovered in the Git Repository."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
-    table = ManufacturerTable
+    table = ManufacturerWizardTable
     queryset = ManufacturerImport.objects.all()
-    action_buttons = None
+    action_buttons = ()
     template_name = "welcome_wizard/manufacturer.html"
     filterset = ManufacturerImportFilterSet
     filterset_form = ManufacturerImportFilterForm
 
-    def check_sync(self, request):
-        """If Device Type Library is enabled and no data in queryset, run the sync."""
-        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not self.queryset.exists():
-            repo = GitRepository.objects.get(slug="devicetype_library")
-            enqueue_pull_git_repository_and_refresh_data(repo, request)
-
     def get(self, request, *args, **kwargs):
         """Add Check Sync to Get."""
-        self.check_sync(request=request)
+        check_sync(instance=self, request=request)
         return super().get(request, *args, **kwargs)
 
 
@@ -55,22 +72,16 @@ class DeviceTypeListView(generic.ObjectListView):
     """Table of Device Types based on the Manufacturer."""
 
     permission_required = "welcome_wizard.view_devicetypeimport"
-    table = DeviceTypeTable
+    table = DeviceTypeWizardTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
-    action_buttons = None
+    action_buttons = ()
     template_name = "welcome_wizard/devicetype.html"
     filterset_form = DeviceTypeImportFilterForm
 
-    def check_sync(self, request):
-        """If Device Type Library is enabled and no data in queryset, run the sync."""
-        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not self.queryset.exists():
-            repo = GitRepository.objects.get(slug="devicetype_library")
-            enqueue_pull_git_repository_and_refresh_data(repo, request)
-
     def get(self, request, *args, **kwargs):
         """Add Check Sync to Get."""
-        self.check_sync(request=request)
+        check_sync(instance=self, request=request)
         return super().get(request, *args, **kwargs)
 
 
@@ -127,22 +138,28 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
             onboarded = []
 
             for obj in self.model.objects.filter(pk__in=pk_list):
+                job_result = JobResult.objects.create(
+                    name="welcome_wizard_import",
+                    obj_type=ContentType.objects.get(app_label="extras", model="job"),
+                    user=None,
+                    job_id=uuid.uuid4(),
+                )
                 if self.model == ManufacturerImport:
                     data = {"manufacturer": obj.name}
                     job = WelcomeWizardImportManufacturer()
-                    job.job_result = JobResult()
+                    job.job_result = job_result
                     job.run(data, commit=True)
                     onboarded.append(obj.name)
 
                 elif self.model == DeviceTypeImport:
                     job = WelcomeWizardImportDeviceType()
                     data = {"device_type": obj.filename}
-                    job.job_result = JobResult()
+                    job.job_result = job_result
                     job.run(data, commit=True)
                     onboarded.append(obj.name)
 
             # Currently treat everything as a success...
-            messages.success(request, "Onboarded {} objects.".format(len(onboarded)))
+            messages.success(request, f"Onboarded {len(onboarded)} objects.")
 
         return redirect(self.return_url)
 
@@ -177,6 +194,8 @@ class WelcomeWizardDashboard(generic.ObjectListView):
     Args:
         View (View): Django View
     """
+
+    action_buttons = ()
 
     @classmethod
     def check_data(cls):

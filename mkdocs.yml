@@ -1,25 +1,24 @@
-dev_addr: '127.0.0.1:8001'
-edit_uri: edit/main/welcome_wizard/docs
-site_name: Nautobot Welcome Wizard Documentation
-site_url: https://nautobot-plugin-welcome-wizard.readthedocs.io/
-repo_url: https://github.com/nautobot/nautobot-plugin-welcome-wizard
-python:
-  install:
-    - requirements: docs/requirements.txt
+---
+dev_addr: "127.0.0.1:8001"
+edit_uri: "edit/main/welcome_wizard/docs"
+site_dir: "welcome_wizard/static/welcome_wizard/docs"
+site_name: "Nautobot Welcome Wizard Documentation"
+site_url: "https://nautobot-plugin-welcome-wizard.readthedocs.io/"
+repo_url: "https://github.com/nautobot/nautobot-plugin-welcome-wizard"
 theme:
-  name: readthedocs
+  name: "readthedocs"
   navigation_depth: 4
   hljs_languages:
-    - django
-    - yaml
+    - "django"
+    - "yaml"
 extra_css:
-  - extra.css
+  - "extra.css"
 markdown_extensions:
-  - admonition
+  - "admonition"
   - toc:
       permalink: true
 nav:
-  - Introduction: 'index.md'
-  - 'Welcome Wizard': 'dashboard.md'
-  - 'Import Wizard': 'import_wizard.md'
-  - 'Middleware': 'middleware.md'
+  - Introduction: "index.md"
+  - "Welcome Wizard": "dashboard.md"
+  - "Import Wizard": "import_wizard.md"
+  - "Middleware": "middleware.md"

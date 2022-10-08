@@ -26,11 +26,10 @@ class Prerequisites:
         # If no user or they aren't authenticated, return to hit the default login redirect
         if not hasattr(request, "user") or not request.user.is_authenticated:
             return
-        if request.path == "/":
-            merlin_msg = f"<a href={reverse('plugins:welcome_wizard:dashboard')}>The Nautobot Welcome Wizard can help you get started with Nautobot!</a>"
-            messages.success(request, mark_safe(merlin_msg))  # nosec
-        elif request.path.endswith("/add/"):
-            # model = view_func.view_class.model_form.Meta.model
+        if request.path.endswith("/add/"):
+            # Check if using a Nautobot view class.
+            if not (hasattr(view_func, "view_class") and hasattr(view_func.view_class, "model_form")):
+                return
             base_fields = view_func.view_class.model_form.base_fields
             for field in base_fields:
                 if base_fields[field].required:

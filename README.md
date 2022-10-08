@@ -39,12 +39,12 @@ The plugin is available as a Python package in pypi and can be installed with pi
 pip install nautobot-welcome-wizard
 ```
 
-> The plugin is compatible with Nautobot 1.0.0b4 and higher
+> The plugin is compatible with Nautobot 1.2.0 and higher
 
 To ensure Welcome Wizard is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-welcome-wizard` package:
 
 ```no-highlight
-# echo nautobot-welcome-wizard >> local_requirements.txt
+echo nautobot-welcome-wizard >> local_requirements.txt
 ```
 
 Once installed, the plugin needs to be enabled in your `nautobot_config.py`
@@ -64,7 +64,26 @@ The plugin behavior can be controlled with the following list of settings:
 
 - `enable_devicetype-library`: If enabled the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
 
-After updating nautobot_config.py, you will need to run `nautobot-server migrate` and then reload the nautobot service and the nautobot-worker service.
+After updating nautobot_config.py, you will need to run `nautobot-server post_upgrade` and then reload the nautobot service and the nautobot-worker service as shown below.
+
+### Final Configuration Steps
+
+After installing the plugin and modifying `nautobot_config.py`, as the `nautobot` user, run the server migration:
+
+```no-highlight
+nautobot-server post_upgrade
+```
+
+Finally, as root, restart Nautobot and the Nautobot worker.
+
+```no-highlight
+$ sudo systemctl restart nautobot nautobot-worker
+```
+
+## Upgrades
+
+When upgrading to a new version of this plugin, it may be necessary to run database migrations, copy new static files, and so forth. These will all be handled by executing the command `nautobot-server post_upgrade` from the Nautobot install `nautobot/` directory after updating the plugin package.
+
 
 ## Usage
 
