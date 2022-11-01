@@ -55,14 +55,16 @@ PLUGINS = ["welcome_wizard"]
 
 # PLUGINS_CONFIG = {
 #   "welcome_wizard": {
-#     "enable_devicetype-library": True
+#     "enable_devicetype-library": True,
+#     "enable_welcome_banner": True,
 #   }
 # }
 ```
 
 The plugin behavior can be controlled with the following list of settings:
 
-- `enable_devicetype-library`: If enabled the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
+- `enable_devicetype-library`: If enabled, the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
+- `enable_welcome_banner`: If enabled, the Welcome Wizard banner will display on the home screen for authenticated users.
 
 After updating nautobot_config.py, you will need to run `nautobot-server post_upgrade` and then reload the nautobot service and the nautobot-worker service as shown below.
 
