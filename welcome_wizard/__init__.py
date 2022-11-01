@@ -1,6 +1,6 @@
 """Plugin declaration for Welcome Wizard."""
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 from nautobot.extras.plugins import PluginConfig
 
