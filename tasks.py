@@ -257,6 +257,21 @@ def post_upgrade(context):
 
 
 # ------------------------------------------------------------------------------
+# DOCS
+# ------------------------------------------------------------------------------
+@task
+def docs(context):
+    """Build and serve docs locally for development."""
+    command = "mkdocs serve -v"
+
+    if is_truthy(context.welcome_wizard.local):
+        print("Serving Documentation...")
+        run_command(context, command)
+    else:
+        print("Only used when developing locally (i.e. context.welcome_wizard.local=True)!")
+
+
+# ------------------------------------------------------------------------------
 # TESTS
 # ------------------------------------------------------------------------------
 @task(
