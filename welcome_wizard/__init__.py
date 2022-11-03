@@ -1,6 +1,6 @@
 """Plugin declaration for Welcome Wizard."""
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 from nautobot.extras.plugins import PluginConfig
 
@@ -19,6 +19,7 @@ class WelcomeWizardConfig(PluginConfig):
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
+        "enable_welcome_banner": True,
     }
     caching_config = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
