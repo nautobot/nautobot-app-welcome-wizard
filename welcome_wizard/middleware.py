@@ -27,13 +27,22 @@ class Prerequisites:
             return
         if request.path.endswith("/add/"):
             # Check if using a Nautobot view class.
-            if not (
+            if (
                 hasattr(view_func, "view_class")
                 and hasattr(view_func.view_class, "model_form")
                 and view_func.view_class.model_form is not None
             ):
+                base_fields = view_func.view_class.model_form.base_fields
+            # Check if using a NautobotUIViewSet class.
+            elif (
+                hasattr(view_func, "cls")
+                and hasattr(view_func.cls, "form_class")
+                and view_func.cls.form_class is not None
+            ):
+                base_fields = view_func.cls.form_class.base_fields
+            else:
                 return
-            base_fields = view_func.view_class.model_form.base_fields
+
             for field in base_fields:
                 if (
                     base_fields[field].required
