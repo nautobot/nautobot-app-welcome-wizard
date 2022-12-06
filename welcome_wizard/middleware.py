@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.safestring import mark_safe
 
+from nautobot.utilities.templatetags.helpers import bettertitle
+
 logger = logging.getLogger("welcome_wizard.middleware")
 
 
@@ -49,12 +51,11 @@ class Prerequisites:
                     and hasattr(base_fields[field], "queryset")
                     and not base_fields[field].queryset.exists()
                 ):
-                    name = base_fields[field].label or field.replace("_", " ").title()
-                    reverse_name = field.replace("_", "")
+                    meta = base_fields[field].queryset.model._meta
                     try:
-                        reverse_link = reverse(f"{request.resolver_match.app_names[0]}:{reverse_name}_add")
+                        reverse_link = reverse(f"{meta.app_label}:{meta.model_name}_add")
                     except NoReverseMatch as error:
-                        logger.warning("No Reverse Match was found for %s. %s", reverse_name, error)
+                        logger.warning("No Reverse Match was found for %s. %s", bettertitle(meta.verbose_name), error)
                         reverse_link = ""
-                    msg = f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item."
+                    msg = f"You need to configure a <a href='{reverse_link}'>{bettertitle(meta.verbose_name)}</a> before you create this item."
                     messages.error(request, mark_safe(msg))  # nosec
