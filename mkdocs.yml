@@ -96,10 +96,9 @@ nav:
   - Overview: "index.md"
   - User Guide:
       - App Overview: "user/app_overview.md"
-      - Using the App: "user/app_use_cases.md"
-      - Import Wizard: "user/import_wizard.md"
-      - Git Data Source: "user/git_datasource.md"
       - Getting Started: "user/app_getting_started.md"
+      - Using the App: "user/app_use_cases.md"
+      - Git Data Source: "user/git_datasource.md"
       - Frequently Asked Questions: "user/faq.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
@@ -108,12 +107,12 @@ nav:
       - Compatibility Matrix: "admin/compatibility_matrix.md"
       - Release Notes:
           - "admin/release_notes/index.md"
+          - v1.1: "admin/release_notes/version_1.1.md"
           - v1.0: "admin/release_notes/version_1.0.md"
   - Developer Guide:
       - Extending the App: "dev/extending.md"
       - Contributing to the App: "dev/contributing.md"
       - Development Environment: "dev/dev_environment.md"
-      - Architecture Decision Records: "dev/arch_decision.md"
       - Code Reference:
           - "dev/code_reference/index.md"
           - Package: "dev/code_reference/package.md"

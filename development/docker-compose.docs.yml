@@ -7,7 +7,6 @@ services:
     healthcheck:
       disable: true
     volumes:
-      - "../docs:/source/docs:ro"
-      - "../mkdocs.yml:/source/mkdocs.yml:ro"
+      - "../:/source"
     ports:
       - "8001:8080"
