@@ -11,4 +11,4 @@
 
 ## Supported Python Versions
 
-Welcome Wizard supports Python 3.6, 3.7, and 3.8.
+Welcome Wizard supports Python 3.7 through 3.9.

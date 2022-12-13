@@ -101,7 +101,6 @@ nav:
       - Git Data Source: "user/git_datasource.md"
       - Getting Started: "user/app_getting_started.md"
       - Frequently Asked Questions: "user/faq.md"
-      - External Interactions: "user/external_interactions.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
       - Upgrade: "admin/upgrade.md"

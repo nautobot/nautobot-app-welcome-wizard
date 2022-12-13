@@ -2,7 +2,6 @@
 
 Here you will find detailed instructions on how to **install** and **configure** the App within your Nautobot environment.
 
-
 ## Prerequisites
 
 - The plugin is compatible with Nautobot 1.2.0 and higher.
