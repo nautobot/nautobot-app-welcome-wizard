@@ -1,17 +1,7 @@
 # Welcome Wizard
 
-<!--
-Developer Note - Remove Me!
-
-The README will have certain links/images broken until the PR is merged into `develop`. Update the GitHub links with whichever branch you're using (main etc.) if different.
-
-The logo of the project is a placeholder (docs/images/icon-nautobot-welcome-wizard.png) - please replace it with your app icon, making sure it's at least 200x200px and has a transparent background!
-
-To avoid extra work and temporary links, make sure that publishing docs (or merging a PR) is done at the same time as setting up the docs site on RTD, then test everything.
--->
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.png" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
   <br>
   <a href="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
@@ -27,7 +17,7 @@ To avoid extra work and temporary links, make sure that publishing docs (or merg
 
 The Welcome Wizard is a getting started wizard for [Nautobot](https://docs.nautobot.com/projects/core/en/stable/) to assist a new user with necessary initial steps in populating data.
 
-![Wecome Wizard GIF](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/WelcomeWizard.gif)
+![Welcome Wizard GIF](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/WelcomeWizard.gif)
 
 ## Key Features
 
