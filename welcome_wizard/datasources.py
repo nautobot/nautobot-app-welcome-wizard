@@ -49,7 +49,7 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
             filename=device_type,
             name=device_data["model"],
             manufacturer=ManufacturerImport.objects.filter(name=device_data["manufacturer"])[0],
-            device_type_data=device_data,
+            defaults={"device_type_data": device_data},
         )
 
         job_result.log(
