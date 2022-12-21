@@ -41,7 +41,7 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "1.3.3",
+            "nautobot_ver": "1.5.4",
             "project_name": "welcome_wizard",
             "python_ver": "3.8",
             "local": False,

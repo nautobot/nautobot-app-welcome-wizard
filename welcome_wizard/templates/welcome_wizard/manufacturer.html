@@ -1,30 +1,14 @@
-{% extends 'base.html' %}
-{% load buttons %}
-{% load custom_links %}
-{% load helpers %}
-{% load plugins %}
-{% load static %}
-{% load tz %}
+{% extends 'generic/object_list.html' %}
 
-{% block header %}
-    <div class="row noprint">
-        <div class="col-sm-9">
-            <ol class="breadcrumb">
-                <li><a href="{% url 'plugins:welcome_wizard:dashboard' %}">Dashboard</a></li>
-                <li><a href="{% url 'plugins:welcome_wizard:manufacturer' %}">Import Manufacturers</a></li>
-            </ol>
-        </div>
-    </div>
-{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{% url 'plugins:welcome_wizard:dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'plugins:welcome_wizard:devicetype' %}">Import Manufacturers</a></li>
+{% endblock breadcrumbs %}
 
-{% block content %}
-<h1>{% block title %}Import Manufacturers{% endblock %}</h1>
-<div class="row">
-	<div class="col-md-9">
-        {% include 'welcome_wizard/extra_actions.html' with bulk_import_url="plugins:welcome_wizard:manufacturer_import" %}
-    </div>
-	<div class="col-md-3 noprint">
-		{% include 'inc/search_panel.html' %}
-	</div>
-</div>
+{% block title %}Import Manufacturers{% endblock %}
+
+{% block bulk_buttons %}
+    <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:manufacturer_import" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">
+        <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import Selected
+    </button>
 {% endblock %}
