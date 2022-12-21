@@ -16,15 +16,13 @@ The Welcome Wizard adds four (4) key features:
 - Welcome Wizard includes **banners** in forms to alert the user when required form fields have no associated resources in Nautobot.
 - The Welcome Wizard **Dashboard** contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them.
 
-
 ## Audience (User Personas) - Who should use this App?
 
 Anyone building a new instance of Nautobot who struggles with where to start when faced with an empty database. You might try to add a Device, only to find that you need to create a Device Type, Site, and Device Role. You go to add a Device Type and find you need a Manufacturer (which is not directly required for a Device). This app tries to alleviate some of these problems.
 
 ## Authors and Maintainers
 
-!!! warning "Developer Note - Remove Me!"
-    Add the team and/or the main individuals maintaining this project. Include historical maintainers as well.
+You can find the contributors on the [GitHub Contribution Graph](https://github.com/nautobot/nautobot-plugin-welcome-wizard/graphs/contributors).
 
 ## Nautobot Features Used
 

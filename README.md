@@ -13,7 +13,7 @@
 
 ## Overview
 
-# What is the Nautobot Welcome Wizard?
+### What is the Nautobot Welcome Wizard?
 
 The Welcome Wizard is a getting started wizard for [Nautobot](https://docs.nautobot.com/projects/core/en/stable/) to assist a new user with necessary initial steps in populating data.
 
@@ -44,7 +44,6 @@ More screenshots can be found in the [Using the App](https://docs.nautobot.com/p
 ![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
 
 ![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_import_device_type.png)
-
 
 ## Documentation
 
