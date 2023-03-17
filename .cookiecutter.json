@@ -1,0 +1,26 @@
+{
+  "cookiecutter": {
+    "codeowner_github_usernames": "@smith-ntc",
+    "full_name": "Network to Code, LLC",
+    "email": "info@networktocode.com",
+    "github_org": "nautobot",
+    "plugin_name": "nautobot_bgp_models",
+    "verbose_name": "Nautobot BGP Models",
+    "plugin_slug": "nautobot-bgp-models",
+    "project_slug": "nautobot-plugin-bgp-models",
+    "repo_url": "https://github.com/nautobot/nautobot-plugin-bgp-models",
+    "base_url": "bgp-models",
+    "min_nautobot_version": "1.5.4",
+    "max_nautobot_version": "1.9999",
+    "nautobot_version": "stable",
+    "camel_name": "NautobotBgpModels",
+    "project_short_description": "Nautobot BGP Models",
+    "version": "0.1.0",
+    "model_class_name": "None",
+    "open_source_license": "Apache-2.0",
+    "docs_base_url": "https://docs.nautobot.com",
+    "docs_app_url": "https://docs.nautobot.com/projects/nautobot-bgp-models/en/latest",
+    "_template": "../networktocode-llc/cookiecutter-ntc/nautobot-plugin",
+    "_output_dir": "/opt/ntc/baked"
+  }
+}

@@ -7,7 +7,8 @@
 | ------------- | -------------------- | ------------- |
 | 1.0.X         | 1.0.0b4              | 1.1.99        |
 | 1.1.X         | 1.2.0                | 1.5.99        |
+| 1.2.X         | 1.4.0                | 1.99.99       |
 
 ## Supported Python Versions
 
-Welcome Wizard supports Python 3.7 through 3.9.
+Welcome Wizard supports Python 3.7 through 3.10.
