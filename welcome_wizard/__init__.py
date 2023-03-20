@@ -15,7 +15,7 @@ class WelcomeWizardConfig(PluginConfig):
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
     required_settings = []
-    min_version = "1.4.0"
+    min_version = "1.5.0"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
