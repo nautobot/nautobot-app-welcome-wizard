@@ -17,7 +17,7 @@ env:
 
 jobs:
   black:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-22.04"
     env:
       INVOKE_WELCOME_WIZARD_LOCAL: "True"
     steps:
