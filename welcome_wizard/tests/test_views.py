@@ -14,6 +14,7 @@ from nautobot.dcim.models import Manufacturer, DeviceType
 from nautobot.dcim.models.sites import Site
 from nautobot.utilities.testing import TransactionTestCase
 from nautobot.utilities.testing.views import TestCase
+from nautobot.virtualization.models import Cluster, ClusterType
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
@@ -354,7 +355,8 @@ class DashboardView(TestCase):
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        self.assertContains(resp, "mdi-plus-thick", 8)
+        # 9th is from nautobot formset javascript
+        self.assertContains(resp, "mdi-plus-thick", 9)
         self.assertContains(resp, "mdi-checkbox-blank-outline", 8)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
 
@@ -368,7 +370,8 @@ class DashboardView(TestCase):
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        self.assertContains(resp, "mdi-plus-thick", 8)
+        # 9th is from nautobot formset javascript
+        self.assertContains(resp, "mdi-plus-thick", 9)
         self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
 
@@ -440,4 +443,17 @@ class BannerTestCase(TestCase):
         self.assertNotContains(
             response,
             '<a href="/plugins/welcome_wizard/dashboard/">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
+        )
+
+
+class ClusterDevicesTestCase(TestCase):
+    """Ensure Cluster Add Devices view loads (https://github.com/nautobot/nautobot-plugin-welcome-wizard/issues/62)."""
+
+    def test_cluster_add_devices(self):
+        self.add_permissions("virtualization.change_cluster")
+        cluster_type = ClusterType.objects.create(name="Cluster Type 1", slug="cluster-type-1")
+        cluster = Cluster.objects.create(name="Cluster 1", type=cluster_type)
+
+        self.assertHttpStatus(
+            self.client.get(reverse("virtualization:cluster_add_devices", kwargs={"pk": cluster.pk})), 200
         )

@@ -57,7 +57,7 @@ class ManufacturerListView(generic.ObjectListView):
     permission_required = "welcome_wizard.view_manufacturerimport"
     table = ManufacturerWizardTable
     queryset = ManufacturerImport.objects.all()
-    action_buttons = None
+    action_buttons = ()
     template_name = "welcome_wizard/manufacturer.html"
     filterset = ManufacturerImportFilterSet
     filterset_form = ManufacturerImportFilterForm
@@ -75,7 +75,7 @@ class DeviceTypeListView(generic.ObjectListView):
     table = DeviceTypeWizardTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
-    action_buttons = None
+    action_buttons = ()
     template_name = "welcome_wizard/devicetype.html"
     filterset_form = DeviceTypeImportFilterForm
 
@@ -195,6 +195,8 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         View (View): Django View
     """
 
+    action_buttons = ()
+
     @classmethod
     def check_data(cls):
         """Check data and update the Merlin database."""
@@ -269,6 +271,13 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         """Get request."""
         self.check_data()
         return super().get(request, *args, **kwargs)
+
+    def extra_context(self):
+        """Override search and table config."""
+        return {
+            "table_config_form": None,
+            "search_form": None,
+        }
 
     permission_required = "welcome_wizard.view_merlin"
     queryset = Merlin.objects.all()

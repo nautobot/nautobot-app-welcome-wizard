@@ -14,10 +14,7 @@ limitations under the License.
 
 from distutils.util import strtobool
 from invoke import Collection, task as invoke_task
-from invoke.exceptions import Exit
 import os
-import requests
-from time import sleep
 
 
 def is_truthy(arg):
@@ -41,24 +38,25 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "1.3.3",
+            "nautobot_ver": "latest",
             "project_name": "welcome_wizard",
             "python_ver": "3.8",
             "local": False,
-            "compose_dir": os.path.join(os.path.dirname(__file__), "development/"),
+            "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
             "compose_files": [
-                "docker-compose.requirements.yml",
                 "docker-compose.base.yml",
+                "docker-compose.redis.yml",
+                "docker-compose.postgres.yml",
                 "docker-compose.dev.yml",
-                "docker-compose.docs.yml",
             ],
+            "compose_http_timeout": "86400",
         }
     }
 )
 
 
 def task(function=None, *args, **kwargs):
-    """Task decorator to override the default Invoke task decorator."""
+    """Task decorator to override the default Invoke task decorator and add each task to the invoke namespace."""
 
     def task_wrapper(function=None):
         """Wrapper around invoke.task to add the task to the namespace as well."""
@@ -84,13 +82,33 @@ def docker_compose(context, command, **kwargs):
         command (str): Command string to append to the "docker-compose ..." command, such as "build", "up", etc.
         **kwargs: Passed through to the context.run() call.
     """
-    build_env = {"NAUTOBOT_VER": context.welcome_wizard.nautobot_ver, "PYTHON_VER": context.welcome_wizard.python_ver}
-    compose_command = f'docker-compose --project-name {context.welcome_wizard.project_name} --project-directory "{context.welcome_wizard.compose_dir}"'
+    build_env = {
+        # Note: 'docker-compose logs' will stop following after 60 seconds by default,
+        # so we are overriding that by setting this environment variable.
+        "COMPOSE_HTTP_TIMEOUT": context.welcome_wizard.compose_http_timeout,
+        "NAUTOBOT_VER": context.welcome_wizard.nautobot_ver,
+        "PYTHON_VER": context.welcome_wizard.python_ver,
+    }
+    compose_command_tokens = [
+        "docker-compose",
+        f"--project-name {context.welcome_wizard.project_name}",
+        f'--project-directory "{context.welcome_wizard.compose_dir}"',
+    ]
+
     for compose_file in context.welcome_wizard.compose_files:
         compose_file_path = os.path.join(context.welcome_wizard.compose_dir, compose_file)
-        compose_command += f' -f "{compose_file_path}"'
-    compose_command += f" {command}"
+        compose_command_tokens.append(f' -f "{compose_file_path}"')
+
+    compose_command_tokens.append(command)
+
+    # If `service` was passed as a kwarg, add it to the end.
+    service = kwargs.pop("service", None)
+    if service is not None:
+        compose_command_tokens.append(service)
+
     print(f'Running docker-compose command "{command}"')
+    compose_command = " ".join(compose_command_tokens)
+
     return context.run(compose_command, env=build_env, **kwargs)
 
 
@@ -99,7 +117,7 @@ def run_command(context, command, **kwargs):
     if is_truthy(context.welcome_wizard.local):
         context.run(command, **kwargs)
     else:
-        # Check if netbox is running, no need to start another netbox container to run a command
+        # Check if nautobot is running, no need to start another nautobot container to run a command
         docker_compose_status = "ps --services --filter status=running"
         results = docker_compose(context, docker_compose_status, hide="out")
         if "nautobot" in results.stdout:
@@ -149,11 +167,11 @@ def debug(context):
     docker_compose(context, "up")
 
 
-@task
-def start(context):
+@task(help={"service": "If specified, only affect this service."})
+def start(context, service=None):
     """Start Nautobot and its dependencies in detached mode."""
     print("Starting Nautobot in detached mode...")
-    docker_compose(context, "up --detach")
+    docker_compose(context, "up --detach", service=service)
 
 
 @task
@@ -185,6 +203,26 @@ def vscode(context):
     context.run(command)
 
 
+@task(
+    help={
+        "service": "Docker-compose service name to view (default: nautobot)",
+        "follow": "Follow logs",
+        "tail": "Tail N number of lines or 'all'",
+    }
+)
+def logs(context, service="nautobot", follow=False, tail=None):
+    """View the logs of a docker-compose service."""
+    command = "logs "
+
+    if follow:
+        command += "--follow "
+    if tail:
+        command += f"--tail={tail} "
+
+    command += service
+    docker_compose(context, command)
+
+
 # ------------------------------------------------------------------------------
 # ACTIONS
 # ------------------------------------------------------------------------------
@@ -192,7 +230,13 @@ def vscode(context):
 def nbshell(context):
     """Launch an interactive nbshell session."""
     command = "nautobot-server nbshell"
+    run_command(context, command)
 
+
+@task
+def shell_plus(context):
+    """Launch an interactive shell_plus session."""
+    command = "nautobot-server shell_plus"
     run_command(context, command)
 
 
@@ -257,6 +301,21 @@ def post_upgrade(context):
 
 
 # ------------------------------------------------------------------------------
+# DOCS
+# ------------------------------------------------------------------------------
+@task
+def docs(context):
+    """Build and serve docs locally for development."""
+    command = "mkdocs serve -v"
+
+    if is_truthy(context.welcome_wizard.local):
+        print(">>> Serving Documentation at http://localhost:8001")
+        run_command(context, command)
+    else:
+        start(context, service="docs")
+
+
+# ------------------------------------------------------------------------------
 # TESTS
 # ------------------------------------------------------------------------------
 @task(
@@ -279,7 +338,7 @@ def black(context, autoformat=False):
 @task
 def flake8(context):
     """Check for PEP8 compliance and other style issues."""
-    command = "flake8 ."
+    command = "flake8 . --config .flake8"
     run_command(context, command)
 
 
@@ -301,7 +360,7 @@ def pylint(context):
 def pydocstyle(context):
     """Run pydocstyle to validate docstring formatting adheres to NTC defined standards."""
     # We exclude the /migrations/ directory since it is autogenerated code
-    command = "pydocstyle --config=.pydocstyle.ini ."
+    command = "pydocstyle ."
     run_command(context, command)
 
 
@@ -362,44 +421,9 @@ def unittest(context, keepdb=False, label="welcome_wizard", failfast=False, buff
 @task
 def unittest_coverage(context):
     """Report on code test coverage as measured by 'invoke unittest'."""
-    command = "coverage report --skip-covered --include 'welcome_wizard/*' --omit *migrations*,welcome_wizard/tests*"
-    run_command(context, command)
-    run_command(context, "rm -f coverage.svg")
-    badge_command = "coverage-badge -o coverage.svg"
-    run_command(context, badge_command)
-
-
-@task
-def unittest_report(context):
-    """Report on code test coverage through html as measured by 'invoke unittest'."""
-    command = "coverage html --include 'welcome_wizard/*' --omit *migrations*,welcome_wizard/tests*"
+    command = "coverage report --skip-covered --include 'welcome_wizard/*' --omit *migrations*"
 
     run_command(context, command)
-
-
-@task
-def integration_tests(context):
-    """Some very generic high level integration tests."""
-    session = requests.Session()
-    retries = 1
-    max_retries = 60
-
-    start(context)
-    while retries < max_retries:
-        try:
-            request = session.get("http://localhost:8080", timeout=300)
-        except requests.exceptions.ConnectionError:
-            print("Nautobot not ready yet sleeping for 5 seconds...")
-            sleep(5)
-            retries += 1
-            continue
-        if request.status_code == 200:
-            print("Nautobot is ready...")
-            break
-        else:
-            raise Exit(f"Nautobot returned and invalid status {request.status_code}", request.status_code)
-    if retries >= max_retries:
-        raise Exit("Timed Out waiting for Nautobot", 1)
 
 
 @task(
@@ -420,10 +444,10 @@ def tests(context, failfast=False):
     flake8(context)
     print("Running bandit...")
     bandit(context)
-    print("Running yamllint...")
-    yamllint(context)
     print("Running pydocstyle...")
     pydocstyle(context)
+    print("Running yamllint...")
+    yamllint(context)
     print("Running pylint...")
     pylint(context)
     print("Running mkdocs...")

@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.safestring import mark_safe
 
+from nautobot.utilities.templatetags.helpers import bettertitle
+
 logger = logging.getLogger("welcome_wizard.middleware")
 
 
@@ -18,8 +20,7 @@ class Prerequisites:
 
     def __call__(self, request):
         """Capture the response and return it."""
-        response = self.get_request(request)
-        return response
+        return self.get_request(request)
 
     def process_view(self, request, view_func, view_args, view_kwargs):  # pylint: disable=W0613,R0201
         """Process the view to determine if it's one we want to intercept."""
@@ -28,20 +29,33 @@ class Prerequisites:
             return
         if request.path.endswith("/add/"):
             # Check if using a Nautobot view class.
-            if not (hasattr(view_func, "view_class") and hasattr(view_func.view_class, "model_form")):
+            if (
+                hasattr(view_func, "view_class")
+                and hasattr(view_func.view_class, "model_form")
+                and view_func.view_class.model_form is not None
+            ):
+                base_fields = view_func.view_class.model_form.base_fields
+            # Check if using a NautobotUIViewSet class.
+            elif (
+                hasattr(view_func, "cls")
+                and hasattr(view_func.cls, "form_class")
+                and view_func.cls.form_class is not None
+            ):
+                base_fields = view_func.cls.form_class.base_fields
+            else:
                 return
-            base_fields = view_func.view_class.model_form.base_fields
+
             for field in base_fields:
-                if base_fields[field].required:
-                    if hasattr(base_fields[field], "queryset") and not base_fields[field].queryset.exists():
-                        name = base_fields[field].label if base_fields[field].label else field.replace("_", " ").title()
-                        reverse_name = field.replace("_", "")
-                        try:
-                            reverse_link = reverse(f"{request.resolver_match.app_names[0]}:{reverse_name}_add")
-                        except NoReverseMatch as error:
-                            logger.warning("No Reverse Match was found for %s. %s", reverse_name, error)
-                            reverse_link = ""
-                        msg = (
-                            f"You need to configure a <a href='{reverse_link}'>{name}</a> before you create this item."
-                        )
-                        messages.error(request, mark_safe(msg))  # nosec
+                if (
+                    base_fields[field].required
+                    and hasattr(base_fields[field], "queryset")
+                    and not base_fields[field].queryset.exists()
+                ):
+                    meta = base_fields[field].queryset.model._meta
+                    try:
+                        reverse_link = reverse(f"{meta.app_label}:{meta.model_name}_add")
+                    except NoReverseMatch as error:
+                        logger.warning("No Reverse Match was found for %s. %s", bettertitle(meta.verbose_name), error)
+                        reverse_link = ""
+                    msg = f"You need to configure a <a href='{reverse_link}'>{bettertitle(meta.verbose_name)}</a> before you create this item."
+                    messages.error(request, mark_safe(msg))  # nosec
