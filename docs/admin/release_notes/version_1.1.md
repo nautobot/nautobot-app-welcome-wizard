@@ -2,13 +2,16 @@
 
 ## Release Overview
 
+## [v1.1.3] - TBD
+
+- [#75](https://github.com/nautobot/nautobot-plugin-welcome-wizard/issues/75) Bug on poe_mode import
+
 ## [v1.1.2] - 2022-11-03
 
 ### Fixed
 
 - [#63](https://github.com/nautobot/nautobot-plugin-welcome-wizard/issues/63) Cluster fix add devices by @smk4664
 - [#63](https://github.com/nautobot/nautobot-plugin-welcome-wizard/issues/63) Setting to disable banner by @smk4664
-
 
 ## [v1.1.1] - 2022-09-27
 
