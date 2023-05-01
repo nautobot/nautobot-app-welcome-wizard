@@ -1,202 +1,68 @@
 # Welcome Wizard
 
-[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-![Coverage](coverage.svg)
-
-A plugin for [Nautobot](https://github.com/nautobot/nautobot).
-
-![Wecome Wizard GIF](docs/img/WelcomeWizard.gif)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
+  <br>
+  <a href="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
+  <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/v/nautobot-welcome-wizard"></a>
+  <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/dm/nautobot-welcome-wizard"></a>
+  <br>
+  An <a href="https://www.networktocode.com/nautobot/apps/">App</a> for <a href="https://nautobot.com/">Nautobot</a>.
+</p>
 
 ## Overview
 
-The Welcome Wizard is an open-source Nautobot Plugin with the goal to assist users with the necessary initial steps in populating data within Nautobot.
+### What is the Nautobot Welcome Wizard?
+
+The Welcome Wizard is a getting started wizard for [Nautobot](https://docs.nautobot.com/projects/core/en/stable/) to assist a new user with necessary initial steps in populating data.
+
+![Welcome Wizard GIF](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/WelcomeWizard.gif)
+
+## Key Features
 
 The Welcome Wizard adds four (4) key features:
 
-### Import Wizard
+1. [**Import Wizard**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/import_wizard/) - Welcome Wizard uses the `Import Wizard` to allow ease of adding community defined Device Types and Manufacturers into Nautobot.
 
-Welcome Wizard uses the `Import Wizard` to allow ease of adding community defined Device Types and Manufacturers into Nautobot. This is built upon the [git datasources](https://nautobot.readthedocs.io/en/stable/user-guides/git-data-source/#git-as-a-data-source) feature of Nautobot.
+2. [**Quick-Start Settings**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/git_datasource/) - Welcome Wizard includes settings that are enabled by default to ease the user in setting up and syncing from a Git Repository.
 
-### Quick-Start Settings
+3. [**Helpful Middleware**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/#middleware) - Welcome Wizard includes middleware banners to assist with Nautobot resource creation.
 
-Welcome Wizard includes by default the [DeviceType-library](https://github.com/netbox-community/devicetype-library), but this can be disabled and a custom library can be used instead.
+4. [**Dashboard**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) - The Welcome Wizard Dashboard contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them. This ties all of the features together.
 
-### Helpful Middleware
+### Screenshots
 
-Welcome Wizard includes banners in forms to alert the user when required form fields have no associated resources in Nautobot.
+More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the plugin's added functionality:
 
-### Welcome Wizard Dashboard
+![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_banner.png)
 
-The Welcome Wizard Dashboard contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them. This ties all of the features together.1
+![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
 
-## Installation
+![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/welcome_wizard.png)
 
-Installing the Nautobot Welcome Wizard follows the [Plugin Installation](https://nautobot.readthedocs.io/en/stable/plugins/#installing-plugins).
+![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
 
-The plugin is available as a Python package in pypi and can be installed with pip
+![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_import_device_type.png)
 
-```shell
-pip install nautobot-welcome-wizard
-```
+## Documentation
 
-> The plugin is compatible with Nautobot 1.2.0 and higher
+Full documentation for this App can be found over on the [Nautobot Docs](https://docs.nautobot.com) website:
 
-To ensure Welcome Wizard is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-welcome-wizard` package:
+- [User Guide](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_overview/) - Overview, Using the App, Getting Started.
+- [Administrator Guide](https://docs.nautobot.com/projects/welcome-wizard/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the App.
+- [Developer Guide](https://docs.nautobot.com/projects/welcome-wizard/en/latest/dev/contributing/) - Extending the App, Code Reference, Contribution Guide.
+- [Release Notes / Changelog](https://docs.nautobot.com/projects/welcome-wizard/en/latest/admin/release_notes/).
+- [Frequently Asked Questions](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/faq/).
 
-```no-highlight
-echo nautobot-welcome-wizard >> local_requirements.txt
-```
+### Contributing to the Documentation
 
-Once installed, the plugin needs to be enabled in your `nautobot_config.py`
+You can find all the Markdown source for the App documentation under the [`docs`](https://github.com/nautobot/nautobot-plugin-welcome-wizard/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient: clone the repository and edit away.
 
-```python
-# In your nautobot_config.py
-PLUGINS = ["welcome_wizard"]
+If you need to view the fully-generated documentation site, you can build it with [MkDocs](https://www.mkdocs.org/). A container hosting the documentation can be started using the `invoke` commands (details in the [Development Environment Guide](https://docs.nautobot.com/projects/welcome-wizard/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). Using this container, as your changes to the documentation are saved, they will be automatically rebuilt and any pages currently being viewed will be reloaded in your browser.
 
-# PLUGINS_CONFIG = {
-#   "welcome_wizard": {
-#     "enable_devicetype-library": True,
-#     "enable_welcome_banner": True,
-#   }
-# }
-```
-
-The plugin behavior can be controlled with the following list of settings:
-
-- `enable_devicetype-library`: If enabled, the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you.
-- `enable_welcome_banner`: If enabled, the Welcome Wizard banner will display on the home screen for authenticated users.
-
-After updating nautobot_config.py, you will need to run `nautobot-server post_upgrade` and then reload the nautobot service and the nautobot-worker service as shown below.
-
-### Final Configuration Steps
-
-After installing the plugin and modifying `nautobot_config.py`, as the `nautobot` user, run the server migration:
-
-```no-highlight
-nautobot-server post_upgrade
-```
-
-Finally, as root, restart Nautobot and the Nautobot worker.
-
-```no-highlight
-$ sudo systemctl restart nautobot nautobot-worker
-```
-
-## Upgrades
-
-When upgrading to a new version of this plugin, it may be necessary to run database migrations, copy new static files, and so forth. These will all be handled by executing the command `nautobot-server post_upgrade` from the Nautobot install `nautobot/` directory after updating the plugin package.
-
-
-## Usage
-
-Log in to Nautobot and you will be guided through Banners on the top of the pages.
-
-## Contributing
-
-Pull Requests are welcome and automatically built and tested against multiple versions of Python and Nautobot through TravisCI.
-
-The project is packaged with a light development environment based on `docker-compose` to help with the local development of the project and to run the tests within TravisCI.
-
-The project is following Network to Code's software development guideline and is leveraging:
-
-- Black, Pylint, Bandit and pydocstyle for Python linting and formatting.
-- Django unit test to ensure the plugin is working properly.
-
-### Development Environment
-
-The development environment can be used in 2 ways. First, with a local poetry environment if you wish to develop outside of docker, and second, inside of a docker container. The below commands will start the Nautobot server listening on port 8080.
-
-#### Local Poetry Development Environment
-
-1. Copy `development/creds.example.env` to `development/creds.env` (This file will be ignored by git and docker)
-2. Uncomment the `POSTGRES_HOST`, `REDIS_HOST`, and `NAUTOBOT_ROOT` variables in `development/creds.env`
-3. Create an invoke.yml with the following contents at the root of the repo:
-
-```shell
----
-welcome_wizard:
-  local: true
-  compose_files:
-    - "docker-compose.requirements.yml"
-```
-
-4. Run the following commands:
-
-```shell
-poetry shell
-poetry install
-export $(cat development/dev.env | xargs)
-export $(cat development/creds.env | xargs)
-```
-
-5. You can now run nautobot-server commands as you would from the [Nautobot documentation](https://nautobot.readthedocs.io/en/latest/). For example, to start the development server:
-
-```shell
-nautobot-server runserver 0.0.0.0:8080 --insecure
-```
-
-#### Docker Development Environment
-
-This project is managed by [Python Poetry](https://python-poetry.org/) and has a few requirements to setup your development environment:
-
-1. Install Poetry, see the [Poetry Documentation](https://python-poetry.org/docs/#installation) for your operating system.
-2. Install Docker, see the [Docker documentation](https://docs.docker.com/get-docker/) for your operating system.
-
-Once you have Poetry and Docker installed you can run the following commands to install all other development dependencies in an isolated python virtual environment:
-
-```shell
-poetry shell
-poetry install
-invoke start
-```
-
-### CLI Helper Commands
-
-The project includes a CLI helper based on [invoke](http://www.pyinvoke.org/) to help setup the development environment. The commands are listed below in 3 categories `dev environment`, `utility` and `testing`.
-
-Each command can be executed with `invoke <command>`. Environment variables `INVOKE_WELCOME_WIZARD_PYTHON_VER` and `INVOKE_WELCOME_WIZARD_NAUTOBOT_VER` may be specified to override the default versions. Each command also has its own help `invoke <command> --help`
-
-#### Docker dev environment
-
-```no-highlight
-  build            Build all docker images.
-  debug            Start Nautobot and its dependencies in debug mode.
-  destroy          Destroy all containers and volumes.
-  restart          Restart Nautobot and its dependencies.
-  start            Start Nautobot and its dependencies in detached mode.
-  stop             Stop Nautobot and its dependencies.
-```
-
-#### Utility
-
-```no-highlight
-  cli              Launch a bash shell inside the running Nautobot container.
-  create-user      Create a new user in django (default: admin), will prompt for password.
-  makemigrations   Run Make Migration in Django.
-  nbshell          Launch a nbshell session.
-```
-
-#### Testing
-
-```no-highlight
-  bandit           Run bandit to validate basic static code security analysis.
-  black            Run black to check that Python files adhere to its style standards.
-  flake8           This will run flake8 for the specified name and Python version.
-  pydocstyle       Run pydocstyle to validate docstring formatting adheres to NTC defined standards.
-  pylint           Run pylint code analysis.
-  tests            Run all tests for this plugin.
-  unittest         Run Django unit tests for the plugin.
-```
+Any PRs with fixes or improvements are very welcome!
 
 ## Questions
 
-For any questions or comments, please check the [FAQ](FAQ.md) first and feel free to swing by the [Network to Code slack channel](https://networktocode.slack.com/) (channel #networktocode).
-Sign up [here](https://slack.networktocode.com/)
-
-## Screenshots
-
-![Welcome Wizard Banner](docs/img/merlin_banner.png)  
-![Welcome Wizard Middleware](docs/img/merlin_middleware_x3.png)  
-![Welcome Wizard Dashboard](docs/img/welcome_wizard.png)  
-![Welcome Wizard Completions](docs/img/dashboard_with_completions.png)
-![Welcome Wizard Import Device Types](docs/img/merlin_import_device_type.png)
+For any questions or comments, please check the [FAQ](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/faq/) first. Feel free to also swing by the [Network to Code Slack](https://networktocode.slack.com/) (channel `#nautobot`), sign up [here](http://slack.networktocode.com/) if you don't have an account.

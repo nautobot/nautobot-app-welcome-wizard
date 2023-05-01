@@ -29,6 +29,10 @@ COMPONENTS["rear-ports"] = RearPortTemplate
 COMPONENTS["front-ports"] = FrontPortTemplate
 COMPONENTS["device-bays"] = DeviceBayTemplate
 
+STRIP_KEYWORDS = {
+    "interfaces": ["poe_mode", "poe_type"],
+}
+
 
 def import_device_type(data):
     """Import DeviceType."""
@@ -46,7 +50,13 @@ def import_device_type(data):
     # Import All Components
     for key, component_class in COMPONENTS.items():
         if key in data:
-            component_list = [component_class(device_type=devtype, **item) for item in data[key]]
+            component_list = [
+                component_class(
+                    device_type=devtype,
+                    **{k: v for k, v in item.items() if k not in STRIP_KEYWORDS.get(key, [])},
+                )
+                for item in data[key]
+            ]
             component_class.objects.bulk_create(component_list)
 
     return devtype

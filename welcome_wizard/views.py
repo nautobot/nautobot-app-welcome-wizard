@@ -272,6 +272,13 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         self.check_data()
         return super().get(request, *args, **kwargs)
 
+    def extra_context(self):
+        """Override search and table config."""
+        return {
+            "table_config_form": None,
+            "search_form": None,
+        }
+
     permission_required = "welcome_wizard.view_merlin"
     queryset = Merlin.objects.all()
     template_name = "welcome_wizard/dashboard.html"

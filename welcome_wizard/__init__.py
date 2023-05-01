@@ -1,6 +1,6 @@
 """Plugin declaration for Welcome Wizard."""
 
-__version__ = "1.1.2"
+__version__ = "1.1.4"
 
 from nautobot.extras.plugins import PluginConfig
 
@@ -15,7 +15,7 @@ class WelcomeWizardConfig(PluginConfig):
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
     required_settings = []
-    min_version = "1.2.0"
+    min_version = "1.5.0"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
