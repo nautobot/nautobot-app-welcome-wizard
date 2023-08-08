@@ -23,7 +23,7 @@ The Welcome Wizard is a getting started wizard for [Nautobot](https://docs.nauto
 
 The Welcome Wizard adds four (4) key features:
 
-1. [**Import Wizard**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/import_wizard/) - Welcome Wizard uses the `Import Wizard` to allow ease of adding community defined Device Types and Manufacturers into Nautobot.
+1. [**Import Wizard**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_getting_started/#import-manufacturers) - Welcome Wizard uses the `Import Wizard` to allow ease of adding community defined Device Types and Manufacturers into Nautobot.
 
 2. [**Quick-Start Settings**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/git_datasource/) - Welcome Wizard includes settings that are enabled by default to ease the user in setting up and syncing from a Git Repository.
 
