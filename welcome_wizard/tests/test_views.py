@@ -7,13 +7,12 @@ from django.urls import reverse
 
 from nautobot.extras.models import Tag
 from nautobot.users.models import ObjectPermission
-from nautobot.utilities.permissions import resolve_permission_ct
-from nautobot.utilities.testing.utils import extract_form_failures
+from nautobot.core.utils.permissions import resolve_permission_ct
+from nautobot.core.testing.utils import extract_form_failures
 
-from nautobot.dcim.models import Manufacturer, DeviceType
-from nautobot.dcim.models.sites import Site
-from nautobot.utilities.testing import TransactionTestCase
-from nautobot.utilities.testing.views import TestCase
+from nautobot.dcim.models import Location, LocationType, DeviceType, Manufacturer
+from nautobot.core.testing import TransactionTestCase
+from nautobot.core.testing.views import TestCase
 from nautobot.virtualization.models import Cluster, ClusterType
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
@@ -361,10 +360,11 @@ class DashboardView(TestCase):
         self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
 
     def test_dashboard_view_with_content(self):
-        # Setup a site and manufacturer
+        # Setup a location and manufacturer
         self.add_permissions("welcome_wizard.view_merlin")
-        Manufacturer.objects.create(name="Manufacturer1", slug="manufacturer1")
-        Site.objects.create(name="site01", slug="site01")
+        Manufacturer.objects.create(name="Manufacturer1")
+        site, _ = LocationType.objects.get_or_create(name="Site")
+        Location.objects.create(name="site01", location_type=site)
         url = reverse("plugins:welcome_wizard:dashboard")
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 200)

@@ -3,21 +3,19 @@
 import django_filters
 
 from django.db.models import Q
-from nautobot.utilities.filters import BaseFilterSet, NameSlugSearchFilterSet
+from nautobot.apps.filters import BaseFilterSet, SearchFilter
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 
-class ManufacturerImportFilterSet(
-    BaseFilterSet,
-    NameSlugSearchFilterSet,
-):
+class ManufacturerImportFilterSet(BaseFilterSet):
     """Manufacturer Import Filter Set."""
+    q = SearchFilter(filter_predicates={"name": "icontains"})
 
     class Meta:
         """Meta for Manufacturer Import Filter Set."""
 
         model = ManufacturerImport
-        fields = ["id", "name", "slug"]
+        fields = ["id", "name"]
 
 
 class DeviceTypeImportFilterSet(BaseFilterSet):

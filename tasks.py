@@ -38,9 +38,9 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "latest",
+            "nautobot_ver": "2.0.0-rc.3",
             "project_name": "welcome_wizard",
-            "python_ver": "3.8",
+            "python_ver": "3.10",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
             "compose_files": [

@@ -72,7 +72,7 @@ class GitTest(TransactionTestCase):
 
                 self.assertEqual(
                     self.job_result.status,
-                    JobResultStatusChoices.STATUS_COMPLETED,
+                    JobResultStatusChoices.STATUS_SUCCESS,
                     self.job_result.data,
                 )
                 self.repo.refresh_from_db()
@@ -105,7 +105,7 @@ class GitTest(TransactionTestCase):
 
                 self.assertEqual(
                     self.job_result.status,
-                    JobResultStatusChoices.STATUS_COMPLETED,
+                    JobResultStatusChoices.STATUS_SUCCESS,
                     self.job_result.data,
                 )
 

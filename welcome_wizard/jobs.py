@@ -1,7 +1,9 @@
 """Background Jobs for Welcome Wizard."""
 
+
+import contextlib
 from collections import OrderedDict
-from django.utils.text import slugify
+from nautobot.core.celery import register_jobs
 from nautobot.dcim.forms import DeviceTypeImportForm
 from nautobot.dcim.models import (
     ConsolePortTemplate,
@@ -36,14 +38,11 @@ STRIP_KEYWORDS = {
 
 def import_device_type(data):
     """Import DeviceType."""
-    slug = data.get("slug")
-
-    try:
-        devtype = DeviceType.objects.get(slug=data.get("slug"))
-        raise ValueError(f"Unable to import this device_type, a DeviceType with this slug ({slug}) already exist.")
-    except DeviceType.DoesNotExist:
-        pass
-
+    manufacturer = Manufacturer.objects.get(data.get("manufacturer"))
+    model = data.get("model")
+    with contextlib.suppress(DeviceType.DoesNotExist):
+        devtype = DeviceType.objects.get(model=model, manufacturer=manufacturer)
+        raise ValueError(f"Unable to import this device_type, a DeviceType with this model ({model}) and manufacturer ({manufacturer}) already exist.")
     dtif = DeviceTypeImportForm(data)
     devtype = dtif.save()
 
@@ -73,14 +72,13 @@ class WelcomeWizardImportManufacturer(Job):
 
     manufacturer = StringVar(description="Name of the new manufacturer")
 
-    def run(self, data, commit):
+    def run(self, **data):
         """Tries to import the selected Manufacturer into Nautobot."""
         # Create the new site
         manufacturer = Manufacturer.objects.update_or_create(
             name=data["manufacturer"],
-            slug=slugify(data["manufacturer"]),
         )
-        self.log_success(obj=manufacturer, message="Created new manufacturer")
+        self.logger.info("Created new manufacturer", extra={"object": manufacturer})
 
 
 class WelcomeWizardImportDeviceType(Job):
@@ -94,25 +92,25 @@ class WelcomeWizardImportDeviceType(Job):
 
     device_type_filename = StringVar()
 
-    def run(self, data, commit=None):  # pylint: disable=inconsistent-return-statements
+    def run(self, **data):  # pylint: disable=inconsistent-return-statements
         """Tries to import the selected Device Type into Nautobot."""
-        device_type = data.get("device_type", "none.yaml")
+        device_type = data.get("device_type_filename", "none.yaml")
 
-        data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
+        device_type_data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
 
-        slug = data.get("slug")
-        manufacturer = data.get("manufacturer")
+        manufacturer = device_type_data.get("manufacturer")
         Manufacturer.objects.update_or_create(
             name=manufacturer,
-            slug=slugify(manufacturer),
         )
 
         try:
-            devtype = import_device_type(data)
+            devtype = import_device_type(device_type_data)
         except ValueError as exc:
-            self.log_warning(
-                message=f"Unable to import {device_type}, a DeviceType with this slug ({slug}) already exist. {exc}"
+            self.logger.error(
+                f"Unable to import {device_type}, a DeviceType with this model and manufacturer ({manufacturer}) already exist. {exc}"
             )
+            raise exc
 
-            return False
-        self.log_success(devtype, f"Imported DeviceType {slug} successfully")
+        self.logger.info(f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype})
+
+register_jobs(WelcomeWizardImportManufacturer, WelcomeWizardImportDeviceType)

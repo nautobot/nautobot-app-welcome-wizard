@@ -10,13 +10,12 @@ from django.views.generic import View
 from django.shortcuts import render, redirect
 from nautobot.circuits.models import CircuitType, Provider
 from nautobot.core.views import generic
-from nautobot.dcim.models import Site, DeviceType, Manufacturer
-from nautobot.dcim.models.devices import DeviceRole
+from nautobot.dcim.models import Location, DeviceType, Manufacturer
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.models import JobResult, GitRepository
 from nautobot.ipam.models import RIR
-from nautobot.utilities.permissions import get_permission_for_model
-from nautobot.utilities.views import ObjectPermissionRequiredMixin
+from nautobot.core.utils.permissions import get_permission_for_model
+from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
 from nautobot.virtualization.models import ClusterType
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.forms import (
@@ -148,14 +147,14 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
                     data = {"manufacturer": obj.name}
                     job = WelcomeWizardImportManufacturer()
                     job.job_result = job_result
-                    job.run(data, commit=True)
+                    job.run(data)
                     onboarded.append(obj.name)
 
                 elif self.model == DeviceTypeImport:
                     job = WelcomeWizardImportDeviceType()
-                    data = {"device_type": obj.filename}
+                    data = {"device_type_filename": obj.filename}
                     job.job_result = job_result
-                    job.run(data, commit=True)
+                    job.run(data)
                     onboarded.append(obj.name)
 
             # Currently treat everything as a success...
@@ -204,7 +203,7 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
         # wise.
         for nautobot_object, var_name, list_url, new_url, wizard_url in [
-            (Site, "Sites", "dcim:site_list", "dcim:site_add", ""),
+            (Location, "locations", "dcim:location_list", "dcim:location_add", ""),
             (
                 Manufacturer,
                 "Manufacturers",
@@ -219,13 +218,14 @@ class WelcomeWizardDashboard(generic.ObjectListView):
                 "dcim:devicetype_add",
                 "plugins:welcome_wizard:devicetype_import",
             ),
-            (
-                DeviceRole,
-                "Device Roles",
-                "dcim:devicerole_list",
-                "dcim:devicerole_add",
-                "",
-            ),
+            # Convert to Role
+            # (
+            #     DeviceRole,
+            #     "Device Roles",
+            #     "dcim:devicerole_list",
+            #     "dcim:devicerole_add",
+            #     "",
+            # ),
             (
                 CircuitType,
                 "Circuit Types",
