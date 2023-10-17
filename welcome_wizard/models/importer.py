@@ -11,7 +11,6 @@ class ManufacturerImport(BaseModel):
     """Store Manufacturers available for import."""
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.CharField(max_length=100, unique=True)
 
     class Meta:
         """Meta for ManufacturerImport."""
