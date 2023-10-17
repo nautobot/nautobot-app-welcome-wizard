@@ -20,15 +20,18 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
     manufacturers = set()
     device_types = {}
 
-    # We have decided that a Git repository can provide YAML files in a
+    # We have decided that a Git repository can provide both YML and YAML files in a
     # /animals/ directory at the repository root.
-    device_type_path = os.path.join(repository_record.filesystem_path, "device-types")
-    for filename in Path(device_type_path).rglob("*.yaml"):
-        with open(filename, encoding="utf8") as file:
-            data = yaml.safe_load(file)
+    extensions = [".yml", ".yaml"]
 
-        manufacturers.add(data["manufacturer"])
-        device_types[filename.name] = data
+    device_type_path = os.path.join(repository_record.filesystem_path, "device-types")
+    for ext in extensions:
+        for filename in Path(device_type_path).rglob(f"*{ext}"):
+            with open(filename, encoding="utf8") as file:
+                data = yaml.safe_load(file)
+
+            manufacturers.add(data["manufacturer"])
+            device_types[filename.name] = data
 
     for manufacturer in manufacturers:
         # Create or update an ManufacturerImport record based on the provided data
