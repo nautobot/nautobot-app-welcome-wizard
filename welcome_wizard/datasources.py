@@ -12,10 +12,11 @@ from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
 
 
 def retrieve_device_types_from_filesystem(path):
-    """_summary_
+    """Retrieve Manufacturers and Device Types from the file system.
 
     Args:
         path (str): Filesystem path to the repo holding the Device Types.
+
     Returns:
         tuple: a Set of Manufacturers and a dictionary of Device Types.
     """
