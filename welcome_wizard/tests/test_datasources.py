@@ -127,6 +127,5 @@ class GitTest(TransactionTestCase):
                 self.assertIsNotNone(device_type2)
                 self.assertEqual(device_type2.name, "Fake Model 2")
 
-
                 # Delete the GitRepository (this is a noop)
                 self.repo.delete()
