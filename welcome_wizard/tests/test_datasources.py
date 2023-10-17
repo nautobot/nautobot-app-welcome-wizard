@@ -94,6 +94,11 @@ class GitTest(TransactionTestCase):
                             {"manufacturer": "Cisco", "model": "Fake Model"},
                             file,
                         )
+                    with open(os.path.join(path, "device-types", "Cisco", "fake2.yml"), "w", encoding="utf8") as file:
+                        yaml.dump(
+                            {"manufacturer": "Cisco", "model": "Fake Model 2"},
+                            file,
+                        )
                     return mock.DEFAULT
 
                 mock_git_repo.side_effect = populate_repo
@@ -118,6 +123,10 @@ class GitTest(TransactionTestCase):
                 self.assertIsNotNone(device_type)
                 self.assertEqual(device_type.name, "Fake Model")
                 self.assertEqual(device_type.manufacturer, manufacturer_import)
+                device_type2 = DeviceTypeImport.objects.get(filename="fake2.yml")
+                self.assertIsNotNone(device_type2)
+                self.assertEqual(device_type2.name, "Fake Model 2")
+
 
                 # Delete the GitRepository (this is a noop)
                 self.repo.delete()
