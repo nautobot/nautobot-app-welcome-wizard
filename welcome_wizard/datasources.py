@@ -11,24 +11,39 @@ from nautobot.extras.registry import DatasourceContent
 from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
 
 
+def retrieve_device_types_from_filesystem(path):
+    """Retrieve Manufacturers and Device Types from the file system.
+
+    Args:
+        path (str): Filesystem path to the repo holding the Device Types.
+
+    Returns:
+        tuple: a Set of Manufacturers and a dictionary of Device Types.
+    """
+    manufacturers = set()
+    device_types = {}
+
+    # We have decided that a Git repository can provide both YML and YAML files in a
+    # /animals/ directory at the repository root.
+
+    device_type_path = os.path.join(path, "device-types")
+    files = (filename for filename in Path(device_type_path).rglob("*") if filename.suffix in [".yml", ".yaml"])
+    for filename in files:
+        with open(filename, encoding="utf8") as file:
+            data = yaml.safe_load(file)
+
+        manufacturers.add(data["manufacturer"])
+        device_types[filename.name] = data
+    return (manufacturers, device_types)
+
+
 def refresh_git_import_wizard(repository_record, job_result, delete=False):
     """Callback for GitRepository updates - refresh Device Types managed by it."""
     if "welcome_wizard.import_wizard" not in repository_record.provided_contents or delete:
         # TODO Handle delete.
         return
 
-    manufacturers = set()
-    device_types = {}
-
-    # We have decided that a Git repository can provide YAML files in a
-    # /animals/ directory at the repository root.
-    device_type_path = os.path.join(repository_record.filesystem_path, "device-types")
-    for filename in Path(device_type_path).rglob("*.yaml"):
-        with open(filename, encoding="utf8") as file:
-            data = yaml.safe_load(file)
-
-        manufacturers.add(data["manufacturer"])
-        device_types[filename.name] = data
+    manufacturers, device_types = retrieve_device_types_from_filesystem(repository_record.filesystem_path)
 
     for manufacturer in manufacturers:
         # Create or update an ManufacturerImport record based on the provided data
