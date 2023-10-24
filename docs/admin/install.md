@@ -2,6 +2,9 @@
 
 Here you will find detailed instructions on how to **install** and **configure** the App within your Nautobot environment.
 
+!!! warning "Developer Note - Remove Me!"
+    Detailed instructions on installing the App. You will need to update this section based on any additional dependencies or prerequisites.
+
 ## Prerequisites
 
 - The plugin is compatible with Nautobot 1.5.0 and higher.
@@ -9,6 +12,11 @@ Here you will find detailed instructions on how to **install** and **configure**
 
 !!! note
     Please check the [dedicated page](compatibility_matrix.md) for a full compatibility matrix and the deprecation policy.
+
+### Access Requirements
+
+!!! warning "Developer Note - Remove Me!"
+    What external systems (if any) it needs access to in order to work.
 
 ## Install Guide
 
@@ -38,8 +46,7 @@ PLUGINS = ["welcome_wizard"]
 
 # PLUGINS_CONFIG = {
 #   "welcome_wizard": {
-#     "enable_devicetype-library": True,
-#     "enable_welcome_banner": True,
+#     ADD YOUR SETTINGS HERE
 #   }
 # }
 ```
@@ -62,9 +69,13 @@ sudo systemctl restart nautobot nautobot-worker nautobot-scheduler
 
 ## App Configuration
 
+!!! warning "Developer Note - Remove Me!"
+    Any configuration required to get the App set up. Edit the table below as per the examples provided.
+
 The plugin behavior can be controlled with the following list of settings:
 
 | Key     | Example | Default | Description                          |
 | ------- | ------ | -------- | ------------------------------------- |
-| `enable_devicetype-library` | `True` | `True` | If enabled, the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you. |
-| `enable_welcome_banner` | `True` | `True` | If enabled, the Welcome Wizard banner will display on the home screen for authenticated users. |
+| `enable_backup` | `True` | `True` | A boolean to represent whether or not to run backup configurations within the plugin. |
+| `platform_slug_map` | `{"cisco_wlc": "cisco_aireos"}` | `None` | A dictionary in which the key is the platform slug and the value is what netutils uses in any "network_os" parameter. |
+| `per_feature_bar_width` | `0.15` | `0.15` | The width of the table bar within the overview report |
