@@ -1,26 +1,30 @@
-"""Plugin declaration for welcome_wizard."""
-# Metadata is inherited from Nautobot. If not including Nautobot in the environment, this should be added
-from importlib import metadata
+"""Plugin declaration for Welcome Wizard."""
 
-__version__ = metadata.version(__name__)
+__version__ = "1.1.4"
 
-from nautobot.extras.plugins import NautobotAppConfig
+from nautobot.extras.plugins import PluginConfig
 
 
-class NautobotWelcomeWizardConfig(NautobotAppConfig):
+class WelcomeWizardConfig(PluginConfig):
     """Plugin configuration for the welcome_wizard plugin."""
 
     name = "welcome_wizard"
-    verbose_name = "Welcome Wizard"
+    verbose_name = "Nautobot Welcome Wizard"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Welcome Wizard."
-    base_url = "nautobot-welcome-wizard"
+    description = "Nautobot's Getting Started Wizard."
+    base_url = "welcome_wizard"
     required_settings = []
     min_version = "1.5.0"
-    max_version = "1.9999"
-    default_settings = {}
+    default_settings = {
+        # Add devicetype-library to Nautobot Git Repositories
+        "enable_devicetype-library": True,
+        "enable_welcome_banner": True,
+    }
     caching_config = {}
+    middleware = ["welcome_wizard.middleware.Prerequisites"]
+    home_view_name = "plugins:welcome_wizard:dashboard"
+    docs_view_name = "plugins:welcome_wizard:docs"
 
 
-config = NautobotWelcomeWizardConfig  # pylint:disable=invalid-name
+config = WelcomeWizardConfig  # pylint:disable=invalid-name

@@ -1,17 +1,7 @@
 # Welcome Wizard
 
-<!--
-Developer Note - Remove Me!
-
-The README will have certain links/images broken until the PR is merged into `develop`. Update the GitHub links with whichever branch you're using (main etc.) if different.
-
-The logo of the project is a placeholder (docs/images/icon-nautobot-welcome-wizard.png) - please replace it with your app icon, making sure it's at least 200x200px and has a transparent background!
-
-To avoid extra work and temporary links, make sure that publishing docs (or merging a PR) is done at the same time as setting up the docs site on RTD, then test everything.
--->
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.png" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
   <br>
   <a href="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
@@ -23,25 +13,37 @@ To avoid extra work and temporary links, make sure that publishing docs (or merg
 
 ## Overview
 
-> Developer Note: Add a long (2-3 paragraphs) description of what the App does, what problems it solves, what functionality it adds to Nautobot, what external systems it works with etc.
+### What is the Nautobot Welcome Wizard?
+
+The Welcome Wizard is a getting started wizard for [Nautobot](https://docs.nautobot.com/projects/core/en/stable/) to assist a new user with necessary initial steps in populating data.
+
+![Welcome Wizard GIF](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/WelcomeWizard.gif)
+
+## Key Features
+
+The Welcome Wizard adds four (4) key features:
+
+1. [**Import Wizard**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_getting_started/#import-manufacturers) - Welcome Wizard uses the `Import Wizard` to allow ease of adding community defined Device Types and Manufacturers into Nautobot.
+
+2. [**Quick-Start Settings**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/git_datasource/) - Welcome Wizard includes settings that are enabled by default to ease the user in setting up and syncing from a Git Repository.
+
+3. [**Helpful Middleware**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/#middleware) - Welcome Wizard includes middleware banners to assist with Nautobot resource creation.
+
+4. [**Dashboard**](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) - The Welcome Wizard Dashboard contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them. This ties all of the features together.
 
 ### Screenshots
 
-> Developer Note: Add any representative screenshots of the App in action. These images should also be added to the `docs/user/app_use_cases.md` section.
-
-> Developer Note: Place the files in the `docs/images/` folder and link them using only full URLs from GitHub, for example: `![Overview](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/plugin-overview.png)`. This absolute static linking is required to ensure the README renders properly in GitHub, the docs site, and any other external sites like PyPI.
-
 More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the plugin's added functionality:
 
-![](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/placeholder.png)
+![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_banner.png)
 
-## Try it out!
+![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
 
-> Developer Note: Only keep this section if appropriate. Update link to correct sandbox.
+![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/welcome_wizard.png)
 
-This App is installed in the Nautobot Community Sandbox found over at [demo.nautobot.com](https://demo.nautobot.com/)!
+![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
 
-> For a full list of all the available always-on sandbox environments, head over to the main page on [networktocode.com](https://www.networktocode.com/nautobot/sandbox-environments/).
+![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_import_device_type.png)
 
 ## Documentation
 
