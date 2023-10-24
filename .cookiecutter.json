@@ -10,7 +10,7 @@
         "project_slug": "nautobot-plugin-welcome-wizard",
         "repo_url": "https://github.com/nautobot/nautobot-plugin-welcome-wizard",
         "base_url": "nautobot-welcome-wizard",
-        "min_nautobot_version": "1.5.0",
+        "min_nautobot_version": "1.6.0",
         "max_nautobot_version": "1.9999",
         "camel_name": "NautobotWelcomeWizard",
         "project_short_description": "Welcome Wizard",

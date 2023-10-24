@@ -5,7 +5,7 @@ about: Report a reproducible bug in the current release of nautobot-welcome-wiza
 
 ### Environment
 * Python version:  <!-- Example: 3.11.4 -->
-* Nautobot version:  <!-- Example: 1.5.0 -->
+* Nautobot version:  <!-- Example: 1.6.0 -->
 * nautobot-welcome-wizard version:  <!-- Example: 1.0.0 -->
 
 <!-- What did you expect to happen? -->
