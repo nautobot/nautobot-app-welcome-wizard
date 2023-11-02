@@ -2,7 +2,7 @@
 import django_tables2 as tables
 
 from django.conf import settings
-from nautobot.utilities.tables import BaseTable, ToggleColumn
+from nautobot.apps.tables import BaseTable, ToggleColumn
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 

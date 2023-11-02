@@ -1,12 +1,17 @@
 """Navigation menu for Welcome Wizard."""
-from nautobot.extras.plugins import PluginMenuItem
+from nautobot.apps.ui import NavMenuGroup, NavMenuItem, NavMenuTab
 
 plugin_items = [
-    PluginMenuItem(
+    NavMenuItem(
         link="plugins:welcome_wizard:dashboard",
-        link_text="Welcome Wizard",
+        name="Welcome Wizard",
         permissions=["welcome_wizard.view_dashboard"],
     ),
 ]
 
-menu_items = tuple(plugin_items)
+menu_items =  (
+    NavMenuTab(
+        name="Plugins",
+        groups=(NavMenuGroup(name="Welcome Wizard", items=tuple(plugin_items)),),
+    ),
+)

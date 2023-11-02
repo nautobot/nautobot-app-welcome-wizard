@@ -7,7 +7,7 @@ from nautobot.core.models import BaseModel
 class Merlin(BaseModel):
     """Base model for Merlin Start.
 
-    Keeping the Merlin name as a node to the original plugin name.
+    Keeping the Merlin name as a nod to the original plugin name.
 
     Args:
         models (model): Django model
