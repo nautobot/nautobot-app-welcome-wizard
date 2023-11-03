@@ -1,12 +1,12 @@
 """Middleware for the Welcome Wizard plugin."""
 
 import logging
+
 from django.contrib import messages
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.safestring import mark_safe
-
-from nautobot.utilities.templatetags.helpers import bettertitle
+from nautobot.core.templatetags.helpers import bettertitle
 
 logger = logging.getLogger("welcome_wizard.middleware")
 

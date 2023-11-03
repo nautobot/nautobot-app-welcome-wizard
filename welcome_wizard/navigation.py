@@ -9,7 +9,7 @@ plugin_items = [
     ),
 ]
 
-menu_items =  (
+menu_items = (
     NavMenuTab(
         name="Plugins",
         groups=(NavMenuGroup(name="Welcome Wizard", items=tuple(plugin_items)),),

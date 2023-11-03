@@ -3,23 +3,24 @@
 
 import contextlib
 from collections import OrderedDict
+
+from nautobot.apps.jobs import Job, StringVar
 from nautobot.core.celery import register_jobs
 from nautobot.dcim.forms import DeviceTypeImportForm
 from nautobot.dcim.models import (
     ConsolePortTemplate,
     ConsoleServerPortTemplate,
     DeviceBayTemplate,
+    DeviceType,
     FrontPortTemplate,
     InterfaceTemplate,
+    Manufacturer,
     PowerOutletTemplate,
     PowerPortTemplate,
     RearPortTemplate,
-    DeviceType,
-    Manufacturer,
 )
-from nautobot.extras.jobs import Job, StringVar
-from welcome_wizard.models.importer import DeviceTypeImport
 
+from welcome_wizard.models.importer import DeviceTypeImport
 
 COMPONENTS = OrderedDict()
 COMPONENTS["console-ports"] = ConsolePortTemplate
@@ -38,11 +39,13 @@ STRIP_KEYWORDS = {
 
 def import_device_type(data):
     """Import DeviceType."""
-    manufacturer = Manufacturer.objects.get(data.get("manufacturer"))
+    manufacturer = Manufacturer.objects.get(name=data.get("manufacturer"))
     model = data.get("model")
     with contextlib.suppress(DeviceType.DoesNotExist):
         devtype = DeviceType.objects.get(model=model, manufacturer=manufacturer)
-        raise ValueError(f"Unable to import this device_type, a DeviceType with this model ({model}) and manufacturer ({manufacturer}) already exist.")
+        raise ValueError(
+            f"Unable to import this device_type, a DeviceType with this model ({model}) and manufacturer ({manufacturer}) already exist."
+        )
     dtif = DeviceTypeImportForm(data)
     devtype = dtif.save()
 
@@ -69,14 +72,15 @@ class WelcomeWizardImportManufacturer(Job):
 
         name = "Welcome Wizard - Import Manufacturer"
         description = "Imports a chosen Manufacturer"
+        enabled = True
 
-    manufacturer = StringVar(description="Name of the new manufacturer")
+    manufacturer_name = StringVar(description="Name of the new manufacturer")
 
-    def run(self, **data):
+    def run(self, manufacturer_name):
         """Tries to import the selected Manufacturer into Nautobot."""
-        # Create the new site
-        manufacturer = Manufacturer.objects.update_or_create(
-            name=data["manufacturer"],
+        # Create the new manufacturer
+        manufacturer, _ = Manufacturer.objects.update_or_create(
+            name=manufacturer_name,
         )
         self.logger.info("Created new manufacturer", extra={"object": manufacturer})
 
@@ -89,12 +93,14 @@ class WelcomeWizardImportDeviceType(Job):
 
         name = "Welcome Wizard - Import Device Type"
         description = "Imports a chosen Device Type"
+        enabled = True
 
-    device_type_filename = StringVar()
+    filename = StringVar()
 
-    def run(self, **data):  # pylint: disable=inconsistent-return-statements
+    def run(self, filename):  # pylint: disable=inconsistent-return-statements
         """Tries to import the selected Device Type into Nautobot."""
-        device_type = data.get("device_type_filename", "none.yaml")
+        # device_type = data.get("device_type_filename", "none.yaml")
+        device_type = filename if filename else "none.yaml"
 
         device_type_data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
 
@@ -112,5 +118,6 @@ class WelcomeWizardImportDeviceType(Job):
             raise exc
 
         self.logger.info(f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype})
+
 
 register_jobs(WelcomeWizardImportManufacturer, WelcomeWizardImportDeviceType)

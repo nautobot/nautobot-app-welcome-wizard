@@ -4,6 +4,7 @@ from django import forms
 from nautobot.apps.forms import DynamicModelMultipleChoiceField
 from nautobot.core.forms import BootstrapMixin
 from nautobot.extras.forms import CustomFieldFilterForm
+
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 
@@ -24,13 +25,13 @@ class DeviceTypeImportFilterForm(BootstrapMixin, CustomFieldFilterForm):
     )
 
 
-class ManufacturerBulkImportForm(BootstrapMixin):
+class ManufacturerBulkImportForm(BootstrapMixin, forms.Form):
     """Bulk Import Form for Manufacturer."""
 
     pk = forms.ModelMultipleChoiceField(queryset=ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
 
 
-class DeviceTypeBulkImportForm(BootstrapMixin):
+class DeviceTypeBulkImportForm(BootstrapMixin, forms.Form):
     """Bulk Import Form for Device Type."""
 
     pk = forms.ModelMultipleChoiceField(queryset=DeviceTypeImport.objects.all(), widget=forms.MultipleHiddenInput)

@@ -1,9 +1,9 @@
 """Models definition for Welcome Wizard Importer."""
 
-from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import ValidationError
-
+from django.db import models
+from django.urls import reverse
 from nautobot.core.models import BaseModel
 
 
@@ -20,6 +20,9 @@ class ManufacturerImport(BaseModel):
     def __str__(self):
         """Return name for string method."""
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("plugins:welcome_wizard:manufacturer", kwargs={"pk": self.pk})
 
 
 class DeviceTypeImport(BaseModel):
@@ -49,3 +52,6 @@ class DeviceTypeImport(BaseModel):
     def __str__(self):
         """Return name for string method."""
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("plugins:welcome_wizard:devicetype", kwargs={"pk": self.pk})

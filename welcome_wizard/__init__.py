@@ -1,11 +1,15 @@
 """Plugin declaration for Welcome Wizard."""
+from importlib import metadata
 
-__version__ = "1.1.4"
+from django.conf import settings
+from nautobot.extras.plugins import NautobotAppConfig
+
+__version__ = metadata.version(__name__)
 
 from nautobot.extras.plugins import PluginConfig
 
 
-class WelcomeWizardConfig(PluginConfig):
+class WelcomeWizardConfig(NautobotAppConfig):
     """Plugin configuration for the welcome_wizard plugin."""
 
     name = "welcome_wizard"
@@ -15,7 +19,8 @@ class WelcomeWizardConfig(PluginConfig):
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
     required_settings = []
-    min_version = "1.5.0"
+    min_version = "2.0.0"
+    max_version = "2.9999"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
