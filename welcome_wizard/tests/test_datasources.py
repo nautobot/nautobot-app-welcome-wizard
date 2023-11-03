@@ -1,20 +1,19 @@
 """Tests for Welcome Wizard Datasources."""
 import os
 import tempfile
-from unittest import mock
 import uuid
+from unittest import mock
 
 import yaml
-
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.test import RequestFactory
-
+from nautobot.core.testing import TransactionTestCase
 from nautobot.extras.choices import JobResultStatusChoices
-from nautobot.extras.datasources.git import pull_git_repository_and_refresh_data
+from nautobot.extras.datasources.git import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.datasources.registry import get_datasource_contents
 from nautobot.extras.models import GitRepository, JobResult
-from nautobot.utilities.testing import TransactionTestCase
+
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 # Use the proper swappable User model
@@ -45,7 +44,7 @@ class GitTest(TransactionTestCase):
             # Provide everything we know we can provide
             provided_contents=[entry.content_identifier for entry in get_datasource_contents("extras.gitrepository")],
         )
-        self.repo.save(trigger_resync=False)
+        self.repo.save()
 
         self.job_result = JobResult.objects.create(
             name=self.repo.name,

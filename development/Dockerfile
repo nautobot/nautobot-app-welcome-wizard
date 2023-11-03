@@ -6,21 +6,32 @@
 # -------------------------------------------------------------------------------------
 # !!! USE CAUTION WHEN MODIFYING LINES BELOW
 
+<<<<<<< HEAD
 # Accepts a desired Nautobot version as build argument, default to 1.6.0
 ARG NAUTOBOT_VER="1.6.0"
 
 # Accepts a desired Python version as build argument, default to 3.11
 ARG PYTHON_VER="3.11"
+=======
+# Accepts a desired Nautobot version as build argument, default to 2.0.0
+ARG NAUTOBOT_VER="2.0.3"
+
+# Accepts a desired Python version as build argument, default to 3.11
+ARG PYTHON_VER="3.8"
+>>>>>>> update for nautobot 2.0
 
 # Retrieve published development image of Nautobot base which should include most CI dependencies
-FROM ghcr.io/nautobot/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER}
+FROM networktocode/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER}
 
 # Runtime argument and environment setup
 ARG NAUTOBOT_ROOT=/opt/nautobot
 
 ENV prometheus_multiproc_dir=/prom_cache
 ENV NAUTOBOT_ROOT=${NAUTOBOT_ROOT}
+<<<<<<< HEAD
 ENV INVOKE_WELCOME_WIZARD_LOCAL=true
+=======
+>>>>>>> update for nautobot 2.0
 
 # Install Poetry manually via its installer script;
 # We might be using an older version of Nautobot that includes an older version of Poetry
@@ -64,7 +75,7 @@ RUN pip show nautobot | grep "^Version: " | sed -e 's/Version: /nautobot==/' > c
 # We can't use the entire freeze as it takes forever to resolve with rigidly fixed non-direct dependencies,
 #   especially those that are only direct to Nautobot but the container included versions slightly mismatch
 RUN poetry export -f requirements.txt --without-hashes --output poetry_freeze_base.txt
-RUN poetry export -f requirements.txt --with dev --without-hashes --output poetry_freeze_all.txt
+RUN poetry export -f requirements.txt --without-hashes --with dev --output poetry_freeze_all.txt
 RUN sort poetry_freeze_base.txt poetry_freeze_all.txt | uniq -u > poetry_freeze_dev.txt
 
 # Install all local project as editable, constrained on Nautobot version, to get any additional

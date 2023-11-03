@@ -1,10 +1,10 @@
 """Welcome Wizard Tests."""
-from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 from nautobot.dcim.models import Location
 
-from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.merlin import Merlin
 
 
 class MerlinModelTest(TestCase):
