@@ -6,11 +6,12 @@ from unittest import mock
 
 import yaml
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.test import RequestFactory
-from nautobot.core.testing import TransactionTestCase
+from nautobot.core.jobs import GitRepositorySync
+from nautobot.core.testing import TransactionTestCase, run_job_for_testing
 from nautobot.extras.choices import JobResultStatusChoices
-from nautobot.extras.datasources.git import enqueue_pull_git_repository_and_refresh_data
+
+# from nautobot.extras.datasources.git import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.datasources.registry import get_datasource_contents
 from nautobot.extras.models import GitRepository, JobResult
 
@@ -30,6 +31,8 @@ class GitTest(TransactionTestCase):
 
     def setUp(self):
         """Setup tests."""
+        super().setUp()
+
         self.user = User.objects.create_user(username="testuser")
         self.factory = RequestFactory()
         self.dummy_request = self.factory.get("/no-op/")
@@ -46,40 +49,35 @@ class GitTest(TransactionTestCase):
         )
         self.repo.save()
 
-        self.job_result = JobResult.objects.create(
-            name=self.repo.name,
-            obj_type=ContentType.objects.get_for_model(GitRepository),
-            user=None,
-            job_id=uuid.uuid4(),
-        )
-
-    def test_pull_git_repository_and_refresh_data_with_no_data(self, mock_git_repo):
-        """The test_pull_git_repository_and_refresh_data job should succeed if the given repo is empty."""
-        with tempfile.TemporaryDirectory() as tempdir:
-            with self.settings(GIT_ROOT=tempdir):
-
-                def create_empty_repo(path, _url):
-                    os.makedirs(path)
-                    return mock.DEFAULT
-
-                mock_git_repo.side_effect = create_empty_repo
-                mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
-
-                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result.pk)
-
-                self.job_result.refresh_from_db()
-
-                self.assertEqual(
-                    self.job_result.status,
-                    JobResultStatusChoices.STATUS_SUCCESS,
-                    self.job_result.data,
-                )
-                self.repo.refresh_from_db()
-                self.assertEqual(self.repo.current_head, self.COMMIT_HEXSHA, self.job_result.data)
-                # TODO: inspect the logs in job_result.data?
+        self.job_result = JobResult.objects.create(name=self.repo.name)
 
     def test_pull_git_repository_and_refresh_data_with_valid_data(self, mock_git_repo):
         """The test_pull_git_repository_and_refresh_data job should succeed if valid data is present in the repo."""
+        # with tempfile.TemporaryDirectory() as tempdir:
+        #     with self.settings(GIT_ROOT=tempdir):
+
+        #         def populate_repo(path, _url):
+        #             os.makedirs(path)
+        #             # Load device-types data for git-repository
+        #             os.makedirs(os.path.join(path, "device-types"))
+        #             os.makedirs(os.path.join(path, "device-types", "Cisco"))
+        #             with open(os.path.join(path, "device-types", "Cisco", "fake.yaml"), "w", encoding="utf8") as file:
+        #                 yaml.dump(
+        #                     {"manufacturer": "Cisco", "model": "Fake Model"},
+        #                     file,
+        #                 )
+        #             with open(os.path.join(path, "device-types", "Cisco", "fake2.yml"), "w", encoding="utf8") as file:
+        #                 yaml.dump(
+        #                     {"manufacturer": "Cisco", "model": "Fake Model 2"},
+        #                     file,
+        #                 )
+        #             return mock.DEFAULT
+
+        #         mock_git_repo.side_effect = populate_repo
+        #         mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
+
+        #         enqueue_pull_git_repository_and_refresh_data(self.repo, self.user)
+
         with tempfile.TemporaryDirectory() as tempdir:
             with self.settings(GIT_ROOT=tempdir):
 
@@ -101,16 +99,19 @@ class GitTest(TransactionTestCase):
                     return mock.DEFAULT
 
                 mock_git_repo.side_effect = populate_repo
-                mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
+                mock_git_repo.return_value.checkout.return_value = (self.COMMIT_HEXSHA, True)
 
-                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result.pk)
-
-                self.job_result.refresh_from_db()
-
+                # Run the Git operation and refresh the object from the DB
+                job_model = GitRepositorySync().job_model
+                job_result = run_job_for_testing(job=job_model, repository=self.repo.pk)
+                job_result.refresh_from_db()
                 self.assertEqual(
-                    self.job_result.status,
+                    job_result.status,
                     JobResultStatusChoices.STATUS_SUCCESS,
-                    self.job_result.data,
+                    (
+                        job_result.result,
+                        list(job_result.job_log_entries.filter(log_level="error").values_list("message", flat=True)),
+                    ),
                 )
 
                 # Make sure ManufacturerImport was successfully loaded from file

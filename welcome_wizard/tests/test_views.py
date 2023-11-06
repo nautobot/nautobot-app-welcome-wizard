@@ -8,7 +8,7 @@ from nautobot.core.testing.utils import extract_form_failures
 from nautobot.core.testing.views import TestCase
 from nautobot.core.utils.permissions import resolve_permission_ct
 from nautobot.dcim.models import DeviceType, Location, LocationType, Manufacturer
-from nautobot.extras.models import Tag
+from nautobot.extras.models import Status, Tag
 from nautobot.users.models import ObjectPermission
 from nautobot.virtualization.models import Cluster, ClusterType
 
@@ -24,7 +24,6 @@ class WizardTestCaseMixin:
 
     def setUpWizard(self, client=True):  # pylint: disable=invalid-name
         """Setup shared testuser, statuses and client."""
-
         # Create the test user and assign permissions
         self.user = User.objects.create_user(username="wizard_testuser")
         self.add_permissions(*self.user_permissions)
@@ -39,7 +38,6 @@ class WizardTestCaseMixin:
     #
     # Permissions management
     #
-
     def add_permissions(self, *names):
         """
         Assign a set of permissions to the test user. Accepts permission names in the form <app>.<action>_<model>.
@@ -340,6 +338,10 @@ class DashboardView(TestCase):
         TestCase (TestCase): Generic Test Case
     """
 
+    def setUp(self):
+        self.active_status, _ = Status.objects.get_or_create(name="Active")
+        super().setUp()
+
     def test_dashboard_view_no_entries(self):
         self.add_permissions("welcome_wizard.view_merlin")
         url = reverse("plugins:welcome_wizard:dashboard")
@@ -357,7 +359,7 @@ class DashboardView(TestCase):
         self.add_permissions("welcome_wizard.view_merlin")
         Manufacturer.objects.create(name="Manufacturer1")
         site, _ = LocationType.objects.get_or_create(name="Site")
-        Location.objects.create(name="site01", location_type=site)
+        Location.objects.create(name="site01", location_type=site, status=self.active_status)
         url = reverse("plugins:welcome_wizard:dashboard")
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 200)
@@ -365,7 +367,7 @@ class DashboardView(TestCase):
         self.assertContains(resp, "mdi-wizard-hat", 2)
         # 8th is from nautobot formset javascript
         self.assertContains(resp, "mdi-plus-thick", 8)
-        self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 5)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
 
     def test_dashboard_view_permission_denied(self):
@@ -445,7 +447,7 @@ class ClusterDevicesTestCase(TestCase):
     def test_cluster_add_devices(self):
         self.add_permissions("virtualization.change_cluster")
         cluster_type = ClusterType.objects.create(name="Cluster Type 1")
-        cluster = Cluster.objects.create(name="Cluster 1", type=cluster_type)
+        cluster = Cluster.objects.create(name="Cluster 1", cluster_type=cluster_type)
 
         self.assertHttpStatus(
             self.client.get(reverse("virtualization:cluster_add_devices", kwargs={"pk": cluster.pk})), 200

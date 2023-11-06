@@ -1,10 +1,7 @@
 """Views for Welcome Wizard."""
-import uuid
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.views.generic import View
@@ -25,7 +22,6 @@ from welcome_wizard.forms import (
     ManufacturerBulkImportForm,
     ManufacturerImportFilterForm,
 )
-from welcome_wizard.jobs import WelcomeWizardImportDeviceType, WelcomeWizardImportManufacturer
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeWizardTable, ManufacturerWizardTable
@@ -144,13 +140,11 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
                     job_result = JobResult.enqueue_job(
                         job_model=job, user=self.request.user, manufacturer_name=obj.name
                     )
-                    job.job_result = job_result
                     onboarded.append(obj.name)
                 elif self.model == DeviceTypeImport:
                     job = Job.objects.get(name="Welcome Wizard - Import Device Type")
                     job_result = JobResult.enqueue_job(job_model=job, user=self.request.user, filename=obj.filename)
                     onboarded.append(obj.name)
-
             # Currently treat everything as a success...
             messages.success(request, f"Onboarded {len(onboarded)} objects.")
 
@@ -280,8 +274,12 @@ class WelcomeWizardDashboard(generic.ObjectListView):
 
 
 class ManufacturerImportDetailView(generic.ObjectView):
+    """Detail view for ManufacturerImport."""
+
     queryset = ManufacturerImport.objects.all()
 
 
 class DeviceTypeImportDetailView(generic.ObjectView):
+    """Detail view for DeviceTypeImport."""
+
     queryset = DeviceTypeImport.objects.all()

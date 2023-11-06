@@ -4,7 +4,6 @@ import os
 from pathlib import Path
 
 import yaml
-from django.utils.text import slugify
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
 
@@ -49,7 +48,7 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
         manufacturer_record, _ = ManufacturerImport.objects.update_or_create(name=manufacturer)
         # Record the outcome in the JobResult record
         job_result.log(
-            f"Successfully created/updated manufacturer",
+            "Successfully created/updated manufacturer",
             obj=manufacturer_record,
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
@@ -62,7 +61,7 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
             defaults={"device_type_data": device_data},
         )
         job_result.log(
-            f"Successfully created/updated device_type",
+            "Successfully created/updated device_type",
             obj=device_type_record,
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
