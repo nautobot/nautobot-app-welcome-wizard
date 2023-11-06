@@ -22,7 +22,7 @@ class Prerequisites:
         """Capture the response and return it."""
         return self.get_request(request)
 
-    def process_view(self, request, view_func, view_args, view_kwargs):  # pylint: disable=W0613,R0201
+    def process_view(self, request, view_func, view_args, view_kwargs):  # pylint: disable=unused-argument
         """Process the view to determine if it's one we want to intercept."""
         # If no user or they aren't authenticated, return to hit the default login redirect
         if not hasattr(request, "user") or not request.user.is_authenticated:

@@ -1,12 +1,9 @@
 """Plugin declaration for Welcome Wizard."""
 from importlib import metadata
 
-from django.conf import settings
 from nautobot.extras.plugins import NautobotAppConfig
 
 __version__ = metadata.version(__name__)
-
-from nautobot.extras.plugins import PluginConfig
 
 
 class WelcomeWizardConfig(NautobotAppConfig):

@@ -60,7 +60,6 @@ def import_device_type(data):
                 for item in data[key]
             ]
             component_class.objects.bulk_create(component_list)
-
     return devtype
 
 
@@ -76,7 +75,7 @@ class WelcomeWizardImportManufacturer(Job):
 
     manufacturer_name = StringVar(description="Name of the new manufacturer")
 
-    def run(self, manufacturer_name):
+    def run(self, manufacturer_name):  # pylint: disable=arguments-differ
         """Tries to import the selected Manufacturer into Nautobot."""
         # Create the new manufacturer
         manufacturer, _ = Manufacturer.objects.update_or_create(
@@ -97,7 +96,7 @@ class WelcomeWizardImportDeviceType(Job):
 
     filename = StringVar()
 
-    def run(self, filename):  # pylint: disable=inconsistent-return-statements
+    def run(self, filename):  # pylint: disable=arguments-differ
         """Tries to import the selected Device Type into Nautobot."""
         # device_type = data.get("device_type_filename", "none.yaml")
         device_type = filename if filename else "none.yaml"
@@ -112,12 +111,13 @@ class WelcomeWizardImportDeviceType(Job):
         try:
             devtype = import_device_type(device_type_data)
         except ValueError as exc:
-            self.logger.error(
+            self.logger.error(  # pylint: disable=logging-fstring-interpolation
                 f"Unable to import {device_type}, a DeviceType with this model and manufacturer ({manufacturer}) already exist. {exc}"
             )
             raise exc
 
-        self.logger.info(f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype})
-
+        self.logger.info(  # pylint: disable=logging-fstring-interpolation
+            f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype}
+        )
 
 register_jobs(WelcomeWizardImportManufacturer, WelcomeWizardImportDeviceType)

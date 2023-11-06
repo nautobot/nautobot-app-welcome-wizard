@@ -21,7 +21,8 @@ class ManufacturerImport(BaseModel):
         """Return name for string method."""
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
+        """Return the absolute url for ManufacturerImport."""
         return reverse("plugins:welcome_wizard:manufacturer", kwargs={"pk": self.pk})
 
 
@@ -53,5 +54,6 @@ class DeviceTypeImport(BaseModel):
         """Return name for string method."""
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
+        """Return the absolute url for DeviceTypeImport."""
         return reverse("plugins:welcome_wizard:devicetype", kwargs={"pk": self.pk})

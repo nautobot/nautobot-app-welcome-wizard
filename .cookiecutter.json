@@ -6,8 +6,6 @@
     "github_org": "nautobot",
     "plugin_name": "nautobot_welcome_wizard",
     "verbose_name": "Nautobot's Welcome Wizard",
-    "plugin_slug": "nautobot-welcome-wizard",
-    "project_slug": "nautobot-plugin-welcome-wizard",
     "repo_url": "https://github.com/nautobot/nautobot-plugin-welcome-wizard",
     "base_url": "welcome-wizard",
     "min_nautobot_version": "1.5.4",

@@ -46,7 +46,7 @@ class DeviceTypeImportFilterSet(BaseFilterSet):
             "name",
         ]
 
-    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument
         """Search for Device Type where name or manufacturer contain value."""
         # Nautobot search function, not sure where name and self should be used.
         return queryset.filter(Q(name__icontains=value) | Q(manufacturer__name__icontains=value))
