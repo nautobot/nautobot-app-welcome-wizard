@@ -29,4 +29,12 @@ class WelcomeWizardConfig(NautobotAppConfig):
     docs_view_name = "plugins:welcome_wizard:docs"
 
 
+    def ready(self):
+        """Callback when this plugin is loaded."""
+        super().ready()
+
+        from nautobot.core.signals import nautobot_database_ready
+        from .signals import nautobot_database_ready_callback
+        nautobot_database_ready.connect(nautobot_database_ready_callback, sender=self)
+
 config = WelcomeWizardConfig  # pylint:disable=invalid-name
