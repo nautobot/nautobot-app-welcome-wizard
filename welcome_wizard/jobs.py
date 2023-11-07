@@ -62,7 +62,8 @@ def import_device_type(data):
             component_class.objects.bulk_create(component_list)
     return devtype
 
-name = "Welcome Wizard" # pylint: disable=invalid-name
+
+name = "Welcome Wizard"  # pylint: disable=invalid-name
 
 
 class WelcomeWizardImportManufacturer(Job):
