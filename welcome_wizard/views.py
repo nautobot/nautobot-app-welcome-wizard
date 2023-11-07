@@ -137,13 +137,11 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
             for obj in self.model.objects.filter(pk__in=pk_list):
                 if self.model == ManufacturerImport:
                     job = Job.objects.get(name="Welcome Wizard - Import Manufacturer")
-                    job_result = JobResult.enqueue_job(
-                        job_model=job, user=self.request.user, manufacturer_name=obj.name
-                    )
+                    JobResult.enqueue_job(job_model=job, user=self.request.user, manufacturer_name=obj.name)
                     onboarded.append(obj.name)
                 elif self.model == DeviceTypeImport:
                     job = Job.objects.get(name="Welcome Wizard - Import Device Type")
-                    job_result = JobResult.enqueue_job(job_model=job, user=self.request.user, filename=obj.filename)
+                    JobResult.enqueue_job(job_model=job, user=self.request.user, filename=obj.filename)
                     onboarded.append(obj.name)
             # Currently treat everything as a success...
             messages.success(request, f"Onboarded {len(onboarded)} objects.")

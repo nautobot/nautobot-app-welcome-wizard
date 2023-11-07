@@ -120,4 +120,5 @@ class WelcomeWizardImportDeviceType(Job):
             f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype}
         )
 
+
 register_jobs(WelcomeWizardImportManufacturer, WelcomeWizardImportDeviceType)
