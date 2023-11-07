@@ -21,7 +21,7 @@ ARG PYTHON_VER="3.8"
 >>>>>>> update for nautobot 2.0
 
 # Retrieve published development image of Nautobot base which should include most CI dependencies
-FROM networktocode/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER}
+FROM ghcr.io/nautobot/nautobot-dev:${NAUTOBOT_VER}-py${PYTHON_VER}
 
 # Runtime argument and environment setup
 ARG NAUTOBOT_ROOT=/opt/nautobot
