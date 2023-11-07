@@ -62,6 +62,8 @@ def import_device_type(data):
             component_class.objects.bulk_create(component_list)
     return devtype
 
+name = "Welcome Wizard" # pylint: disable=invalid-name
+
 
 class WelcomeWizardImportManufacturer(Job):
     """Manufacturer Import."""
@@ -70,8 +72,7 @@ class WelcomeWizardImportManufacturer(Job):
         """Meta for Manufacturer Import."""
 
         name = "Welcome Wizard - Import Manufacturer"
-        description = "Imports a chosen Manufacturer"
-        enabled = True
+        description = "Imports a chosen Manufacturer (Run from the Welcome Wizard Dashboard)"
 
     manufacturer_name = StringVar(description="Name of the new manufacturer")
 
@@ -91,8 +92,7 @@ class WelcomeWizardImportDeviceType(Job):
         """Meta for Device Type Import."""
 
         name = "Welcome Wizard - Import Device Type"
-        description = "Imports a chosen Device Type"
-        enabled = True
+        description = "Imports a chosen Device Type (Run from the Welcome Wizard Dashboard)"
 
     filename = StringVar()
 
