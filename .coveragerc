@@ -1,0 +1,7 @@
+[run]
+include =
+    welcome_wizard/*
+    *migrations*
+omit =
+     welcome_wizard/tests/*
+    /usr/*

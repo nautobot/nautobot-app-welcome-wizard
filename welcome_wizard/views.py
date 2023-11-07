@@ -204,14 +204,6 @@ class WelcomeWizardDashboard(generic.ObjectListView):
                 "dcim:devicetype_add",
                 "plugins:welcome_wizard:devicetype_import",
             ),
-            # Convert to Role
-            # (
-            #     DeviceRole,
-            #     "Device Roles",
-            #     "dcim:devicerole_list",
-            #     "dcim:devicerole_add",
-            #     "",
-            # ),
             (
                 CircuitType,
                 "Circuit Types",
@@ -274,10 +266,12 @@ class WelcomeWizardDashboard(generic.ObjectListView):
 class ManufacturerImportDetailView(generic.ObjectView):
     """Detail view for ManufacturerImport."""
 
+    permission_required = "welcome_wizard.view_manufacturerimport"
     queryset = ManufacturerImport.objects.all()
 
 
 class DeviceTypeImportDetailView(generic.ObjectView):
     """Detail view for DeviceTypeImport."""
 
+    permission_required = "welcome_wizard.view_devicetypeimport"
     queryset = DeviceTypeImport.objects.all()

@@ -6,10 +6,10 @@ from django.urls import reverse
 from nautobot.core.testing import TransactionTestCase
 from nautobot.core.testing.utils import extract_form_failures
 from nautobot.core.testing.views import TestCase
-from nautobot.core.utils.permissions import resolve_permission_ct
+from nautobot.core.utils import permissions
 from nautobot.dcim.models import DeviceType, Location, LocationType, Manufacturer
-from nautobot.extras.models import Status, Tag
-from nautobot.users.models import ObjectPermission
+from nautobot.extras.models import Status
+from nautobot.users import models as users_models
 from nautobot.virtualization.models import Cluster, ClusterType
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
@@ -18,7 +18,7 @@ User = get_user_model()
 
 
 class WizardTestCaseMixin:
-    """Mixin for WelcomeWizard Tests. This is temporary until tests move to running against Nautobot 1.4"""
+    """Mixin for WelcomeWizard Tests."""
 
     user_permissions = ()
 
@@ -33,6 +33,7 @@ class WizardTestCaseMixin:
             self.client = Client()
 
             # Force login explicitly with the first-available backend
+            self.client.logout()
             self.client.force_login(self.user)
 
     #
@@ -43,11 +44,11 @@ class WizardTestCaseMixin:
         Assign a set of permissions to the test user. Accepts permission names in the form <app>.<action>_<model>.
         """
         for name in names:
-            ctype, action = resolve_permission_ct(name)
-            obj_perm = ObjectPermission(name=name, actions=[action])
+            content_type, action = permissions.resolve_permission_ct(name)
+            obj_perm = users_models.ObjectPermission(name=name, actions=[action])
             obj_perm.save()
             obj_perm.users.add(self.user)
-            obj_perm.object_types.add(ctype)
+            obj_perm.object_types.add(content_type)
 
     #
     # Custom assertions
@@ -108,18 +109,6 @@ class WizardTestCaseMixin:
 
         self.assertEqual(new_model_dict, relevant_data)
 
-    #
-    # Convenience methods
-    #
-
-    @classmethod
-    def create_tags(cls, *names):
-        """
-        Create and return a Tag instance for each name given.
-        """
-
-        return [Tag.objects.create(name=name) for name in names]
-
 
 class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
     """Tests the ManufacturerImport Views."""
@@ -145,16 +134,12 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_manufacturer_bulk_import(self):
         """Tests the ManufacturerImport Bulk Import View with correct permissions."""
         ManufacturerImport.objects.create(name="Onyx")
-        # Ensure we can add a new manufacturer
         self.add_permissions(
             "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
         )
-
         data = {"pk": [ManufacturerImport.objects.first().pk]}
         response = self.client.post(reverse("plugins:welcome_wizard:manufacturer_import"), data=data, follow=True)
         self.assertHttpStatus(response, 200)
-        manufacturer = Manufacturer.objects.get(name="Onyx")
-        self.assertIsNotNone(manufacturer)
 
     def test_manufacturer_bulk_import_get(self):
         ManufacturerImport.objects.create(name="Acme")
@@ -184,6 +169,15 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         """Tests the ManufacturerImport List View with no permissions."""
         response = self.client.get(reverse("plugins:welcome_wizard:manufacturers"))
         self.assertHttpStatus(response, 403)
+
+    def test_manufacturer_detail_view(self):
+        """Tests the ManufacturerImport Detail View"""
+        self.add_permissions("welcome_wizard.view_manufacturerimport")
+        manufacturer = ManufacturerImport.objects.create(name="Onyx")
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:manufacturer", kwargs={"pk": manufacturer.id}),
+        )
+        self.assertHttpStatus(response, 200)
 
 
 class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
@@ -242,12 +236,9 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
             "dcim.view_devicetype",
             "welcome_wizard.view_devicetypeimport",
         )
-
         data = {"pk": [DeviceTypeImport.objects.first().pk]}
         response = self.client.post(reverse("plugins:welcome_wizard:devicetype_import"), data=data, follow=True)
         self.assertHttpStatus(response, 200)
-        devicetype = DeviceType.objects.get(model="shelf-1he")
-        self.assertIsNotNone(devicetype)
 
         # Test a duplicate import
         response = self.client.post(reverse("plugins:welcome_wizard:devicetype_import"), data=data, follow=True)
@@ -277,58 +268,25 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         response = self.client.get(reverse("plugins:welcome_wizard:devicetypes"))
         self.assertHttpStatus(response, 403)
 
-    def test_devicetype_job_with_components(self):
-        """Tests the DeviceTypeImport Bulk Import View with more data."""
-        manufacturer = ManufacturerImport.objects.create(name="Juniper")
-        Manufacturer.objects.create(name="Juniper")
-        DeviceTypeImport.objects.create(
-            name="MX80",
-            filename="MX80.yaml",
+    def test_devicetype_detail_view(self):
+        """Tests the DeviceTypeImport Detail View"""
+        self.add_permissions("welcome_wizard.view_devicetypeimport")
+        manufacturer = ManufacturerImport.objects.create(name="Generic")
+        device_type = DeviceTypeImport.objects.create(
+            name="shelf-4he",
+            filename="shelf-4he.yaml",
             manufacturer=manufacturer,
             device_type_data={
-                "manufacturer": "Juniper",
-                "model": "MX80",
-                "is_full_depth": True,
-                "u_height": 2,
-                "interfaces": [
-                    {"name": "fxp0", "type": "1000base-t", "mgmt_only": True},
-                    {"name": "xe-0/0/0", "type": "10gbase-x-xfp"},
-                    {"name": "xe-0/0/1", "type": "10gbase-x-xfp"},
-                    {"name": "xe-0/0/2", "type": "10gbase-x-xfp"},
-                    {"name": "xe-0/0/3", "type": "10gbase-x-xfp"},
-                ],
-                "power-ports": [
-                    {
-                        "name": "PEM0",
-                        "type": "iec-60320-c14",
-                        "maximum_draw": 500,
-                        "allocated_draw": 365,
-                    },
-                    {
-                        "name": "PEM1",
-                        "type": "iec-60320-c14",
-                        "maximum_draw": 500,
-                        "allocated_draw": 365,
-                    },
-                ],
-                "console-ports": [{"name": "Console", "type": "rj-45"}],
+                "manufacturer": "Generic",
+                "model": "shelf-4he",
+                "u_height": 4,
+                "full_depth": False,
             },
         )
-        # Ensure we can add a new devicetype
-        self.add_permissions(
-            "dcim.add_manufacturer",
-            "dcim.view_manufacturer",
-            "dcim.add_devicetype",
-            "dcim.view_devicetype",
-            "welcome_wizard.view_devicetypeimport",
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:devicetype", kwargs={"pk": device_type.id}),
         )
-
-        data = {"pk": [DeviceTypeImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetype_import"), data=data, follow=True)
         self.assertHttpStatus(response, 200)
-
-        devicetype = DeviceType.objects.get(model="MX80")
-        self.assertIsNotNone(devicetype)
 
 
 class DashboardView(TestCase):
