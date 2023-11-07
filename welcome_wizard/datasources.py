@@ -22,9 +22,6 @@ def retrieve_device_types_from_filesystem(path):
     manufacturers = set()
     device_types = {}
 
-    # We have decided that a Git repository can provide both YML and YAML files in a
-    # /animals/ directory at the repository root.
-
     device_type_path = os.path.join(path, "device-types")
     files = (filename for filename in Path(device_type_path).rglob("*") if filename.suffix in [".yml", ".yaml"])
     for filename in files:
@@ -68,7 +65,7 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
         )
 
 
-# Register that Animal records can be loaded from a Git repository,
+# Register that records can be loaded from a Git repository,
 # and register the callback function used to do so
 datasource_contents = [
     (
