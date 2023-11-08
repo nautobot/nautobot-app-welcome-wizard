@@ -10,6 +10,7 @@ from nautobot.core.utils.permissions import get_permission_for_model
 from nautobot.core.views import generic
 from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
 from nautobot.dcim.models import DeviceType, Location, Manufacturer
+from nautobot.extras.models import Role
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.models import GitRepository, Job, JobResult
 from nautobot.ipam.models import RIR
@@ -203,6 +204,13 @@ class WelcomeWizardDashboard(generic.ObjectListView):
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
                 "plugins:welcome_wizard:devicetype_import",
+            ),
+            (
+                Role,
+                "Roles",
+                "extras:role_list",
+                "extras:role_add",
+                "",
             ),
             (
                 CircuitType,

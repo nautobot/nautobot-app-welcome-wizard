@@ -3,7 +3,7 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, override_settings
 from django.urls import reverse
-from nautobot.core.testing import TransactionTestCase
+from nautobot.apps.testing import TransactionTestCase
 from nautobot.core.testing.utils import extract_form_failures
 from nautobot.core.testing.views import TestCase
 from nautobot.core.utils import permissions
@@ -289,7 +289,7 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         self.assertHttpStatus(response, 200)
 
 
-class DashboardView(TestCase):
+class DashboardView(TransactionTestCase):
     """Tests for dashboard view.
 
     Args:
@@ -307,9 +307,9 @@ class DashboardView(TestCase):
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        # 8th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 8)
-        self.assertContains(resp, "mdi-checkbox-blank-outline", 7)
+        # 9th is from nautobot formset javascript
+        self.assertContains(resp, "mdi-plus-thick", 9)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 8)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
 
     def test_dashboard_view_with_content(self):
@@ -323,9 +323,9 @@ class DashboardView(TestCase):
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        # 8th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 8)
-        self.assertContains(resp, "mdi-checkbox-blank-outline", 5)
+        # 9th is from nautobot formset javascript
+        self.assertContains(resp, "mdi-plus-thick", 9)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
 
     def test_dashboard_view_permission_denied(self):
@@ -335,7 +335,7 @@ class DashboardView(TestCase):
         self.assertHttpStatus(resp, 403)
 
 
-class MiddlewareTestCase(TestCase):
+class MiddlewareTestCase(TransactionTestCase):
     """Tests the Middleware."""
 
     def test_middleware_missing_required(self):
