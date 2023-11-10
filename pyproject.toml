@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "welcome-wizard"
+name = "nautobot-welcome-wizard"
 version = "2.0.0"
 description = "Nautobot's Welcome Wizard"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
