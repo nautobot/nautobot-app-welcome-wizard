@@ -11,7 +11,7 @@ class ManufacturerTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         """Setup Testing data."""
-        ManufacturerImport.objects.create(name="Acme", slug="acme")
+        ManufacturerImport.objects.create(name="Acme")
 
     def test_manufacturer_bulk_import(self):
         """Ensure form with valid data is valid."""
@@ -32,7 +32,7 @@ class DeviceTypeTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         """Setup Testing data."""
-        manufacturer = ManufacturerImport.objects.create(name="Acme", slug="acme")
+        manufacturer = ManufacturerImport.objects.create(name="Acme")
         DeviceTypeImport.objects.create(
             filename="fs12.yml", name="FS12", manufacturer=manufacturer, device_type_data={"foo": "test"}
         )
