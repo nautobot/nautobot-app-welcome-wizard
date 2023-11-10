@@ -20,10 +20,7 @@ ARG NAUTOBOT_ROOT=/opt/nautobot
 
 ENV prometheus_multiproc_dir=/prom_cache
 ENV NAUTOBOT_ROOT=${NAUTOBOT_ROOT}
-<<<<<<< HEAD
 ENV INVOKE_WELCOME_WIZARD_LOCAL=true
-=======
->>>>>>> update for nautobot 2.0
 
 # Install Poetry manually via its installer script;
 # We might be using an older version of Nautobot that includes an older version of Poetry
