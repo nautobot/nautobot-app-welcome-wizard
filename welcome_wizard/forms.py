@@ -23,12 +23,14 @@ class DeviceTypeImportFilterForm(BootstrapMixin, CustomFieldFilterForm):
     )
 
 
+# pylint: disable-next=nb-incorrect-base-class
 class ManufacturerBulkImportForm(forms.Form):
     """Bulk Import Form for Manufacturer."""
 
     pk = forms.ModelMultipleChoiceField(queryset=ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
 
 
+# pylint: disable-next=nb-incorrect-base-class
 class DeviceTypeBulkImportForm(forms.Form):
     """Bulk Import Form for Device Type."""
 

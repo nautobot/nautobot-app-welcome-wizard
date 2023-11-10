@@ -303,8 +303,7 @@ development/*.txt
 invoke.yml
 
 # Docs
-docs/README.md
-docs/CHANGELOG.md
 public
-
-welcome_wizard/static
+/compose.yaml
+/dump.sql
+/welcome_wizard/static/welcome_wizard/docs

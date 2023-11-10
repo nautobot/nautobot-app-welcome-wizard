@@ -1,4 +1,4 @@
-"""Unit tests for Welcome Wizard."""
+"""Unit tests for welcome_wizard."""
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
