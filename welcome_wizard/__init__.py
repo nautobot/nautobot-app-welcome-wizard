@@ -1,9 +1,9 @@
 """Plugin declaration for Welcome Wizard."""
-from importlib import metadata
 
 from nautobot.extras.plugins import NautobotAppConfig
 
-__version__ = metadata.version(__name__)
+# FIXME: This is due to a bug tracked by issue #86
+__version__ = "2.0.0"
 
 
 class WelcomeWizardConfig(NautobotAppConfig):
