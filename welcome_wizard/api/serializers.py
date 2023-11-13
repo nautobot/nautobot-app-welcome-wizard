@@ -1,7 +1,7 @@
 """API Serializers for Welcome Wizard."""
 from rest_framework.serializers import ModelSerializer
 
-from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 
 class ManufacturerImportSerializer(ModelSerializer):
@@ -11,7 +11,7 @@ class ManufacturerImportSerializer(ModelSerializer):
         """Meta for ManufacturerImport Serializer."""
 
         model = ManufacturerImport
-        fields = ("id", "name", "slug")
+        fields = ("id", "name")
 
 
 class DeviceTypeImportSerializer(ModelSerializer):
