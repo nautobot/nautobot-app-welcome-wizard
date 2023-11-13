@@ -1,11 +1,11 @@
-"""Unit tests for Welcome Wizard."""
+"""Unit tests for welcome_wizard."""
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from nautobot.users.models import Token
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from nautobot.users.models import Token
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 User = get_user_model()
@@ -37,7 +37,7 @@ class PlaceholderAPITest(TestCase):
 
     def test_devicetype_with_data(self):
         """Verify that device type import shows devicetype."""
-        manufacturer = ManufacturerImport(name="Acme", slug="acme")
+        manufacturer = ManufacturerImport(name="Acme")
         manufacturer.save()
         devicetype = DeviceTypeImport(
             name="acme10", manufacturer=manufacturer, filename="acme10.yaml", device_type_data={"test": "foo"}
@@ -56,7 +56,7 @@ class PlaceholderAPITest(TestCase):
 
     def test_manufacturer_with_data(self):
         """Verify that manufacturer import shows manufacturer."""
-        manufacturer = ManufacturerImport(name="Acme", slug="acme")
+        manufacturer = ManufacturerImport(name="Acme")
         manufacturer.save()
         url = reverse("plugins-api:welcome_wizard-api:manufacturerimport-list")
         response = self.client.get(url)
@@ -67,4 +67,3 @@ class PlaceholderAPITest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Acme")
-        self.assertEqual(response.data["slug"], "acme")

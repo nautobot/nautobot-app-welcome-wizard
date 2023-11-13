@@ -1,12 +1,12 @@
 """Middleware for the Welcome Wizard plugin."""
 
 import logging
+
 from django.contrib import messages
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.safestring import mark_safe
-
-from nautobot.utilities.templatetags.helpers import bettertitle
+from nautobot.core.templatetags.helpers import bettertitle
 
 logger = logging.getLogger("welcome_wizard.middleware")
 
@@ -22,7 +22,7 @@ class Prerequisites:
         """Capture the response and return it."""
         return self.get_request(request)
 
-    def process_view(self, request, view_func, view_args, view_kwargs):  # pylint: disable=W0613,R0201
+    def process_view(self, request, view_func, view_args, view_kwargs):  # pylint: disable=unused-argument
         """Process the view to determine if it's one we want to intercept."""
         # If no user or they aren't authenticated, return to hit the default login redirect
         if not hasattr(request, "user") or not request.user.is_authenticated:
