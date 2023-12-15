@@ -17,4 +17,7 @@ class Migration(migrations.Migration):
         ("welcome_wizard", "0004_remove_manufacturerimport_slug"),
     ]
 
-    operations = [migrations.RunPython(remove_device_roles), migrations.RunPython(remove_sites)]
+    operations = [
+        migrations.RunPython(code=remove_device_roles, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(code=remove_sites, reverse_code=migrations.RunPython.noop),
+    ]
