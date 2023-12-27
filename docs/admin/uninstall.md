@@ -4,10 +4,10 @@ Here you will find any steps necessary to cleanly remove the App from your Nauto
 
 ## Database Cleanup
 
-Prior to removing the plugin from the `nautobot_config.py`, run the following command to roll back any migration specific to this plugin.
+Prior to removing the app from the `nautobot_config.py`, run the following command to roll back any migration specific to this app.
 
 ```shell
-nautobot-server migrate nautobot_plugin_welcome_wizard zero
+nautobot-server migrate welcome_wizard zero
 ```
 
 ## Remove App configuration

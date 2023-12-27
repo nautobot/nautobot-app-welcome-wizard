@@ -137,7 +137,7 @@ Once CI has completed on the PR, merge it.
 
 ### Create a New Release
 
-Draft a [new release](https://github.com/nautobot/nautobot-plugin-welcome-wizard/releases/new) with the following parameters.
+Draft a [new release](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/new) with the following parameters.
 
 * **Tag:** Current version (e.g. `v1.0.0`)
 * **Target:** `develop`

@@ -1,4 +1,4 @@
-"""Middleware for the Welcome Wizard plugin."""
+"""Middleware for the Welcome Wizard app."""
 
 import logging
 
