@@ -1,9 +1,9 @@
 # Welcome Wizard
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
   <br>
-  <a href="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-plugin-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/nautobot/nautobot-app-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-app-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
   <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/v/nautobot-welcome-wizard"></a>
   <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/dm/nautobot-welcome-wizard"></a>
@@ -17,7 +17,7 @@
 
 The Welcome Wizard is a getting started wizard for [Nautobot](https://docs.nautobot.com/projects/core/en/stable/) to assist a new user with necessary initial steps in populating data.
 
-![Welcome Wizard GIF](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/WelcomeWizard.gif)
+![Welcome Wizard GIF](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/WelcomeWizard.gif)
 
 ## Key Features
 
@@ -33,17 +33,17 @@ The Welcome Wizard adds four (4) key features:
 
 ### Screenshots
 
-More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the plugin's added functionality:
+More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the app's added functionality:
 
-![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_banner.png)
+![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_banner.png)
 
-![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
+![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
 
-![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/welcome_wizard.png)
+![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/welcome_wizard.png)
 
-![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
+![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
 
-![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-plugin-welcome-wizard/develop/docs/images/merlin_import_device_type.png)
+![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_import_device_type.png)
 
 ## Documentation
 
@@ -57,7 +57,7 @@ Full documentation for this App can be found over on the [Nautobot Docs](https:/
 
 ### Contributing to the Documentation
 
-You can find all the Markdown source for the App documentation under the [`docs`](https://github.com/nautobot/nautobot-plugin-welcome-wizard/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient: clone the repository and edit away.
+You can find all the Markdown source for the App documentation under the [`docs`](https://github.com/nautobot/nautobot-app-welcome-wizard/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient: clone the repository and edit away.
 
 If you need to view the fully-generated documentation site, you can build it with [MkDocs](https://www.mkdocs.org/). A container hosting the documentation can be started using the `invoke` commands (details in the [Development Environment Guide](https://docs.nautobot.com/projects/welcome-wizard/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). Using this container, as your changes to the documentation are saved, they will be automatically rebuilt and any pages currently being viewed will be reloaded in your browser.
 

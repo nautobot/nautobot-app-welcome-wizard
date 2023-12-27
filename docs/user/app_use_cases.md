@@ -39,7 +39,7 @@ Navigate back to the Getting Started Dashboard to see that your field is marked 
 
 ### Middleware
 
-The Welcome Wizard plugin comes packed with helpful middleware.
+The Welcome Wizard App comes packed with helpful middleware.
 
 #### Homepage Banner
 

@@ -5,9 +5,9 @@ description = "Nautobot's Welcome Wizard"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-homepage = "https://github.com/nautobot/nautobot-plugin-welcome-wizard"
-repository = "https://github.com/nautobot/nautobot-plugin-welcome-wizard"
-keywords = ["nautobot", "nautobot-plugin"]
+homepage = "https://github.com/nautobot/nautobot-app-welcome-wizard"
+repository = "https://github.com/nautobot/nautobot-app-welcome-wizard"
+keywords = ["nautobot", "nautobot-plugin", "nautobot-app"]
 classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 5 - Production/Stable",

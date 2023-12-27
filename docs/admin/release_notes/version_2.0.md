@@ -6,4 +6,4 @@
 
 ### Changed
 
-- [#85](https://github.com/nautobot/nautobot-plugin-welcome-wizard/pull/85) Updates for Nautobot v2
+- [#85](https://github.com/nautobot/nautobot-app-welcome-wizard/pull/85) Updates for Nautobot v2
