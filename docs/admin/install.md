@@ -7,7 +7,7 @@ Here you will find detailed instructions on how to **install** and **configure**
 
 ## Prerequisites
 
-- The plugin is compatible with Nautobot 1.5.0 and higher.
+- The app is compatible with Nautobot 2.0.0 and higher.
 - Databases supported: PostgreSQL, MySQL
 
 !!! note
@@ -21,9 +21,9 @@ Here you will find detailed instructions on how to **install** and **configure**
 ## Install Guide
 
 !!! note
-    Plugins can be installed manually or using Python's `pip`. See the [nautobot documentation](https://nautobot.readthedocs.io/en/latest/plugins/#install-the-package) for more details. The pip package name for this plugin is [`nautobot-welcome-wizard`](https://pypi.org/project/nautobot-welcome-wizard/).
+    Apps can be installed manually or using Python's `pip`. See the [nautobot documentation](https://nautobot.readthedocs.io/en/latest/plugins/#install-the-package) for more details. The pip package name for this app is [`nautobot-welcome-wizard`](https://pypi.org/project/nautobot-welcome-wizard/).
 
-The plugin is available as a Python package via PyPI and can be installed with `pip`:
+The app is available as a Python package via PyPI and can be installed with `pip`:
 
 ```shell
 pip install nautobot-welcome-wizard
@@ -35,7 +35,7 @@ To ensure Welcome Wizard is automatically re-installed during future upgrades, c
 echo nautobot-welcome-wizard >> local_requirements.txt
 ```
 
-Once installed, the plugin needs to be enabled in your Nautobot configuration. The following block of code below shows the additional configuration required to be added to your `nautobot_config.py` file:
+Once installed, the app needs to be enabled in your Nautobot configuration. The following block of code below shows the additional configuration required to be added to your `nautobot_config.py` file:
 
 - Append `"welcome_wizard"` to the `PLUGINS` list.
 - Append the `"welcome_wizard"` dictionary to the `PLUGINS_CONFIG` dictionary and override any defaults.
@@ -72,10 +72,10 @@ sudo systemctl restart nautobot nautobot-worker nautobot-scheduler
 !!! warning "Developer Note - Remove Me!"
     Any configuration required to get the App set up. Edit the table below as per the examples provided.
 
-The plugin behavior can be controlled with the following list of settings:
+The app behavior can be controlled with the following list of settings:
 
 | Key     | Example | Default | Description                          |
 | ------- | ------ | -------- | ------------------------------------- |
-| `enable_backup` | `True` | `True` | A boolean to represent whether or not to run backup configurations within the plugin. |
+| `enable_backup` | `True` | `True` | A boolean to represent whether or not to run backup configurations within the app. |
 | `platform_slug_map` | `{"cisco_wlc": "cisco_aireos"}` | `None` | A dictionary in which the key is the platform slug and the value is what netutils uses in any "network_os" parameter. |
 | `per_feature_bar_width` | `0.15` | `0.15` | The width of the table bar within the overview report |
