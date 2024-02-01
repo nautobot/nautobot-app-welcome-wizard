@@ -1,35 +1,36 @@
 {
-  "cookiecutter": {
-    "codeowner_github_usernames": "@brohrich @joewesch @jvanderaa @LoneStar-Swish @nniehoff @smk4664 @glennmatthews @chadell",
-    "full_name": "Network to Code, LLC",
-    "email": "info@networktocode.com",
-    "github_org": "nautobot",
-    "app_name": "welcome_wizard",
-    "verbose_name": "Welcome Wizard",
-    "app_slug": "nautobot-welcome-wizard",
-    "project_slug": "nautobot-app-welcome-wizard",
-    "repo_url": "https://github.com/nautobot/nautobot-app-welcome-wizard",
-    "base_url": "nautobot-welcome-wizard",
-    "min_nautobot_version": "2.0.0",
-    "max_nautobot_version": "2.9999",
-    "camel_name": "NautobotWelcomeWizard",
-    "project_short_description": "Welcome Wizard",
-    "model_class_name": "None",
-    "open_source_license": "Apache-2.0",
-    "docs_base_url": "https://docs.nautobot.com",
-    "docs_app_url": "https://docs.nautobot.com/projects/welcome-wizard/en/latest",
-    "_drift_manager": {
-      "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
-      "template_dir": "nautobot-app",
-      "template_ref": "develop",
-      "cookie_dir": "",
-      "branch_prefix": "drift-manager",
-      "pull_request_strategy": "create",
-      "post_actions": [
-        "black"
-      ],
-      "draft": true,
-      "baked_commit_ref": "5f16ab16af724ae770a143c2fd26ea152bb620a5"
+    "cookiecutter": {
+        "codeowner_github_usernames": "@brohrich @joewesch @jvanderaa @LoneStar-Swish @nniehoff @smk4664 @glennmatthews @chadell",
+        "full_name": "Network to Code, LLC",
+        "email": "info@networktocode.com",
+        "github_org": "nautobot",
+        "app_name": "welcome_wizard",
+        "verbose_name": "Welcome Wizard",
+        "app_slug": "nautobot-welcome-wizard",
+        "project_slug": "nautobot-app-welcome-wizard",
+        "repo_url": "https://github.com/nautobot/nautobot-app-welcome-wizard",
+        "base_url": "nautobot-welcome-wizard",
+        "min_nautobot_version": "2.0.0",
+        "max_nautobot_version": "2.9999",
+        "camel_name": "NautobotWelcomeWizard",
+        "project_short_description": "Welcome Wizard",
+        "model_class_name": "None",
+        "open_source_license": "Apache-2.0",
+        "docs_base_url": "https://docs.nautobot.com",
+        "docs_app_url": "https://docs.nautobot.com/projects/welcome-wizard/en/latest",
+        "_drift_manager": {
+            "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
+            "template_dir": "nautobot-app",
+            "template_ref": "refs/tags/nautobot-app-v2.1.0",
+            "cookie_dir": "",
+            "branch_prefix": "drift-manager",
+            "pull_request_strategy": "create",
+            "post_actions": [
+                "black"
+            ],
+            "draft": true,
+            "baked_commit_ref": "b734d153c61ac62f0073329155291b8ffb86440f"
+        }
     }
   }
 }
