@@ -26,8 +26,7 @@ You can find the contributors on the [GitHub Contribution Graph](https://github.
 
 ## Nautobot Features Used
 
-!!! warning "Developer Note - Remove Me!"
-    What is shown today in the Installed Apps page in Nautobot. What parts of Nautobot does it interact with, what does it add etc. ?
+Welcome Wizard helps you import the following data types:
 
 - Sites
 - Manufacturers

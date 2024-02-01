@@ -1,15 +1,11 @@
 """App declaration for welcome_wizard."""
-# Metadata is inherited from Nautobot. If not including Nautobot in the environment, this should be added
-from importlib import metadata
-
 from nautobot.apps import NautobotAppConfig
-
-__version__ = metadata.version(__name__)
 
 # Needs to be resovled: This is due to a bug tracked by issue #86
 __version__ = "2.0.0"
 
-class NautobotWelcomeWizardConfig(NautobotAppConfig):
+
+class WelcomeWizardConfig(NautobotAppConfig):
     """App configuration for the welcome_wizard app."""
 
     name = "welcome_wizard"
@@ -21,7 +17,11 @@ class NautobotWelcomeWizardConfig(NautobotAppConfig):
     required_settings = []
     min_version = "2.0.0"
     max_version = "2.9999"
-    default_settings = {}
+    default_settings = {
+        # Add devicetype-library to Nautobot Git Repositories
+        "enable_devicetype-library": True,
+        "enable_welcome_banner": True,
+    }
     caching_config = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard"

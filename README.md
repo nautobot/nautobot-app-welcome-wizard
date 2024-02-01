@@ -1,10 +1,10 @@
 # Welcome Wizard
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.png" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
   <br>
   <a href="https://github.com/nautobot/nautobot-app-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-app-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-app-welcome-wizard/badge/"></a>
+  <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
   <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/v/nautobot-welcome-wizard"></a>
   <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/dm/nautobot-welcome-wizard"></a>
   <br>
@@ -35,11 +35,11 @@ The Welcome Wizard adds four (4) key features:
 
 More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the app's added functionality:
 
-> Developer Note: Place the files in the `docs/images/` folder and link them using only full URLs from GitHub, for example: `![Overview](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/app-overview.png)`. This absolute static linking is required to ensure the README renders properly in GitHub, the docs site, and any other external sites like PyPI.
+![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_banner.png)
 
-More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the app's added functionality:
+![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
 
-![](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/placeholder.png)
+![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/welcome_wizard.png)
 
 ![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
 

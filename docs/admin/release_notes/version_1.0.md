@@ -2,13 +2,7 @@
 
 ## Release Overview
 
-- Major features or milestones
-- Achieved in this `x.y` release
-- Changes to compatibility with Nautobot and/or other apps, libraries etc.
-
-## [v1.0.1] - 2021-09-08
-
-### Added
+## [v1.0.3] - 2022-01-01
 
 ### Changed
 
@@ -16,7 +10,7 @@
 
 ### Fixed
 
-- [#123](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/123) Fixed Tag filtering not working in job launch form
+- [#1](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/1) Fix: Directory traversal in mkdocs
 
 ## [v1.0.3] - 2022-01-01
 
