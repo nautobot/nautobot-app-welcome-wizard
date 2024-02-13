@@ -1,6 +1,5 @@
-"""App declaration for Welcome Wizard."""
-
-from nautobot.extras.plugins import NautobotAppConfig
+"""App declaration for welcome_wizard."""
+from nautobot.apps import NautobotAppConfig
 
 # Needs to be resovled: This is due to a bug tracked by issue #86
 __version__ = "2.0.0"

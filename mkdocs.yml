@@ -1,6 +1,6 @@
 ---
 dev_addr: "127.0.0.1:8001"
-edit_uri: "edit/main/nautobot-plugin-welcome-wizard/docs"
+edit_uri: "edit/main/nautobot-app-welcome-wizard/docs"
 site_dir: "welcome_wizard/static/welcome_wizard/docs"
 site_name: "Welcome Wizard Documentation"
 site_url: "https://docs.nautobot.com/projects/welcome-wizard/en/latest/"
