@@ -4,7 +4,7 @@
   <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/icon-nautobot-welcome-wizard.svg" class="logo" height="200px">
   <br>
   <a href="https://github.com/nautobot/nautobot-app-welcome-wizard/actions"><img src="https://github.com/nautobot/nautobot-app-welcome-wizard/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
+  <a href="https://docs.nautobot.com/projects/welcome-wizard/en/latest/"><img src="https://readthedocs.org/projects/nautobot-plugin-welcome-wizard/badge/"></a>
   <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/v/nautobot-welcome-wizard"></a>
   <a href="https://pypi.org/project/nautobot-welcome-wizard/"><img src="https://img.shields.io/pypi/dm/nautobot-welcome-wizard"></a>
   <br>
