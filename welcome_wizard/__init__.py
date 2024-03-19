@@ -15,7 +15,7 @@ class NautobotWelcomeWizardConfig(NautobotAppConfig):
     version = __version__
     author = "Network to Code, LLC"
     description = "Welcome Wizard."
-    base_url = "nautobot-welcome-wizard"
+    base_url = "welcome-wizard"
     required_settings = []
     min_version = "2.0.0"
     max_version = "2.9999"
