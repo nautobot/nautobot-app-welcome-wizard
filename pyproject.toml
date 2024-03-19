@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nautobot-welcome-wizard"
 version = "0.1.0"
-description = "Welcome Wizard"
+description = "Nautobot's Getting Started Wizard"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
 readme = "README.md"
