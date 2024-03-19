@@ -12,8 +12,8 @@ class WelcomeWizardConfig(NautobotAppConfig):
     verbose_name = "Nautobot Welcome Wizard"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Nautobot's Getting Started Wizard."
-    base_url = "welcome_wizard"
+    description = "Welcome Wizard."
+    base_url = "welcome-wizard"
     required_settings = []
     min_version = "2.0.0"
     max_version = "2.9999"
