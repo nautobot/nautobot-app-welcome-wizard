@@ -5,11 +5,11 @@ from welcome_wizard.models.merlin import Merlin
 
 
 def remove_device_roles(welcome_wizard, schema):
-    Merlin.objects.filter(name="Sites").delete()
+    Merlin.objects.filter(name="Device Roles").delete()
 
 
 def remove_sites(welcome_wizard, schema):
-    Merlin.objects.filter(name="Device Roles").delete()
+    Merlin.objects.filter(name="Sites").delete()
 
 
 class Migration(migrations.Migration):
