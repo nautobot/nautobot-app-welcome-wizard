@@ -1,13 +1,12 @@
-"""Plugin declaration for Welcome Wizard."""
-
-from nautobot.extras.plugins import NautobotAppConfig
+"""App declaration for welcome_wizard."""
+from nautobot.apps import NautobotAppConfig
 
 # Needs to be resovled: This is due to a bug tracked by issue #86
 __version__ = "2.0.0"
 
 
 class WelcomeWizardConfig(NautobotAppConfig):
-    """Plugin configuration for the welcome_wizard plugin."""
+    """App configuration for the welcome_wizard app."""
 
     name = "welcome_wizard"
     verbose_name = "Nautobot Welcome Wizard"
@@ -29,7 +28,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     docs_view_name = "plugins:welcome_wizard:docs"
 
     def ready(self):
-        """Callback when this plugin is loaded."""
+        """Callback when this app is loaded."""
         super().ready()
 
         from nautobot.core.signals import nautobot_database_ready  # pylint: disable=import-outside-toplevel

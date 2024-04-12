@@ -400,7 +400,7 @@ class BannerTestCase(TestCase):
 
 
 class ClusterDevicesTestCase(TestCase):
-    """Ensure Cluster Add Devices view loads (https://github.com/nautobot/nautobot-plugin-welcome-wizard/issues/62)."""
+    """Ensure Cluster Add Devices view loads (https://github.com/nautobot/nautobot-app-welcome-wizard/issues/62)."""
 
     def test_cluster_add_devices(self):
         self.add_permissions("virtualization.change_cluster")

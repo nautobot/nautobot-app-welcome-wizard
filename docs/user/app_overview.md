@@ -1,13 +1,13 @@
 # App Overview
 
-This document provides an overview of the App including critical information and import considerations when applying it to your Nautobot environment.
+This document provides an overview of the App including critical information and important considerations when applying it to your Nautobot environment.
 
 !!! note
     Throughout this documentation, the terms "app" and "plugin" will be used interchangeably.
 
 ## Description
 
-The Welcome Wizard is an open-source Nautobot plugin with the goal to assist users with the necessary initial steps in populating data within Nautobot.
+The Welcome Wizard is an open-source Nautobot app with the goal to assist users with the necessary initial steps in populating data within Nautobot.
 
 The Welcome Wizard adds four (4) key features:
 
@@ -22,7 +22,7 @@ Anyone building a new instance of Nautobot who struggles with where to start whe
 
 ## Authors and Maintainers
 
-You can find the contributors on the [GitHub Contribution Graph](https://github.com/nautobot/nautobot-plugin-welcome-wizard/graphs/contributors).
+You can find the contributors on the [GitHub Contribution Graph](https://github.com/nautobot/nautobot-app-welcome-wizard/graphs/contributors).
 
 ## Nautobot Features Used
 

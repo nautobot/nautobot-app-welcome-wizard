@@ -1,1 +1,1 @@
-"""REST API module for welcome_wizard plugin."""
+"""REST API module for welcome_wizard app."""
