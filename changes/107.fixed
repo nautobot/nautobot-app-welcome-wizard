@@ -1,0 +1,1 @@
+Fixed error `Cannot create a consistent method resolution order (MRO) for bases BootstrapMixin, CustomFieldFilterForm` under Nautobot 2.2.5 and later.
