@@ -1,4 +1,8 @@
 """App declaration for welcome_wizard."""
+
+# Metadata is inherited from Nautobot. If not including Nautobot in the environment, this should be added
+from importlib import metadata
+
 from nautobot.apps import NautobotAppConfig
 
 # Needs to be resovled: This is due to a bug tracked by issue #86

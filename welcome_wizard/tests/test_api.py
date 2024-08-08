@@ -1,12 +1,11 @@
 """Unit tests for welcome_wizard."""
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from nautobot.users.models import Token
 from rest_framework import status
 from rest_framework.test import APIClient
-
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 User = get_user_model()
 
