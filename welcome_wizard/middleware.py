@@ -5,7 +5,7 @@ import logging
 from django.contrib import messages
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from nautobot.core.templatetags.helpers import bettertitle
 
 logger = logging.getLogger("welcome_wizard.middleware")
@@ -57,5 +57,5 @@ class Prerequisites:
                     except NoReverseMatch as error:
                         logger.warning("No Reverse Match was found for %s. %s", bettertitle(meta.verbose_name), error)
                         reverse_link = ""
-                    msg = f"You need to configure a <a href='{reverse_link}'>{bettertitle(meta.verbose_name)}</a> before you create this item."
-                    messages.error(request, mark_safe(msg))  # nosec
+                    msg = "You need to configure a <a href='{}'>{}</a> before you create this item."
+                    messages.error(request, format_html(msg, reverse_link, bettertitle(meta.verbose_name)))

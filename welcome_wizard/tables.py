@@ -1,4 +1,5 @@
 """Tables for Welcome Wizard."""
+
 import django_tables2 as tables
 from django.conf import settings
 from nautobot.apps.tables import BaseTable, ToggleColumn

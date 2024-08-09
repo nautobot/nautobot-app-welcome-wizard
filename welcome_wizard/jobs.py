@@ -1,6 +1,5 @@
 """Background Jobs for Welcome Wizard."""
 
-
 import contextlib
 from collections import OrderedDict
 

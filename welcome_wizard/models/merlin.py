@@ -1,4 +1,5 @@
 """Models definition for Welcome Wizard."""
+
 from django.db import models
 from nautobot.core.models import BaseModel
 

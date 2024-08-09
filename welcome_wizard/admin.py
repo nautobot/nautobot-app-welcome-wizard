@@ -1,4 +1,5 @@
 """Welcome Wizard Admin definition."""
+
 from django.contrib import admin
 
 from welcome_wizard.models.merlin import Merlin

@@ -1,4 +1,5 @@
 """Test Welcome Wizard Filters."""
+
 from django.test import TestCase
 
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet

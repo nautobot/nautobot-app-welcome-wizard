@@ -7,6 +7,8 @@ from nautobot.users.models import Token
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+
 User = get_user_model()
 
 
