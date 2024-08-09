@@ -57,5 +57,9 @@ class Prerequisites:
                     except NoReverseMatch as error:
                         logger.warning("No Reverse Match was found for %s. %s", bettertitle(meta.verbose_name), error)
                         reverse_link = ""
-                    msg = "You need to configure a <a href='{}'>{}</a> before you create this item."
-                    messages.error(request, format_html(msg, reverse_link, bettertitle(meta.verbose_name)))
+                    msg = format_html(
+                        "You need to configure a <a href='{}'>{}</a> before you create this item.",
+                        reverse_link,
+                        bettertitle(meta.verbose_name),
+                    )
+                    messages.error(request, msg)
