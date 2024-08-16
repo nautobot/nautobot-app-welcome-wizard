@@ -1,4 +1,5 @@
 """Views for Welcome Wizard."""
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -10,9 +11,8 @@ from nautobot.core.utils.permissions import get_permission_for_model
 from nautobot.core.views import generic
 from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
 from nautobot.dcim.models import DeviceType, Location, Manufacturer
-from nautobot.extras.models import Role
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
-from nautobot.extras.models import GitRepository, Job, JobResult
+from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
 from nautobot.virtualization.models import ClusterType
 

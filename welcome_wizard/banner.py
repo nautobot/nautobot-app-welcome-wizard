@@ -1,4 +1,5 @@
 """Home page banner for Welcome Wizard."""
+
 from typing import Optional
 
 from django.conf import settings
