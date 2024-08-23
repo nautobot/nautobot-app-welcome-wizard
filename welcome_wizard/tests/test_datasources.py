@@ -1,54 +1,131 @@
 """Tests for Welcome Wizard Datasources."""
+import os
+import tempfile
+from unittest import mock
+import uuid
 
-from unittest.mock import MagicMock
+import yaml
 
-from nautobot.apps.testing import TransactionTestCase
-from nautobot.extras.models import JobResult
+from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.test import RequestFactory
 
-from welcome_wizard.datasources import refresh_git_import_wizard, retrieve_device_types_from_filesystem
+from nautobot.extras.choices import JobResultStatusChoices
+from nautobot.extras.datasources.git import pull_git_repository_and_refresh_data
+from nautobot.extras.datasources.registry import get_datasource_contents
+from nautobot.extras.models import GitRepository, JobResult
+from nautobot.utilities.testing import TransactionTestCase
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
+# Use the proper swappable User model
+User = get_user_model()
 
-class TestDatasources(TransactionTestCase):
-    """Test Datasources."""
 
-    def test_retrieve_device_types_from_filesystem(self):
-        """test retrieval of Manufacturers and DeviceTypes from the filesystem."""
-        manufacturers, device_types = retrieve_device_types_from_filesystem("welcome_wizard/tests/fixtures")
+@mock.patch("nautobot.extras.datasources.git.GitRepo")
+class GitTest(TransactionTestCase):
+    """Git Tests."""
 
-        # provided by device_type_fixture.yaml
-        device_types_data = {
-            "device_type_fixture.yaml": {
-                "manufacturer": "Cisco",
-                "model": "Catalyst 9500-32QC",
-                "slug": "cisco-c9500-32qc",
-                "part_number": "C9500-32QC",
-                "u_height": 1,
-                "is_full_depth": True,
-                "comments": "Comments Here",
-                "console-ports": [{"name": "con 0", "type": "rj-45"}, {"name": "usb", "type": "usb-mini-b"}],
-                "power-ports": [{"name": "PS-0", "type": "iec-60320-c14"}, {"name": "PS-1", "type": "iec-60320-c14"}],
-                "interfaces": [
-                    {"name": "GigabitEthernet0/0", "type": "1000base-t", "mgmt_only": True},
-                    {"name": "FortyGigabitEthernet1/0/1", "type": "40gbase-x-qsfpp"},
-                    {"name": "FortyGigabitEthernet1/0/2"},
-                ],
-            }
-        }
+    databases = ("default", "job_logs")
 
-        self.assertEqual({"Cisco"}, manufacturers)
-        self.assertEqual(device_types_data, device_types)
+    COMMIT_HEXSHA = "88dd9cd78df89e887ee90a1d209a3e9a04e8c841"
 
-    def test_refresh_git_import_wizard(self):
-        repository_record = MagicMock()
-        repository_record.filesystem_path = "welcome_wizard/tests/fixtures"
-        repository_record.provided_contents = "welcome_wizard.import_wizard"
-        job_result = JobResult()
-        job_result.log = MagicMock(return_value=None)
+    def setUp(self):
+        """Setup tests."""
+        self.user = User.objects.create_user(username="testuser")
+        self.factory = RequestFactory()
+        self.dummy_request = self.factory.get("/no-op/")
+        self.dummy_request.user = self.user
+        # Needed for use with the change_logging decorator
+        self.dummy_request.id = uuid.uuid4()
 
-        refresh_git_import_wizard(repository_record=repository_record, job_result=job_result)
+        self.repo = GitRepository(
+            name="Test Git Repository",
+            slug="test_git_repo",
+            remote_url="http://localhost/git.git",
+            # Provide everything we know we can provide
+            provided_contents=[entry.content_identifier for entry in get_datasource_contents("extras.gitrepository")],
+        )
+        self.repo.save(trigger_resync=False)
 
-        manufacturer = ManufacturerImport.objects.get(name="Cisco")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9500-32QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
+        self.job_result = JobResult.objects.create(
+            name=self.repo.name,
+            obj_type=ContentType.objects.get_for_model(GitRepository),
+            user=None,
+            job_id=uuid.uuid4(),
+        )
+
+    def test_pull_git_repository_and_refresh_data_with_no_data(self, mock_git_repo):
+        """The test_pull_git_repository_and_refresh_data job should succeed if the given repo is empty."""
+        with tempfile.TemporaryDirectory() as tempdir:
+            with self.settings(GIT_ROOT=tempdir):
+
+                def create_empty_repo(path, _url):
+                    os.makedirs(path)
+                    return mock.DEFAULT
+
+                mock_git_repo.side_effect = create_empty_repo
+                mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
+
+                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result.pk)
+
+                self.job_result.refresh_from_db()
+
+                self.assertEqual(
+                    self.job_result.status,
+                    JobResultStatusChoices.STATUS_COMPLETED,
+                    self.job_result.data,
+                )
+                self.repo.refresh_from_db()
+                self.assertEqual(self.repo.current_head, self.COMMIT_HEXSHA, self.job_result.data)
+                # TODO: inspect the logs in job_result.data?
+
+    def test_pull_git_repository_and_refresh_data_with_valid_data(self, mock_git_repo):
+        """The test_pull_git_repository_and_refresh_data job should succeed if valid data is present in the repo."""
+        with tempfile.TemporaryDirectory() as tempdir:
+            with self.settings(GIT_ROOT=tempdir):
+
+                def populate_repo(path, _url):
+                    os.makedirs(path)
+                    # Load device-types data for git-repository
+                    os.makedirs(os.path.join(path, "device-types"))
+                    os.makedirs(os.path.join(path, "device-types", "Cisco"))
+                    with open(os.path.join(path, "device-types", "Cisco", "fake.yaml"), "w", encoding="utf8") as file:
+                        yaml.dump(
+                            {"manufacturer": "Cisco", "model": "Fake Model"},
+                            file,
+                        )
+                    with open(os.path.join(path, "device-types", "Cisco", "fake2.yml"), "w", encoding="utf8") as file:
+                        yaml.dump(
+                            {"manufacturer": "Cisco", "model": "Fake Model 2"},
+                            file,
+                        )
+                    return mock.DEFAULT
+
+                mock_git_repo.side_effect = populate_repo
+                mock_git_repo.return_value.checkout.return_value = self.COMMIT_HEXSHA
+
+                pull_git_repository_and_refresh_data(self.repo.pk, self.dummy_request, self.job_result.pk)
+
+                self.job_result.refresh_from_db()
+
+                self.assertEqual(
+                    self.job_result.status,
+                    JobResultStatusChoices.STATUS_COMPLETED,
+                    self.job_result.data,
+                )
+
+                # Make sure ManufacturerImport was successfully loaded from file
+                manufacturer_import = ManufacturerImport.objects.get(name="Cisco")
+                self.assertIsNotNone(manufacturer_import)
+
+                # Make sure DeviceTypeImport was successfully loaded from file
+                device_type = DeviceTypeImport.objects.get(filename="fake.yaml")
+                self.assertIsNotNone(device_type)
+                self.assertEqual(device_type.name, "Fake Model")
+                self.assertEqual(device_type.manufacturer, manufacturer_import)
+                device_type2 = DeviceTypeImport.objects.get(filename="fake2.yml")
+                self.assertIsNotNone(device_type2)
+                self.assertEqual(device_type2.name, "Fake Model 2")
+
+                # Delete the GitRepository (this is a noop)
+                self.repo.delete()

@@ -1,8 +1,8 @@
 """Test Welcome Wizard Filters."""
 from django.test import TestCase
 
-from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 
 
 class ManufacturerTestCase(TestCase):
@@ -14,9 +14,9 @@ class ManufacturerTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         """Setup Data."""
-        ManufacturerImport.objects.create(name="Acme")
-        ManufacturerImport.objects.create(name="Acme1")
-        ManufacturerImport.objects.create(name="Test")
+        ManufacturerImport.objects.create(name="Acme", slug="acme")
+        ManufacturerImport.objects.create(name="Acme1", slug="acme1")
+        ManufacturerImport.objects.create(name="Test", slug="test")
 
     def test_id(self):
         """Test filtering by ID."""
@@ -27,6 +27,11 @@ class ManufacturerTestCase(TestCase):
         """Test filtering by Name."""
         params = {"name": ["Acme", "Test", "Acme1"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
+
+    def test_slug(self):
+        """Test filtering by Slug."""
+        params = {"slug": ["acme1", "test"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
 class DeviceTypeTestCase(TestCase):
@@ -39,8 +44,8 @@ class DeviceTypeTestCase(TestCase):
     def setUpTestData(cls):
         """Setup Data."""
         manufacturers = (
-            ManufacturerImport.objects.create(name="Acme"),
-            ManufacturerImport.objects.create(name="Test"),
+            ManufacturerImport.objects.create(name="Acme", slug="acme"),
+            ManufacturerImport.objects.create(name="Test", slug="test"),
         )
 
         DeviceTypeImport.objects.create(
@@ -70,7 +75,7 @@ class DeviceTypeTestCase(TestCase):
         manufacturers = ManufacturerImport.objects.all()[:2]
         params = {"manufacturer_id": [manufacturers[0].pk, manufacturers[1].pk]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
-        params = {"manufacturers": [manufacturers[0].name, manufacturers[1].name]}
+        params = {"manufacturers": [manufacturers[0].slug, manufacturers[1].slug]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
 
     def test_search(self):

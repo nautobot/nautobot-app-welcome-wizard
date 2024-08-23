@@ -1,31 +1,34 @@
 """Views for Welcome Wizard."""
+import uuid
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseForbidden
-from django.shortcuts import redirect, render
 from django.views.generic import View
+from django.shortcuts import render, redirect
 from nautobot.circuits.models import CircuitType, Provider
-from nautobot.core.utils.permissions import get_permission_for_model
 from nautobot.core.views import generic
-from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
-from nautobot.dcim.models import DeviceType, Location, Manufacturer
-from nautobot.extras.models import Role
+from nautobot.dcim.models import Site, DeviceType, Manufacturer
+from nautobot.dcim.models.devices import DeviceRole
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
-from nautobot.extras.models import GitRepository, Job, JobResult
+from nautobot.extras.models import JobResult, GitRepository
 from nautobot.ipam.models import RIR
+from nautobot.utilities.permissions import get_permission_for_model
+from nautobot.utilities.views import ObjectPermissionRequiredMixin
 from nautobot.virtualization.models import ClusterType
-
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.forms import (
-    DeviceTypeBulkImportForm,
     DeviceTypeImportFilterForm,
-    ManufacturerBulkImportForm,
+    DeviceTypeBulkImportForm,
     ManufacturerImportFilterForm,
+    ManufacturerBulkImportForm,
 )
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.jobs import WelcomeWizardImportDeviceType, WelcomeWizardImportManufacturer
+from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
 from welcome_wizard.models.merlin import Merlin
-from welcome_wizard.tables import DashboardTable, DeviceTypeWizardTable, ManufacturerWizardTable
+from welcome_wizard.tables import ManufacturerWizardTable, DeviceTypeWizardTable, DashboardTable
 
 
 def check_sync(instance, request):
@@ -43,9 +46,9 @@ def check_sync(instance, request):
                 ],
                 branch="master",
             )
-            repo.save()
+            repo.save(trigger_resync=False)
 
-        enqueue_pull_git_repository_and_refresh_data(repo, request.user)
+        enqueue_pull_git_repository_and_refresh_data(repo, request)
 
 
 class ManufacturerListView(generic.ObjectListView):
@@ -111,7 +114,6 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
         initial = {"pk": [primarykey]}
 
         obj = self.model.objects.get(pk=primarykey)
-
         form = self.form(initial)
 
         return render(
@@ -136,14 +138,26 @@ class BulkImportView(View, ObjectPermissionRequiredMixin):
             onboarded = []
 
             for obj in self.model.objects.filter(pk__in=pk_list):
+                job_result = JobResult.objects.create(
+                    name="welcome_wizard_import",
+                    obj_type=ContentType.objects.get(app_label="extras", model="job"),
+                    user=None,
+                    job_id=uuid.uuid4(),
+                )
                 if self.model == ManufacturerImport:
-                    job = Job.objects.get(name="Welcome Wizard - Import Manufacturer")
-                    JobResult.enqueue_job(job_model=job, user=self.request.user, manufacturer_name=obj.name)
+                    data = {"manufacturer": obj.name}
+                    job = WelcomeWizardImportManufacturer()
+                    job.job_result = job_result
+                    job.run(data, commit=True)
                     onboarded.append(obj.name)
+
                 elif self.model == DeviceTypeImport:
-                    job = Job.objects.get(name="Welcome Wizard - Import Device Type")
-                    JobResult.enqueue_job(job_model=job, user=self.request.user, filename=obj.filename)
+                    job = WelcomeWizardImportDeviceType()
+                    data = {"device_type": obj.filename}
+                    job.job_result = job_result
+                    job.run(data, commit=True)
                     onboarded.append(obj.name)
+
             # Currently treat everything as a success...
             messages.success(request, f"Onboarded {len(onboarded)} objects.")
 
@@ -155,7 +169,7 @@ class ManufacturerBulkImportView(BulkImportView):
 
     model = ManufacturerImport
     form = ManufacturerBulkImportForm
-    return_url = "plugins:welcome_wizard:manufacturers"
+    return_url = "plugins:welcome_wizard:manufacturer"
     bulk_import_url = "plugins:welcome_wizard:manufacturer_import"
     permission_required = "dcim.add_manufacturer"
     queryset = Manufacturer.objects.all()
@@ -167,7 +181,7 @@ class DeviceTypeBulkImportView(BulkImportView):
 
     model = DeviceTypeImport
     form = DeviceTypeBulkImportForm
-    return_url = "plugins:welcome_wizard:devicetypes"
+    return_url = "plugins:welcome_wizard:devicetype"
     bulk_import_url = "plugins:welcome_wizard:devicetype_import"
     permission_required = "dcim.add_devicetype"
     queryset = DeviceType.objects.prefetch_related("manufacturer")
@@ -190,7 +204,7 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
         # wise.
         for nautobot_object, var_name, list_url, new_url, wizard_url in [
-            (Location, "Locations", "dcim:location_list", "dcim:location_add", ""),
+            (Site, "Sites", "dcim:site_list", "dcim:site_add", ""),
             (
                 Manufacturer,
                 "Manufacturers",
@@ -206,10 +220,10 @@ class WelcomeWizardDashboard(generic.ObjectListView):
                 "plugins:welcome_wizard:devicetype_import",
             ),
             (
-                Role,
-                "Roles",
-                "extras:role_list",
-                "extras:role_add",
+                DeviceRole,
+                "Device Roles",
+                "dcim:devicerole_list",
+                "dcim:devicerole_add",
                 "",
             ),
             (
@@ -269,17 +283,3 @@ class WelcomeWizardDashboard(generic.ObjectListView):
     queryset = Merlin.objects.all()
     template_name = "welcome_wizard/dashboard.html"
     table = DashboardTable
-
-
-class ManufacturerImportDetailView(generic.ObjectView):
-    """Detail view for ManufacturerImport."""
-
-    permission_required = "welcome_wizard.view_manufacturerimport"
-    queryset = ManufacturerImport.objects.all()
-
-
-class DeviceTypeImportDetailView(generic.ObjectView):
-    """Detail view for DeviceTypeImport."""
-
-    permission_required = "welcome_wizard.view_devicetypeimport"
-    queryset = DeviceTypeImport.objects.all()

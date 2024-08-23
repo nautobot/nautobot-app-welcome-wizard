@@ -4,6 +4,7 @@ from typing import Optional
 from django.conf import settings
 from django.urls import reverse
 from django.utils.html import format_html
+
 from nautobot.extras.choices import BannerClassChoices
 from nautobot.extras.plugins import PluginBanner
 

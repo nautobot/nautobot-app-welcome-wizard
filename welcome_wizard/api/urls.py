@@ -1,7 +1,8 @@
 """API Urls for Welcome Wizard."""
 from rest_framework import routers
 
-from .views import DeviceTypeViewSet, ManufacturerViewSet
+from .views import ManufacturerViewSet, DeviceTypeViewSet
+
 
 router = routers.DefaultRouter()
 router.register("devicetypeimport", DeviceTypeViewSet)

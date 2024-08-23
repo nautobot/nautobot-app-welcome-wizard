@@ -1,1 +1,1 @@
-"""Unit tests for welcome_wizard plugin."""
+"""Unit tests for Welcome Wizard plugin."""
