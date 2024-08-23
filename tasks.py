@@ -12,7 +12,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from distutils.util import strtobool
 from invoke import Collection, task as invoke_task
 import os
 
@@ -29,7 +28,14 @@ def is_truthy(arg):
     """
     if isinstance(arg, bool):
         return arg
-    return bool(strtobool(arg))
+
+    val = str(arg).lower()
+    if val in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    elif val in ("n", "no", "f", "false", "off", "0"):
+        return False
+    else:
+        raise ValueError(f"Invalid truthy value: `{arg}`")
 
 
 # Use pyinvoke configuration for default values, see http://docs.pyinvoke.org/en/stable/concepts/configuration.html
@@ -38,7 +44,7 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "latest",
+            "nautobot_ver": "1.5.5",
             "project_name": "welcome_wizard",
             "python_ver": "3.8",
             "local": False,
@@ -75,22 +81,23 @@ def task(function=None, *args, **kwargs):
 
 
 def docker_compose(context, command, **kwargs):
-    """Helper function for running a specific docker-compose command with all appropriate parameters and environment.
+    """Helper function for running a specific docker compose command with all appropriate parameters and environment.
 
     Args:
         context (obj): Used to run specific commands
-        command (str): Command string to append to the "docker-compose ..." command, such as "build", "up", etc.
+        command (str): Command string to append to the "docker compose ..." command, such as "build", "up", etc.
         **kwargs: Passed through to the context.run() call.
     """
     build_env = {
-        # Note: 'docker-compose logs' will stop following after 60 seconds by default,
+        # Note: 'docker compose logs' will stop following after 60 seconds by default,
         # so we are overriding that by setting this environment variable.
         "COMPOSE_HTTP_TIMEOUT": context.welcome_wizard.compose_http_timeout,
         "NAUTOBOT_VER": context.welcome_wizard.nautobot_ver,
         "PYTHON_VER": context.welcome_wizard.python_ver,
+        **kwargs.pop("env", {}),
     }
     compose_command_tokens = [
-        "docker-compose",
+        "docker compose",
         f"--project-name {context.welcome_wizard.project_name}",
         f'--project-directory "{context.welcome_wizard.compose_dir}"',
     ]
@@ -106,7 +113,7 @@ def docker_compose(context, command, **kwargs):
     if service is not None:
         compose_command_tokens.append(service)
 
-    print(f'Running docker-compose command "{command}"')
+    print(f'Running docker compose command "{command}"')
     compose_command = " ".join(compose_command_tokens)
 
     return context.run(compose_command, env=build_env, **kwargs)
@@ -205,13 +212,13 @@ def vscode(context):
 
 @task(
     help={
-        "service": "Docker-compose service name to view (default: nautobot)",
+        "service": "Docker compose service name to view (default: nautobot)",
         "follow": "Follow logs",
         "tail": "Tail N number of lines or 'all'",
     }
 )
 def logs(context, service="nautobot", follow=False, tail=None):
-    """View the logs of a docker-compose service."""
+    """View the logs of a docker compose service."""
     command = "logs "
 
     if follow:
