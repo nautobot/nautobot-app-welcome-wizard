@@ -81,7 +81,7 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ["3.8"] # Using older python version as the installed pylint does not support 3.11
-        nautobot-version: ["1.5.0"]
+        nautobot-version: ["1.6.0"]
     env:
       INVOKE_WELCOME_WIZARD_PYTHON_VER: "${{ matrix.python-version }}"
       INVOKE_WELCOME_WIZARD_NAUTOBOT_VER: "${{ matrix.nautobot-version }}"
