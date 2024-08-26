@@ -2,7 +2,6 @@
 from rest_framework.viewsets import ModelViewSet
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
-
 from .serializers import DeviceTypeImportSerializer, ManufacturerImportSerializer
 
 

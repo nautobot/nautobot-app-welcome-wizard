@@ -1,12 +1,11 @@
 """Plugin declaration for Welcome Wizard."""
 
-from nautobot.extras.plugins import NautobotAppConfig
+__version__ = "1.1.4"
 
-# Needs to be resovled: This is due to a bug tracked by issue #86
-__version__ = "2.0.0"
+from nautobot.extras.plugins import PluginConfig
 
 
-class WelcomeWizardConfig(NautobotAppConfig):
+class WelcomeWizardConfig(PluginConfig):
     """Plugin configuration for the welcome_wizard plugin."""
 
     name = "welcome_wizard"
@@ -16,8 +15,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
     required_settings = []
-    min_version = "2.0.0"
-    max_version = "2.9999"
+    min_version = "1.5.0"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
@@ -27,15 +25,6 @@ class WelcomeWizardConfig(NautobotAppConfig):
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard"
     docs_view_name = "plugins:welcome_wizard:docs"
-
-    def ready(self):
-        """Callback when this plugin is loaded."""
-        super().ready()
-
-        from nautobot.core.signals import nautobot_database_ready  # pylint: disable=import-outside-toplevel
-        from .signals import nautobot_database_ready_callback  # pylint: disable=import-outside-toplevel
-
-        nautobot_database_ready.connect(nautobot_database_ready_callback, sender=self)
 
 
 config = WelcomeWizardConfig  # pylint:disable=invalid-name

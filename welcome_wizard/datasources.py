@@ -2,12 +2,13 @@
 
 import os
 from pathlib import Path
-
 import yaml
+
+from django.utils.text import slugify
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import ManufacturerImport, DeviceTypeImport
 
 
 def retrieve_device_types_from_filesystem(path):
@@ -21,6 +22,9 @@ def retrieve_device_types_from_filesystem(path):
     """
     manufacturers = set()
     device_types = {}
+
+    # We have decided that a Git repository can provide both YML and YAML files in a
+    # /animals/ directory at the repository root.
 
     device_type_path = os.path.join(path, "device-types")
     files = (filename for filename in Path(device_type_path).rglob("*") if filename.suffix in [".yml", ".yaml"])
@@ -40,16 +44,21 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
         return
 
     manufacturers, device_types = retrieve_device_types_from_filesystem(repository_record.filesystem_path)
+
     for manufacturer in manufacturers:
         # Create or update an ManufacturerImport record based on the provided data
-        manufacturer_record, _ = ManufacturerImport.objects.update_or_create(name=manufacturer)
+        manufacturer_record, _ = ManufacturerImport.objects.update_or_create(
+            name=manufacturer, slug=slugify(manufacturer)
+        )
+
         # Record the outcome in the JobResult record
         job_result.log(
             "Successfully created/updated manufacturer",
             obj=manufacturer_record,
-            level_choice=LogLevelChoices.LOG_INFO,
+            level_choice=LogLevelChoices.LOG_SUCCESS,
             grouping="welcome_wizard",
         )
+
     for device_type, device_data in device_types.items():
         device_type_record, _ = DeviceTypeImport.objects.update_or_create(
             filename=device_type,
@@ -57,15 +66,16 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
             manufacturer=ManufacturerImport.objects.filter(name=device_data["manufacturer"])[0],
             defaults={"device_type_data": device_data},
         )
+
         job_result.log(
             "Successfully created/updated device_type",
             obj=device_type_record,
-            level_choice=LogLevelChoices.LOG_INFO,
+            level_choice=LogLevelChoices.LOG_SUCCESS,
             grouping="welcome_wizard",
         )
 
 
-# Register that records can be loaded from a Git repository,
+# Register that Animal records can be loaded from a Git repository,
 # and register the callback function used to do so
 datasource_contents = [
     (
