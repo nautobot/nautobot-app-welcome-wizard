@@ -66,5 +66,5 @@ The app behavior can be controlled with the following list of settings:
 
 | Key     | Example | Default | Description                          |
 | ------- | ------ | -------- | ------------------------------------- |
-| `enable_devicetype-library` | `True` | `True` | If enabled, the [device type](https://github.com/netbox-community/devicetype-library) git repository will be automatically added for you. |
+| `enable_devicetype-library` | `True` | `True` | If enabled, the [device type](https://github.com/nautobot/devicetype-library) git repository will be automatically added for you. |
 | `enable_welcome_banner` | `True` | `True` | If enabled, the Welcome Wizard banner will display on the home screen for authenticated users. |

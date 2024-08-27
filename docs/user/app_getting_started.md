@@ -20,7 +20,8 @@ From the dashboard, you can click on the green Add button in the Sites role to t
 
 ### Import Manufacturers
 
-You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nautobot.
+You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nautobot. If the [Git Repository](git_datasource.md) 
+has not yet been synced, this page will initially be blank but the repository will be automatically synced (and created if necessary). You can refresh the page, once the repository has synced the manufacturers will become available.
 
 ![Import Manufacturers](../images/merlin_import_manufacturers.png)
 
@@ -44,7 +45,8 @@ Navigating to Manufacturers inside Nautobot will confirm these manufacturers wer
 
 ### Import Device Types
 
-You can browse to the `Import Device Types` page to easily import selected device types into Nautobot.
+You can browse to the `Import Device Types` page to easily import selected device types into Nautobot.  If the [Git Repository](git_datasource.md) 
+has not yet been synced, this page will initially be blank but the repository will be automatically synced (and created if necessary). You can refresh the page, once the repository has synced the device types will become available.
 
 ![Import Device Types](../images/merlin_import_device_type.png)
 

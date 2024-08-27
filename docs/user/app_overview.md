@@ -12,7 +12,7 @@ The Welcome Wizard is an open-source Nautobot app with the goal to assist users 
 The Welcome Wizard adds four (4) key features:
 
 - Welcome Wizard uses the **Import Wizard** to allow ease of adding community-defined Device Types and Manufacturers into Nautobot. This is built upon the Git datasources feature of Nautobot.
-- Welcome Wizard includes by default the **[DeviceType-library](https://github.com/netbox-community/devicetype-library)**, but this can be disabled and a custom library can be used instead.
+- Welcome Wizard includes by default the **[DeviceType-library](https://github.com/nautobot/devicetype-library)**, but this can be disabled and a custom library can be used instead.
 - Welcome Wizard includes **banners** in forms to alert the user when required form fields have no associated resources in Nautobot.
 - The Welcome Wizard **Dashboard** contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them.
 
