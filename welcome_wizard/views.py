@@ -37,11 +37,11 @@ def check_sync(instance, request):
             repo = GitRepository(
                 name="Devicetype-library",
                 slug="devicetype_library",
-                remote_url="https://github.com/netbox-community/devicetype-library.git",
+                remote_url="https://github.com/nautobot/devicetype-library.git",
                 provided_contents=[
                     "welcome_wizard.import_wizard",
                 ],
-                branch="master",
+                branch="main",
             )
             repo.save()
 

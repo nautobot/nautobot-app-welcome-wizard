@@ -2,13 +2,13 @@
 
 ## Release Overview
 
-## [v2.0.0] - 2023-11-15
+## [v2.0.0 - (2023-11-15)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v2.0.0)
 
 ### Changed
 
 - [#85](https://github.com/nautobot/nautobot-app-welcome-wizard/pull/85) Updates for Nautobot v2
 
-## [v2.0.1 (2024-04-11)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v2.0.0)
+## [v2.0.1 (2024-04-11)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v2.0.1)
 
 ### Changed
 
