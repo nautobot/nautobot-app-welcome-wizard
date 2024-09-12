@@ -25,7 +25,7 @@ from welcome_wizard.forms import (
 )
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
-from welcome_wizard.tables import DashboardTable, DeviceTypeWizardTable, ManufacturerWizardTable
+from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
 
 
 def check_sync(instance, request):
@@ -52,7 +52,7 @@ class ManufacturerListView(generic.ObjectListView):
     """Table of all Manufacturers discovered in the Git Repository."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
-    table = ManufacturerWizardTable
+    table = ManufacturerImportTable
     queryset = ManufacturerImport.objects.all()
     action_buttons = ()
     template_name = "welcome_wizard/manufacturer.html"
@@ -69,7 +69,7 @@ class DeviceTypeListView(generic.ObjectListView):
     """Table of Device Types based on the Manufacturer."""
 
     permission_required = "welcome_wizard.view_devicetypeimport"
-    table = DeviceTypeWizardTable
+    table = DeviceTypeImportTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
     action_buttons = ()

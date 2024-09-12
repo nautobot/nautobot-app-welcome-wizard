@@ -39,7 +39,7 @@ DASHBOARD_LINK = """
 """
 
 
-class ManufacturerWizardTable(BaseTable):
+class ManufacturerImportTable(BaseTable):
     """Table to show the ManufactureImport List."""
 
     pk = ToggleColumn()
@@ -57,7 +57,7 @@ class ManufacturerWizardTable(BaseTable):
             empty_text = "Adding data from GitRepository, please refresh"
 
 
-class DeviceTypeWizardTable(BaseTable):
+class DeviceTypeImportTable(BaseTable):
     """Table to show the DeviceTypeImport List."""
 
     pk = ToggleColumn()
@@ -76,7 +76,7 @@ class DeviceTypeWizardTable(BaseTable):
             empty_text = "Adding data from GitRepository, please refresh"
 
 
-class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods
+class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods, nb-sub-class-name
     """Table for the Dashboard."""
 
     name = tables.TemplateColumn(verbose_name="Name", template_code=DASHBOARD_LINK)
