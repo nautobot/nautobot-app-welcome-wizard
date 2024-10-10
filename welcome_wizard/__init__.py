@@ -22,6 +22,7 @@ class NautobotWelcomeWizardConfig(NautobotAppConfig):
     max_version = "2.9999"
     default_settings = {}
     caching_config = {}
+    docs_view_name = "plugins:welcome_wizard:docs"
 
 
 config = NautobotWelcomeWizardConfig  # pylint:disable=invalid-name
