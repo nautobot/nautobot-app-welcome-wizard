@@ -1,4 +1,5 @@
 """Django urlpatterns declaration for Welcome Wizard app."""
+
 from django.templatetags.static import static
 from django.urls import path
 from django.views.generic import RedirectView

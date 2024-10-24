@@ -1,4 +1,5 @@
 """Test cases for Forms."""
+
 from django.test import TestCase
 
 from welcome_wizard.forms import DeviceTypeBulkImportForm, ManufacturerBulkImportForm

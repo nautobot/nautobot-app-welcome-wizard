@@ -1,4 +1,5 @@
 """Views for Welcome Wizard."""
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -10,9 +11,8 @@ from nautobot.core.utils.permissions import get_permission_for_model
 from nautobot.core.views import generic
 from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
 from nautobot.dcim.models import DeviceType, Location, Manufacturer
-from nautobot.extras.models import Role
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
-from nautobot.extras.models import GitRepository, Job, JobResult
+from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
 from nautobot.virtualization.models import ClusterType
 
@@ -25,7 +25,7 @@ from welcome_wizard.forms import (
 )
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
-from welcome_wizard.tables import DashboardTable, DeviceTypeWizardTable, ManufacturerWizardTable
+from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
 
 
 def check_sync(instance, request):
@@ -37,11 +37,11 @@ def check_sync(instance, request):
             repo = GitRepository(
                 name="Devicetype-library",
                 slug="devicetype_library",
-                remote_url="https://github.com/netbox-community/devicetype-library.git",
+                remote_url="https://github.com/nautobot/devicetype-library.git",
                 provided_contents=[
                     "welcome_wizard.import_wizard",
                 ],
-                branch="master",
+                branch="main",
             )
             repo.save()
 
@@ -52,7 +52,7 @@ class ManufacturerListView(generic.ObjectListView):
     """Table of all Manufacturers discovered in the Git Repository."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
-    table = ManufacturerWizardTable
+    table = ManufacturerImportTable
     queryset = ManufacturerImport.objects.all()
     action_buttons = ()
     template_name = "welcome_wizard/manufacturer.html"
@@ -69,7 +69,7 @@ class DeviceTypeListView(generic.ObjectListView):
     """Table of Device Types based on the Manufacturer."""
 
     permission_required = "welcome_wizard.view_devicetypeimport"
-    table = DeviceTypeWizardTable
+    table = DeviceTypeImportTable
     queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
     filterset = DeviceTypeImportFilterSet
     action_buttons = ()

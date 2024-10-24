@@ -1,4 +1,5 @@
 """API Urls for Welcome Wizard."""
+
 from rest_framework import routers
 
 from .views import DeviceTypeViewSet, ManufacturerViewSet

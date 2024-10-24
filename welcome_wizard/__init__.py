@@ -1,7 +1,8 @@
 """App declaration for welcome_wizard."""
+
 from nautobot.apps import NautobotAppConfig
 
-# Needs to be resovled: This is due to a bug tracked by issue #86
+# Needs to be resolved: This is due to a bug tracked by issue #86
 __version__ = "2.0.0"
 
 
@@ -32,6 +33,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
         super().ready()
 
         from nautobot.core.signals import nautobot_database_ready  # pylint: disable=import-outside-toplevel
+
         from .signals import nautobot_database_ready_callback  # pylint: disable=import-outside-toplevel
 
         nautobot_database_ready.connect(nautobot_database_ready_callback, sender=self)

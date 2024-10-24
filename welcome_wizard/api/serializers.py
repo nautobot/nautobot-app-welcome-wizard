@@ -1,4 +1,5 @@
 """API Serializers for Welcome Wizard."""
+
 from rest_framework.serializers import ModelSerializer
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport

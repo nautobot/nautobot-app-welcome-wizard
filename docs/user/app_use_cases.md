@@ -8,7 +8,7 @@ The Nautobot Welcome Wizard includes a great dashboard to help you get started w
 
 ### The Dashboard
 
-This is where the Welcome Wizard Dashboard will help. It is a single location you can visit to find links to common dependencies. If a resource in Nautobot requires another it will be listed here. The `Name` column includes links to view a list of the associated resources. The `Completed` column will show if a resource has been created. The `Ignored` column allows the administrator (through the admin panel) tp mark a dependency as ignored if that resource that will be unused. Finally, the `Actions` column will have two button links. The first is a green plus which will take you to the resource creation form. The blue wizard hat will take you to the [Import Wizard](app_getting_started.md#import-manufacturers) allowing you to import from a git repository.
+This is where the Welcome Wizard Dashboard will help. It is a single location you can visit to find links to common dependencies. If a resource in Nautobot requires another it will be listed here. The `Name` column includes links to view a list of the associated resources. The `Completed` column will show if a resource has been created. The `Ignored` column allows the administrator (through the admin panel) to mark a dependency as ignored if that resource will be unused. Finally, the `Actions` column will have two button links. The first is a green plus which will take you to the resource creation form. The blue wizard hat will take you to the [Import Wizard](app_getting_started.md#import-manufacturers) allowing you to import from a git repository.
 
 ![Welcome Wizard](../images/welcome_wizard.png)
 

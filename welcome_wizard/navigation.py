@@ -1,4 +1,5 @@
 """Navigation menu for Welcome Wizard."""
+
 from nautobot.apps.ui import NavMenuGroup, NavMenuItem, NavMenuTab
 
 plugin_items = [

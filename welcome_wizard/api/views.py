@@ -1,4 +1,5 @@
 """API Views for Welcome Wizard."""
+
 from rest_framework.viewsets import ModelViewSet
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
