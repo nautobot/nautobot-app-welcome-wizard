@@ -1,52 +1,17 @@
-"""Filters for Welcome Wizard."""
+"""Filtering for welcome_wizard."""
 
-import django_filters
-from django.db.models import Q
-from nautobot.apps.filters import BaseFilterSet, SearchFilter
+from nautobot.apps.filters import NameSearchFilterSet, NautobotFilterSet
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard import models
 
 
-class ManufacturerImportFilterSet(BaseFilterSet):
-    """Manufacturer Import Filter Set."""
-
-    q = SearchFilter(filter_predicates={"name": "icontains"})
+class ManufacturerImportFilterSet(NautobotFilterSet, NameSearchFilterSet):  # pylint: disable=too-many-ancestors
+    """Filter for ManufacturerImport."""
 
     class Meta:
-        """Meta for Manufacturer Import Filter Set."""
+        """Meta attributes for filter."""
 
-        model = ManufacturerImport
-        fields = ["id", "name"]
+        model = models.ManufacturerImport
 
-
-class DeviceTypeImportFilterSet(BaseFilterSet):
-    """Device Type Import Filter Set."""
-
-    q = django_filters.CharFilter(
-        method="search",
-        label="Search",
-    )
-    manufacturer_id = django_filters.ModelMultipleChoiceFilter(
-        queryset=ManufacturerImport.objects.all(),
-        label="Manufacturer (ID)",
-    )
-    manufacturer = django_filters.ModelMultipleChoiceFilter(
-        field_name="manufacturer__name",
-        queryset=ManufacturerImport.objects.all(),
-        to_field_name="name",
-        label="Manufacturer",
-    )
-
-    class Meta:
-        """Meta for Device Type Import Filter Set."""
-
-        model = DeviceTypeImport
-        fields = [
-            "id",
-            "name",
-        ]
-
-    def search(self, queryset, name, value):  # pylint: disable=unused-argument
-        """Search for Device Type where name or manufacturer contain value."""
-        # Nautobot search function, not sure where name and self should be used.
-        return queryset.filter(Q(name__icontains=value) | Q(manufacturer__name__icontains=value))
+        # add any fields from the model that you would like to filter your searches by using those
+        fields = ["id", "name", "description"]

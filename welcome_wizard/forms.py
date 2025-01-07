@@ -1,35 +1,47 @@
-"""Forms for Welcome Wizard."""
+"""Forms for welcome_wizard."""
 
 from django import forms
-from nautobot.apps.forms import BootstrapMixin, CustomFieldModelFilterFormMixin, DynamicModelMultipleChoiceField
+from nautobot.apps.forms import NautobotBulkEditForm, NautobotFilterForm, NautobotModelForm, TagsBulkEditFormMixin
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
-
-
-class ManufacturerImportFilterForm(BootstrapMixin, CustomFieldModelFilterFormMixin):
-    """Filter form for Manufacturer."""
-
-    model = ManufacturerImport
-    q = forms.CharField(required=False, label="Search")
+from welcome_wizard import models
 
 
-class DeviceTypeImportFilterForm(BootstrapMixin, CustomFieldModelFilterFormMixin):
-    """Filter form for Device Type."""
+class ManufacturerImportForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport creation/edit form."""
 
-    model = DeviceTypeImport
-    q = forms.CharField(required=False, label="Search")
-    manufacturer = DynamicModelMultipleChoiceField(
-        queryset=ManufacturerImport.objects.all(), to_field_name="name", required=False
+    class Meta:
+        """Meta attributes."""
+
+        model = models.ManufacturerImport
+        fields = [
+            "name",
+            "description",
+        ]
+
+
+class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport bulk edit form."""
+
+    pk = forms.ModelMultipleChoiceField(queryset=models.ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
+    description = forms.CharField(required=False)
+
+    class Meta:
+        """Meta attributes."""
+
+        nullable_fields = [
+            "description",
+        ]
+
+
+class ManufacturerImportFilterForm(NautobotFilterForm):
+    """Filter form to filter searches."""
+
+    model = models.ManufacturerImport
+    field_order = ["q", "name"]
+
+    q = forms.CharField(
+        required=False,
+        label="Search",
+        help_text="Search within Name or Slug.",
     )
-
-
-class ManufacturerBulkImportForm(BootstrapMixin, forms.Form):
-    """Bulk Import Form for Manufacturer."""
-
-    pk = forms.ModelMultipleChoiceField(queryset=ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
-
-
-class DeviceTypeBulkImportForm(BootstrapMixin, forms.Form):
-    """Bulk Import Form for Device Type."""
-
-    pk = forms.ModelMultipleChoiceField(queryset=DeviceTypeImport.objects.all(), widget=forms.MultipleHiddenInput)
+    name = forms.CharField(required=False, label="Name")

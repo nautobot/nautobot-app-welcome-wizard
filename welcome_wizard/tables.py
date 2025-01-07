@@ -1,91 +1,38 @@
-"""Tables for Welcome Wizard."""
+"""Tables for welcome_wizard."""
 
 import django_tables2 as tables
-from django.conf import settings
-from nautobot.apps.tables import BaseTable, ToggleColumn
+from nautobot.apps.tables import BaseTable, ButtonsColumn, ToggleColumn
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
-from welcome_wizard.models.merlin import Merlin
-
-MANUFACTURER_BUTTONS = """
-<a href="{% url 'plugins:welcome_wizard:manufacturer_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Manufacturer">
-    <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
-</a>
-"""
-
-DEVICE_TYPE_BUTTONS = """
-<a href="{% url 'plugins:welcome_wizard:devicetype_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Device Type">
-    <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
-</a>
-"""
-
-IMPORT_BUTTONS = """
-<a href="{% url record.nautobot_add_link %}" class="btn btn-xs btn-success" title="Add"><i class="mdi mdi-plus-thick"></i></a>
-{% if record.merlin_link %}
-<a href="{% url record.merlin_link %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
-{% endif %}
-"""
-
-COMPLETED_INFO = """
-{% if record.completed %}
-<span class="mdi mdi-checkbox-marked-outline"></span>
-{% else %}
-<span class="mdi mdi-checkbox-blank-outline"></span>
-{% endif %}
-"""
-
-DASHBOARD_LINK = """
-<a href="{% url record.nautobot_list_link %}">{{ record.name }}</a>
-"""
+from welcome_wizard import models
 
 
 class ManufacturerImportTable(BaseTable):
-    """Table to show the ManufactureImport List."""
+    # pylint: disable=R0903
+    """Table for list view."""
 
     pk = ToggleColumn()
-    name = tables.Column(accessor="name", verbose_name="Name")
-    actions = tables.TemplateColumn(MANUFACTURER_BUTTONS)
+    name = tables.Column(linkify=True)
+    actions = ButtonsColumn(
+        models.ManufacturerImport,
+        # Option for modifying the default action buttons on each row:
+        # buttons=("changelog", "edit", "delete"),
+        # Option for modifying the pk for the action buttons:
+        pk_field="pk",
+    )
 
-    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
-        """Meta for ManufacturerImport Table."""
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
 
-        model = ManufacturerImport
-        fields = ("pk", "name", "actions")
-        default_columns = ("pk", "name", "actions")
-        empty_text = "Add or Sync a Welcome Wizard Import Wizard GitRepository"
-        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library"):
-            empty_text = "Adding data from GitRepository, please refresh"
+        model = models.ManufacturerImport
+        fields = (
+            "pk",
+            "name",
+            "description",
+        )
 
-
-class DeviceTypeImportTable(BaseTable):
-    """Table to show the DeviceTypeImport List."""
-
-    pk = ToggleColumn()
-    name = tables.Column(accessor="name", verbose_name="Name")
-    manufacturer = tables.Column(accessor="manufacturer", verbose_name="Manufacturer")
-    actions = tables.TemplateColumn(DEVICE_TYPE_BUTTONS)
-
-    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
-        """Meta for DeviceTypeImport Table."""
-
-        model = DeviceTypeImport
-        fields = ("pk", "name", "manufacturer", "actions")
-        default_columns = ("pk", "name", "manufacturer", "actions")
-        empty_text = "Add or Sync a Welcome Wizard Import Wizard GitRepository"
-        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library"):
-            empty_text = "Adding data from GitRepository, please refresh"
-
-
-class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods, nb-sub-class-name
-    """Table for the Dashboard."""
-
-    name = tables.TemplateColumn(verbose_name="Name", template_code=DASHBOARD_LINK)
-    imports = tables.TemplateColumn(verbose_name="Actions", template_code=IMPORT_BUTTONS)
-    completed_info = tables.TemplateColumn(verbose_name="Completed", template_code=COMPLETED_INFO)
-
-    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
-        """Meta for Dashboard Table."""
-
-        model = Merlin
-        fields = ("name", "completed_info", "ignored", "imports")
-        default_columns = ("name", "completed_info", "ignored", "imports")
+        # Option for modifying the columns that show up in the list view by default:
+        # default_columns = (
+        #     "pk",
+        #     "name",
+        #     "description",
+        # )
