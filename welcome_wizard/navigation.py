@@ -1,18 +1,12 @@
 """Menu items."""
 
-from nautobot.apps.ui import NavMenuAddButton, NavMenuGroup, NavMenuItem, NavMenuTab
+from nautobot.apps.ui import NavMenuGroup, NavMenuItem, NavMenuTab
 
 items = (
     NavMenuItem(
-        link="plugins:welcome_wizard:manufacturerimport_list",
-        name="Welcome Wizard",
-        permissions=["welcome_wizard.view_manufacturerimport"],
-        buttons=(
-            NavMenuAddButton(
-                link="plugins:welcome_wizard:manufacturerimport_add",
-                permissions=["welcome_wizard.add_manufacturerimport"],
-            ),
-        ),
+        link="plugins:welcome_wizard:dashboard",
+        name="Welcome Wizard Dashboard",
+        permissions=["welcome_wizard.view_dashboard"],
     ),
 )
 

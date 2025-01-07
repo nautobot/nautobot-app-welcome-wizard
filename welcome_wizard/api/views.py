@@ -13,5 +13,10 @@ class ManufacturerImportViewSet(NautobotModelViewSet):  # pylint: disable=too-ma
     serializer_class = serializers.ManufacturerImportSerializer
     filterset_class = filters.ManufacturerImportFilterSet
 
-    # Option for modifying the default HTTP methods:
-    # http_method_names = ["get", "post", "put", "patch", "delete", "head", "options", "trace"]
+
+class DeviceTypeImportViewSet(NautobotModelViewSet):  # pylint: disable=too-many-ancestors
+    """DeviceTypeImport viewset."""
+
+    queryset = models.DeviceTypeImport.objects.all()
+    serializer_class = serializers.DeviceTypeImportSerializer
+    filterset_class = filters.DeviceTypeImportFilterSet
