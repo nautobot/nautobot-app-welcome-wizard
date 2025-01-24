@@ -15,7 +15,6 @@ class ManufacturerImportFilterForm(NautobotFilterForm):  # pylint: disable=too-m
     q = forms.CharField(
         required=False,
         label="Search",
-        help_text="Search within Name or Slug.",
     )
     name = forms.CharField(required=False, label="Name")
 
@@ -29,7 +28,6 @@ class DeviceTypeImportFilterForm(NautobotFilterForm):  # pylint: disable=too-man
     q = forms.CharField(
         required=False,
         label="Search",
-        help_text="Search within Manufacturer or Name.",
     )
     manufacturer = DynamicModelMultipleChoiceField(
         queryset=models.ManufacturerImport.objects.all(),
