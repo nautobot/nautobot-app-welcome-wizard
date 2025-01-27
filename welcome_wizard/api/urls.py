@@ -1,12 +1,13 @@
-"""API Urls for Welcome Wizard."""
+"""Django API urlpatterns declaration for welcome_wizard app."""
 
-from rest_framework import routers
+from nautobot.apps.api import OrderedDefaultRouter
 
-from .views import DeviceTypeViewSet, ManufacturerViewSet
-
-router = routers.DefaultRouter()
-router.register("devicetypeimport", DeviceTypeViewSet)
-router.register("manufacturerimport", ManufacturerViewSet)
+from welcome_wizard.api import views
 
 app_name = "welcome_wizard-api"
+router = OrderedDefaultRouter()
+# add the name of your api endpoint, usually hyphenated model name in plural, e.g. "my-model-classes"
+router.register("manufacturerimport", views.ManufacturerImportViewSet)
+router.register("devicetypeimport", views.DeviceTypeImportViewSet)
+
 urlpatterns = router.urls

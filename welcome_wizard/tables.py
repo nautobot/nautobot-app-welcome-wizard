@@ -1,11 +1,10 @@
-"""Tables for Welcome Wizard."""
+"""Tables for welcome_wizard."""
 
 import django_tables2 as tables
 from django.conf import settings
 from nautobot.apps.tables import BaseTable, ToggleColumn
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
-from welcome_wizard.models.merlin import Merlin
+from welcome_wizard import models
 
 MANUFACTURER_BUTTONS = """
 <a href="{% url 'plugins:welcome_wizard:manufacturer_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Manufacturer">
@@ -49,7 +48,7 @@ class ManufacturerImportTable(BaseTable):
     class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
         """Meta for ManufacturerImport Table."""
 
-        model = ManufacturerImport
+        model = models.ManufacturerImport
         fields = ("pk", "name", "actions")
         default_columns = ("pk", "name", "actions")
         empty_text = "Add or Sync a Welcome Wizard Import Wizard GitRepository"
@@ -68,7 +67,7 @@ class DeviceTypeImportTable(BaseTable):
     class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
         """Meta for DeviceTypeImport Table."""
 
-        model = DeviceTypeImport
+        model = models.DeviceTypeImport
         fields = ("pk", "name", "manufacturer", "actions")
         default_columns = ("pk", "name", "manufacturer", "actions")
         empty_text = "Add or Sync a Welcome Wizard Import Wizard GitRepository"
@@ -86,6 +85,6 @@ class DashboardTable(BaseTable):  # pylint: disable=too-few-public-methods, nb-s
     class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
         """Meta for Dashboard Table."""
 
-        model = Merlin
+        model = models.Merlin
         fields = ("name", "completed_info", "ignored", "imports")
         default_columns = ("name", "completed_info", "ignored", "imports")

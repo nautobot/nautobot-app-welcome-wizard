@@ -1,21 +1,22 @@
-"""API Views for Welcome Wizard."""
+"""API views for welcome_wizard."""
 
-from rest_framework.viewsets import ModelViewSet
+from nautobot.apps.api import NautobotModelViewSet
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
-
-from .serializers import DeviceTypeImportSerializer, ManufacturerImportSerializer
-
-
-class ManufacturerViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """API viewset for interacting with ManufacturerImport objects."""
-
-    queryset = ManufacturerImport.objects.all()
-    serializer_class = ManufacturerImportSerializer
+from welcome_wizard import filters, models
+from welcome_wizard.api import serializers
 
 
-class DeviceTypeViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """API viewset for interacting with DeviceTypeImport objects."""
+class ManufacturerImportViewSet(NautobotModelViewSet):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport viewset."""
 
-    queryset = DeviceTypeImport.objects.all()
-    serializer_class = DeviceTypeImportSerializer
+    queryset = models.ManufacturerImport.objects.all()
+    serializer_class = serializers.ManufacturerImportSerializer
+    filterset_class = filters.ManufacturerImportFilterSet
+
+
+class DeviceTypeImportViewSet(NautobotModelViewSet):  # pylint: disable=too-many-ancestors
+    """DeviceTypeImport viewset."""
+
+    queryset = models.DeviceTypeImport.objects.all()
+    serializer_class = serializers.DeviceTypeImportSerializer
+    filterset_class = filters.DeviceTypeImportFilterSet

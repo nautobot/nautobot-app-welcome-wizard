@@ -1,25 +1,25 @@
-"""API Serializers for Welcome Wizard."""
+"""API serializers for welcome_wizard."""
 
-from rest_framework.serializers import ModelSerializer
+from nautobot.apps.api import NautobotModelSerializer
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
-
-
-class ManufacturerImportSerializer(ModelSerializer):
-    """API serializer for interacting with ManufacturerImport objects."""
-
-    class Meta:
-        """Meta for ManufacturerImport Serializer."""
-
-        model = ManufacturerImport
-        fields = ("id", "name")
+from welcome_wizard import models
 
 
-class DeviceTypeImportSerializer(ModelSerializer):
-    """API serializer for interacting with DeviceTypeImport Objects."""
+class ManufacturerImportSerializer(NautobotModelSerializer):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport Serializer."""
 
     class Meta:
-        """Meta for DeviceTypeImport Serializer."""
+        """Meta attributes."""
 
-        model = DeviceTypeImport
-        fields = ("id", "name", "filename", "manufacturer")
+        model = models.ManufacturerImport
+        fields = "__all__"
+
+
+class DeviceTypeImportSerializer(NautobotModelSerializer):  # pylint: disable=too-many-ancestors
+    """DeviceTypeImport Serializer."""
+
+    class Meta:
+        """Meta attributes."""
+
+        model = models.DeviceTypeImport
+        fields = "__all__"
