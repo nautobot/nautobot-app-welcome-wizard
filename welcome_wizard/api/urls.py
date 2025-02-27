@@ -10,4 +10,5 @@ router = OrderedDefaultRouter()
 router.register("manufacturerimport", views.ManufacturerImportViewSet)
 router.register("devicetypeimport", views.DeviceTypeImportViewSet)
 
+app_name = "welcome_wizard-api"
 urlpatterns = router.urls
