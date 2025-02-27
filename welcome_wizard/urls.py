@@ -9,6 +9,7 @@ from nautobot.apps.urls import NautobotUIViewSetRouter
 from welcome_wizard import views
 
 
+app_name = "welcome_wizard"
 router = NautobotUIViewSetRouter()
 
 router.register("manufacturerimport", views.ManufacturerImportUIViewSet)
