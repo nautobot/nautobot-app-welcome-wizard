@@ -6,12 +6,7 @@ from django.views.generic import RedirectView
 
 from welcome_wizard import views
 
-
 app_name = "welcome_wizard"
-router = NautobotUIViewSetRouter()
-
-router.register("manufacturerimport", views.ManufacturerImportUIViewSet)
-
 
 urlpatterns = [
     path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),
