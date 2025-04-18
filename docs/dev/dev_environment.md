@@ -408,7 +408,7 @@ namespace.configure(
     {
         "welcome_wizard": {
             ...
-            "nautobot_ver": "2.0.0",
+            "nautobot_ver": "3.0.0",
 	    ...
         }
     }
