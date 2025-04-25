@@ -7,6 +7,12 @@ from django.views.generic import RedirectView
 from welcome_wizard import views
 
 app_name = "welcome_wizard"
+router = NautobotUIViewSetRouter()
+
+# The standard is for the route to be the hyphenated version of the model class name plural.
+# for example, ExampleModel would be example-models.
+router.register("manufacturer-imports", views.ManufacturerImportUIViewSet)
+
 
 urlpatterns = [
     path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),

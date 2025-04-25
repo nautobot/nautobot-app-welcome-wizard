@@ -6,7 +6,31 @@ from nautobot.apps.forms import BootstrapMixin, DynamicModelMultipleChoiceField,
 from welcome_wizard import models
 
 
-class ManufacturerImportFilterForm(NautobotFilterForm):  # pylint: disable=too-many-ancestors
+class ManufacturerImportForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport creation/edit form."""
+
+    class Meta:
+        """Meta attributes."""
+
+        model = models.ManufacturerImport
+        fields = "__all__"
+
+
+class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport bulk edit form."""
+
+    pk = forms.ModelMultipleChoiceField(queryset=models.ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
+    description = forms.CharField(required=False)
+
+    class Meta:
+        """Meta attributes."""
+
+        nullable_fields = [
+            "description",
+        ]
+
+
+class ManufacturerImportFilterForm(NautobotFilterForm):
     """Filter form to filter searches."""
 
     model = models.ManufacturerImport
@@ -15,6 +39,7 @@ class ManufacturerImportFilterForm(NautobotFilterForm):  # pylint: disable=too-m
     q = forms.CharField(
         required=False,
         label="Search",
+        help_text="Search within Name.",
     )
     name = forms.CharField(required=False, label="Name")
 
