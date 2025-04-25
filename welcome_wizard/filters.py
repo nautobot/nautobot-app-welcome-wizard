@@ -5,7 +5,7 @@ from nautobot.apps.filters import NameSearchFilterSet, NautobotFilterSet
 from welcome_wizard import models
 
 
-class ManufacturerImportFilterSet(NautobotFilterSet, NameSearchFilterSet):  # pylint: disable=too-many-ancestors
+class ManufacturerImportFilterSet(NameSearchFilterSet, NautobotFilterSet):  # pylint: disable=too-many-ancestors
     """Filter for ManufacturerImport."""
 
     class Meta:
@@ -14,4 +14,4 @@ class ManufacturerImportFilterSet(NautobotFilterSet, NameSearchFilterSet):  # py
         model = models.ManufacturerImport
 
         # add any fields from the model that you would like to filter your searches by using those
-        fields = ["id", "name", "description"]
+        fields = "__all__"

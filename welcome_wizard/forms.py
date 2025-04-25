@@ -13,10 +13,7 @@ class ManufacturerImportForm(NautobotModelForm):  # pylint: disable=too-many-anc
         """Meta attributes."""
 
         model = models.ManufacturerImport
-        fields = [
-            "name",
-            "description",
-        ]
+        fields = "__all__"
 
 
 class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
@@ -42,6 +39,6 @@ class ManufacturerImportFilterForm(NautobotFilterForm):
     q = forms.CharField(
         required=False,
         label="Search",
-        help_text="Search within Name or Slug.",
+        help_text="Search within Name.",
     )
     name = forms.CharField(required=False, label="Name")

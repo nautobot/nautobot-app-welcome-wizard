@@ -12,7 +12,9 @@ from welcome_wizard import views
 app_name = "welcome_wizard"
 router = NautobotUIViewSetRouter()
 
-router.register("manufacturerimport", views.ManufacturerImportUIViewSet)
+# The standard is for the route to be the hyphenated version of the model class name plural.
+# for example, ExampleModel would be example-models.
+router.register("manufacturer-imports", views.ManufacturerImportUIViewSet)
 
 
 urlpatterns = [

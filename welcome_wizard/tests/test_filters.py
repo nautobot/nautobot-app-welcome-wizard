@@ -1,16 +1,22 @@
 """Test ManufacturerImport Filter."""
 
-from django.test import TestCase
+from nautobot.apps.testing import FilterTestCases
 
 from welcome_wizard import filters, models
 from welcome_wizard.tests import fixtures
 
 
-class ManufacturerImportFilterTestCase(TestCase):
+class ManufacturerImportFilterTestCase(FilterTestCases.FilterTestCase):
     """ManufacturerImport Filter Test Case."""
 
     queryset = models.ManufacturerImport.objects.all()
     filterset = filters.ManufacturerImportFilterSet
+    generic_filter_tests = (
+        ("id",),
+        ("created",),
+        ("last_updated",),
+        ("name",),
+    )
 
     @classmethod
     def setUpTestData(cls):
