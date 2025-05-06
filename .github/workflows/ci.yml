@@ -117,6 +117,8 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
+      - name: "Pip install virtualenv to avoid issue with virtualenv --wheel"
+        run: "pip install virtualenv=20.13.0"
       - name: "Constrain Nautobot version and regenerate lock file"
         env:
           INVOKE_WELCOME_WIZARD_LOCAL: "true"
