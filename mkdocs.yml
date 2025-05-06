@@ -109,7 +109,6 @@ nav:
       - Using the App: "user/app_use_cases.md"
       - Git Data Source: "user/git_datasource.md"
       - Frequently Asked Questions: "user/faq.md"
-      - External Interactions: "user/external_interactions.md"
       - Data Models:
           - Manufacturer Import: "models/manufacturerimport.md"
   - Administrator Guide:
