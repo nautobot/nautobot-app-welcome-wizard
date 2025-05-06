@@ -265,7 +265,7 @@ def lock(context, check=False, constrain_nautobot_ver=False, constrain_python_ve
         if constrain_python_ver:
             command += f" --python {context.welcome_wizard.python_ver}"
         try:
-            output = run_command(context, command, hide=True)
+            output = run_command(context, command)
             print(output.stdout, end="")
             print(output.stderr, file=sys.stderr, end="")
         except UnexpectedExit:
