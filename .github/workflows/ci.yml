@@ -24,7 +24,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Linting: ruff format"
@@ -37,7 +37,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Linting: ruff"
@@ -50,7 +50,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Check Docs Build"
@@ -63,7 +63,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Checking: poetry lock file"
@@ -76,7 +76,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Linting: yamllint"
@@ -89,7 +89,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Linting: markdownlint"
@@ -114,7 +114,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Constrain Nautobot version and regenerate lock file"
@@ -169,7 +169,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Constrain Nautobot version and regenerate lock file"
@@ -220,7 +220,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Constrain Nautobot version and regenerate lock file"
@@ -284,7 +284,7 @@ jobs:
         with:
           fetch-depth: "0"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
       - name: "Check for changelog entry"
@@ -306,7 +306,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
           python-version: "3.12"
@@ -336,7 +336,7 @@ jobs:
       - name: "Check out repository code"
         uses: "actions/checkout@v4"
       - name: "Setup environment"
-        uses: "smk4664/gh-action-setup-poetry-environment@57ed837e68fd09e7797fe39302c6570281c325a2"
+        uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
           python-version: "3.12"
