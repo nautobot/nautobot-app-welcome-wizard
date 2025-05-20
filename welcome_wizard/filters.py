@@ -10,7 +10,7 @@ from nautobot.apps.filters import (
 from welcome_wizard import models
 
 
-class ManufacturerImportFilterSet(NautobotFilterSet, NameSearchFilterSet):  # pylint: disable=too-many-ancestors
+class ManufacturerImportFilterSet(NameSearchFilterSet, NautobotFilterSet):  # pylint: disable=too-many-ancestors
     """Filter for ManufacturerImport."""
 
     class Meta:
