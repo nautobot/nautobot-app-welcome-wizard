@@ -64,21 +64,18 @@ class ManufacturerListView(NautobotUIViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class DeviceTypeListView(generic.ObjectListView):
-    """Table of Device Types based on the Manufacturer."""
-
+class DeviceTypeListView(NautobotUIViewSet):
+    """List view for DeviceTypeImport."""
     permission_required = "welcome_wizard.view_devicetypeimport"
-    table = DeviceTypeImportTable
-    queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
-    filterset = DeviceTypeImportFilterSet
-    action_buttons = ()
+    queryset = DeviceTypeImport.objects.select_related("manufacturer")
+    table_class = DeviceTypeImportTable
+    filterset_class = DeviceTypeImportFilterSet
+    filterset_form_class = DeviceTypeImportFilterForm
     template_name = "welcome_wizard/devicetype.html"
-    filterset_form = DeviceTypeImportFilterForm
 
-    def get(self, request, *args, **kwargs):
-        """Add Check Sync to Get."""
-        check_sync(instance=self, request=request)
-        return super().get(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        check_sync(self, request)
+        return super().list(request, *args, **kwargs)
 
 
 class BulkImportView(View, ObjectPermissionRequiredMixin):

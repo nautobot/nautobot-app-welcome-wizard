@@ -12,12 +12,13 @@ app_name = "welcome_wizard"
 router = NautobotUIViewSetRouter()
 
 router.register("manufacturers", views.ManufacturerListView, basename="manufacturerimport")
+router.register("devicetypes", views.DeviceTypeListView, basename="devicetypeimport")
 
 urlpatterns = [
     path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),
     # path("manufacturers/", views.ManufacturerListView.as_view(), name="manufacturers"),
     # path("manufacturer/<pk>", views.ManufacturerImportDetailView.as_view(), name="manufacturer"),
-    path("devicetypes/", views.DeviceTypeListView.as_view(), name="devicetypes"),
+    # path("devicetypes/", views.DeviceTypeListView.as_view(), name="devicetypes"),
     path("devicetype/<pk>", views.DeviceTypeImportDetailView.as_view(), name="devicetype"),
     path(
         "manufacturers/import/",
