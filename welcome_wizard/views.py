@@ -31,9 +31,13 @@ from nautobot.apps.views import NautobotUIViewSet
 
 def check_sync(instance, request):
     """If Device Type Library is enabled and no data in queryset, run the sync."""
+    print("Syncing Device Type Library ENTROU", instance.queryset.exists())
+    print("Syncing Device Type Library", instance.queryset.exists())
     if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not instance.queryset.exists():
+        print("Syncing Device Type Library ENTROU")
         try:
             repo = GitRepository.objects.get(slug="devicetype_library")
+            print("Syncing Device Type Library", repo, "ENTROU")
         except GitRepository.DoesNotExist:
             repo = GitRepository(
                 name="Devicetype-library",
@@ -45,8 +49,10 @@ def check_sync(instance, request):
                 branch="main",
             )
             repo.save()
+            print("Syncing Device Type Library", repo, "SAIU")
 
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
+        print("Syncing Device Type Library", repo, "SAIU 2")
 
 
 
@@ -170,14 +176,15 @@ class DeviceTypeBulkImportView(BulkImportView):
     breadcrumb_name = "Import Device Types"
 
 
-class WelcomeWizardDashboard(generic.ObjectListView):
-    """Welcome Wizard dashboard view.
-
-    Args:
-        View (View): Django View
-    """
-
+class MerlinUIViewSet(NautobotUIViewSet):
+    """Dashboard do Welcome Wizard."""
     action_buttons = ()
+    permission_required = "welcome_wizard.view_merlin"
+    queryset = Merlin.objects.all()
+    table_class = DashboardTable
+    template_name = "welcome_wizard/dashboard.html"
+    filterset_class = None
+    filterset_form_class = None
 
     @classmethod
     def check_data(cls):
@@ -249,22 +256,113 @@ class WelcomeWizardDashboard(generic.ObjectListView):
                     nautobot_list_link=list_url,
                 )
 
-    def get(self, request, *args, **kwargs):
-        """Get request."""
+    def get_extra_context(self, request, *args, **kwargs):
+        # remove o filtro dinâmico
+        context = super().get_extra_context(request, *args, **kwargs)
+        context["dynamic_filter_form"] = None
+        context["table_config_form"] = None
+        context["search_form"] = None
+        return context
+
+    def list(self, request, *args, **kwargs):
         self.check_data()
-        return super().get(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
-    def extra_context(self):
-        """Override search and table config."""
-        return {
-            "table_config_form": None,
-            "search_form": None,
-        }
-
-    permission_required = "welcome_wizard.view_merlin"
-    queryset = Merlin.objects.all()
-    template_name = "welcome_wizard/dashboard.html"
-    table = DashboardTable
+# class WelcomeWizardDashboard(generic.ObjectListView):
+#     """Welcome Wizard dashboard view.
+#
+#     Args:
+#         View (View): Django View
+#     """
+#
+#     action_buttons = ()
+#
+#     @classmethod
+#     def check_data(cls):
+#         """Check data and update the Merlin database."""
+#         # Check the status of each of the Merlin Items
+#         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
+#         # wise.
+#         for nautobot_object, var_name, list_url, new_url, wizard_url in [
+#             (Location, "Locations", "dcim:location_list", "dcim:location_add", ""),
+#             (
+#                 Manufacturer,
+#                 "Manufacturers",
+#                 "dcim:manufacturer_list",
+#                 "dcim:manufacturer_add",
+#                 "plugins:welcome_wizard:manufacturer_import",
+#             ),
+#             (
+#                 DeviceType,
+#                 "Device Types",
+#                 "dcim:devicetype_list",
+#                 "dcim:devicetype_add",
+#                 "plugins:welcome_wizard:devicetype_import",
+#             ),
+#             (
+#                 Role,
+#                 "Roles",
+#                 "extras:role_list",
+#                 "extras:role_add",
+#                 "",
+#             ),
+#             (
+#                 CircuitType,
+#                 "Circuit Types",
+#                 "circuits:circuittype_list",
+#                 "circuits:circuittype_add",
+#                 "",
+#             ),
+#             (
+#                 Provider,
+#                 "Circuit Providers",
+#                 "circuits:provider_list",
+#                 "circuits:provider_add",
+#                 "",
+#             ),
+#             (RIR, "RIRs", "ipam:rir_list", "ipam:rir_add", ""),
+#             (
+#                 ClusterType,
+#                 "VM Cluster Types",
+#                 "virtualization:clustertype_list",
+#                 "virtualization:clustertype_add",
+#                 "",
+#             ),
+#         ]:
+#             completed = nautobot_object.objects.exists()
+#             try:
+#                 Merlin.objects.filter(name=var_name).update(completed=completed)
+#                 merlin_id = Merlin.objects.get(name=var_name)
+#             except Merlin.DoesNotExist:
+#                 merlin_id = None
+#
+#             if merlin_id is None:
+#                 Merlin.objects.create(
+#                     name=var_name,
+#                     completed=completed,
+#                     ignored=False,
+#                     nautobot_model=nautobot_object,
+#                     nautobot_add_link=new_url,
+#                     merlin_link=wizard_url,
+#                     nautobot_list_link=list_url,
+#                 )
+#
+#     def get(self, request, *args, **kwargs):
+#         """Get request."""
+#         self.check_data()
+#         return super().get(request, *args, **kwargs)
+#
+#     def extra_context(self):
+#         """Override search and table config."""
+#         return {
+#             "table_config_form": None,
+#             "search_form": None,
+#         }
+#
+#     permission_required = "welcome_wizard.view_merlin"
+#     queryset = Merlin.objects.all()
+#     template_name = "welcome_wizard/dashboard.html"
+#     table = DashboardTable
 
 
 class ManufacturerImportDetailView(generic.ObjectView):

@@ -4,6 +4,7 @@ from django.templatetags.static import static
 from django.urls import path
 from django.views.generic import RedirectView
 from nautobot.apps.urls import NautobotUIViewSetRouter
+from django.urls import path, include
 
 from welcome_wizard import views
 
@@ -13,13 +14,14 @@ router = NautobotUIViewSetRouter()
 
 router.register("manufacturers", views.ManufacturerListView, basename="manufacturerimport")
 router.register("devicetypes", views.DeviceTypeListView, basename="devicetypeimport")
+router.register("dashboard", views.MerlinUIViewSet, basename="dashboard")
 
 urlpatterns = [
-    path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),
+    # path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),
     # path("manufacturers/", views.ManufacturerListView.as_view(), name="manufacturers"),
     # path("manufacturer/<pk>", views.ManufacturerImportDetailView.as_view(), name="manufacturer"),
     # path("devicetypes/", views.DeviceTypeListView.as_view(), name="devicetypes"),
-    path("devicetype/<pk>", views.DeviceTypeImportDetailView.as_view(), name="devicetype"),
+    # path("devicetype/<pk>", views.DeviceTypeImportDetailView.as_view(), name="devicetype"),
     path(
         "manufacturers/import/",
         views.ManufacturerBulkImportView.as_view(),
@@ -32,3 +34,5 @@ urlpatterns = [
     ),
     path("docs/", RedirectView.as_view(url=static("welcome_wizard/docs/index.html")), name="docs"),
 ]
+
+urlpatterns += router.urls
