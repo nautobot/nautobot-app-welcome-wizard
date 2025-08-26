@@ -26,6 +26,7 @@ from welcome_wizard.forms import (
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
+from nautobot.apps.views import NautobotUIViewSet
 
 
 def check_sync(instance, request):
@@ -48,21 +49,19 @@ def check_sync(instance, request):
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
 
 
-class ManufacturerListView(generic.ObjectListView):
-    """Table of all Manufacturers discovered in the Git Repository."""
 
+class ManufacturerListView(NautobotUIViewSet):
+    """List view for ManufacturerImport."""
     permission_required = "welcome_wizard.view_manufacturerimport"
-    table = ManufacturerImportTable
     queryset = ManufacturerImport.objects.all()
-    action_buttons = ()
+    table_class = ManufacturerImportTable
+    filterset_class = ManufacturerImportFilterSet
+    filterset_form_class = ManufacturerImportFilterForm
     template_name = "welcome_wizard/manufacturer.html"
-    filterset = ManufacturerImportFilterSet
-    filterset_form = ManufacturerImportFilterForm
 
-    def get(self, request, *args, **kwargs):
-        """Add Check Sync to Get."""
-        check_sync(instance=self, request=request)
-        return super().get(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        check_sync(self, request)
+        return super().list(request, *args, **kwargs)
 
 
 class DeviceTypeListView(generic.ObjectListView):
