@@ -121,7 +121,6 @@ class DeviceTypeListView(NautobotUIViewSet):
     table_class = DeviceTypeImportTable
     filterset_class = DeviceTypeImportFilterSet
     filterset_form_class = DeviceTypeImportFilterForm
-    template_name = "welcome_wizard/devicetype.html"
     action_buttons = ()
     serializer_class = serializers.Serializer
 
@@ -174,7 +173,6 @@ class WelcomeWizardDashboard(NautobotUIViewSet):
     permission_required = "welcome_wizard.view_merlin"
     queryset = Merlin.objects.all()
     table_class = DashboardTable
-    template_name = "welcome_wizard/dashboard.html"
     filterset_class = None
     filterset_form_class = None
     serializer_class = serializers.Serializer
