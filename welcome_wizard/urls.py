@@ -3,6 +3,9 @@ from nautobot.apps.urls import NautobotUIViewSetRouter
 from . import views
 from .views import ManufacturerListView, DeviceTypeListView, WelcomeWizardDashboard
 from django.urls import path
+from django.templatetags.static import static
+from django.urls import path
+from django.views.generic import RedirectView
 
 app_name = "welcome_wizard"
 
@@ -25,4 +28,5 @@ urlpatterns = [
     path("dashboard/", dashboard_list_view, name="dashboard"),
     path("manufacturers/import/", manufacturer_import_view, name="manufacturer_import"),
     path("devicetypes/import/",   devicetype_import_view,   name="devicetype_import"),
+    path("docs/", RedirectView.as_view(url=static("welcome_wizard/docs/index.html")), name="docs"),
 ] + router.urls
