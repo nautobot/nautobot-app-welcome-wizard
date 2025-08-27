@@ -75,7 +75,7 @@ class ManufacturerListView(NautobotUIViewSet):
         check_sync(self, request)
         return super().list(request, *args, **kwargs)
 
-    @action(detail=False, methods=["get", "post"], url_path="import", url_name="import")
+    @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
         print("entrou aqui 3?")
         if not request.user.has_perm("dcim.add_manufacturer"):
@@ -89,7 +89,7 @@ class ManufacturerListView(NautobotUIViewSet):
             form = ManufacturerBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
 
-            bulk_import_url = "plugins:welcome_wizard:manufacturerimport_import"
+            bulk_import_url = "plugins:welcome_wizard:manufacturerimport_import_wizard"
             return render(
                 request,
                 "welcome_wizard/import.html",
@@ -134,7 +134,7 @@ class DeviceTypeListView(NautobotUIViewSet):
     def create(self, request, *args, **kwargs):
         return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
-    @action(detail=False, methods=["get", "post"], url_path="import", url_name="import")
+    @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
         if not request.user.has_perm("dcim.add_devicetype"):
             return HttpResponseForbidden()
@@ -145,7 +145,7 @@ class DeviceTypeListView(NautobotUIViewSet):
                 return redirect("plugins:welcome_wizard:devicetypeimport_list")
             form = DeviceTypeBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
-            bulk_import_url = "plugins:welcome_wizard:devicetypeimport_import"
+            bulk_import_url = "plugins:welcome_wizard:devicetypeimport_import_wizard"
             return render(
                 request,
                 "welcome_wizard/import.html",
@@ -209,14 +209,14 @@ class WelcomeWizardDashboard(NautobotUIViewSet):
                 "Manufacturers",
                 "dcim:manufacturer_list",
                 "dcim:manufacturer_add",
-                "plugins:welcome_wizard:manufacturerimport_import",
+                "plugins:welcome_wizard:manufacturerimport_import_wizard",
             ),
             (
                 DeviceType,
                 "Device Types",
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
-                "plugins:welcome_wizard:devicetypeimport_import",
+                "plugins:welcome_wizard:devicetypeimport_import_wizard",
             ),
             (
                 Role,
