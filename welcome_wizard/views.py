@@ -77,7 +77,6 @@ class ManufacturerListView(NautobotUIViewSet):
 
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
-        print("entrou aqui 3?")
         if not request.user.has_perm("dcim.add_manufacturer"):
             return HttpResponseForbidden()
 
@@ -96,7 +95,7 @@ class ManufacturerListView(NautobotUIViewSet):
                 {
                     "form": form,
                     "obj": obj,
-                    "return_url": "plugins:welcome_wizard:manufacturerimport_list",
+                    "return_url": "plugins:welcome_wizard:manufacturers",
                     "bulk_import_url": bulk_import_url,
                     "breadcrumb_name": "Import Manufacturers",
                 },
@@ -113,7 +112,7 @@ class ManufacturerListView(NautobotUIViewSet):
                 JobResult.enqueue_job(job_model=job, user=request.user, manufacturer_name=obj.name)
                 onboarded += 1
             messages.success(request, f"Onboarded {onboarded} objects.")
-        return redirect("plugins:welcome_wizard:manufacturerimport_list")
+        return redirect("plugins:welcome_wizard:manufacturers")
 
 
 class DeviceTypeListView(NautobotUIViewSet):
@@ -152,7 +151,7 @@ class DeviceTypeListView(NautobotUIViewSet):
                 {
                     "form": form,
                     "obj": obj,
-                    "return_url": "plugins:welcome_wizard:devicetypeimport_list",
+                    "return_url": "plugins:welcome_wizard:devicetypes",
                     "bulk_import_url": bulk_import_url,
                     "breadcrumb_name": "Import Device Types",
                 },
@@ -167,7 +166,7 @@ class DeviceTypeListView(NautobotUIViewSet):
                 JobResult.enqueue_job(job_model=job, user=request.user, filename=obj.filename)
                 onboarded += 1
             messages.success(request, f"Onboarded {onboarded} objects.")
-        return redirect("plugins:welcome_wizard:devicetypeimport_list")
+        return redirect("plugins:welcome_wizard:devicetypes")
 
 
 
