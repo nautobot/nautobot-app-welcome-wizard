@@ -89,7 +89,7 @@ class ManufacturerListView(NautobotUIViewSet):
             form = ManufacturerBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
 
-            bulk_import_url = "plugins:welcome_wizard:manufacturerimport_import_wizard"
+            bulk_import_url = "plugins:welcome_wizard:manufacturer_import"
             return render(
                 request,
                 "welcome_wizard/import.html",
@@ -145,7 +145,7 @@ class DeviceTypeListView(NautobotUIViewSet):
                 return redirect("plugins:welcome_wizard:devicetypeimport_list")
             form = DeviceTypeBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
-            bulk_import_url = "plugins:welcome_wizard:devicetypeimport_import_wizard"
+            bulk_import_url = "plugins:welcome_wizard:devicetype_import"
             return render(
                 request,
                 "welcome_wizard/import.html",
@@ -209,14 +209,14 @@ class WelcomeWizardDashboard(NautobotUIViewSet):
                 "Manufacturers",
                 "dcim:manufacturer_list",
                 "dcim:manufacturer_add",
-                "plugins:welcome_wizard:manufacturerimport_import_wizard",
+                "plugins:welcome_wizard:manufacturer_import",
             ),
             (
                 DeviceType,
                 "Device Types",
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
-                "plugins:welcome_wizard:devicetypeimport_import_wizard",
+                "plugins:welcome_wizard:devicetype_import",
             ),
             (
                 Role,
