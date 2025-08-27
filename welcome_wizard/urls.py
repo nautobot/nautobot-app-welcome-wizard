@@ -17,10 +17,12 @@ devicetype_import_view   = DeviceTypeListView.as_view({"get": "bulk_import", "po
 
 manufacturers_list_view = ManufacturerListView.as_view({"get": "list"})
 devicetypes_list_view   = DeviceTypeListView.as_view({"get": "list"})
+dashboard_list_view = WelcomeWizardDashboard.as_view({"get": "list"})
 
 urlpatterns = [
     path("manufacturers/", manufacturers_list_view, name="manufacturers"),
     path("devicetypes/",   devicetypes_list_view,  name="devicetypes"),
+    path("dashboard/", dashboard_list_view, name="dashboard"),
     path("manufacturers/import/", manufacturer_import_view, name="manufacturer_import"),
     path("devicetypes/import/",   devicetype_import_view,   name="devicetype_import"),
 ] + router.urls

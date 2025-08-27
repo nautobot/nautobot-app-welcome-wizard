@@ -67,7 +67,6 @@ class ManufacturerListView(NautobotUIViewSet):
     table_class = ManufacturerImportTable
     filterset_class = ManufacturerImportFilterSet
     filterset_form_class = ManufacturerImportFilterForm
-    template_name = "welcome_wizard/manufacturer.html"
     action_buttons = ()
     serializer_class = serializers.Serializer
 
@@ -167,21 +166,6 @@ class DeviceTypeListView(NautobotUIViewSet):
                 onboarded += 1
             messages.success(request, f"Onboarded {onboarded} objects.")
         return redirect("plugins:welcome_wizard:devicetypes")
-
-
-
-class ManufacturerImportDetailView(generic.ObjectView):
-    """Detail view for ManufacturerImport."""
-
-    permission_required = "welcome_wizard.view_manufacturerimport"
-    queryset = ManufacturerImport.objects.all()
-
-
-class DeviceTypeImportDetailView(generic.ObjectView):
-    """Detail view for DeviceTypeImport."""
-
-    permission_required = "welcome_wizard.view_devicetypeimport"
-    queryset = DeviceTypeImport.objects.all()
 
 
 class WelcomeWizardDashboard(NautobotUIViewSet):
