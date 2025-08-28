@@ -31,17 +31,15 @@ from nautobot.apps.views import NautobotUIViewSet
 from rest_framework.decorators import action
 from nautobot.extras.models import Job, JobResult
 from rest_framework import serializers
+from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, SectionChoices
+from nautobot.core.templatetags.helpers import placeholder
 
 
 def check_sync(instance, request):
     """If Device Type Library is enabled and no data in queryset, run the sync."""
-    print("Syncing Device Type Library ENTROU", instance.queryset.exists())
-    print("Syncing Device Type Library", instance.queryset.exists())
     if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library") and not instance.queryset.exists():
-        print("Syncing Device Type Library ENTROU")
         try:
             repo = GitRepository.objects.get(slug="devicetype_library")
-            print("Syncing Device Type Library", repo, "ENTROU")
         except GitRepository.DoesNotExist:
             repo = GitRepository(
                 name="Devicetype-library",
@@ -53,10 +51,8 @@ def check_sync(instance, request):
                 branch="main",
             )
             repo.save()
-            print("Syncing Device Type Library", repo, "SAIU")
 
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
-        print("Syncing Device Type Library", repo, "SAIU 2")
 
 
 
@@ -71,6 +67,17 @@ class ManufacturerListView(NautobotUIViewSet):
     serializer_class = serializers.Serializer
     bulk_update_form_class = None
     bulk_destroy_form_class = None
+
+    object_detail_content = ObjectDetailContent(
+        panels=[
+            ObjectFieldsPanel(
+                weight=100,
+                section=SectionChoices.LEFT_HALF,
+                label="Manufacturer Import",
+                fields=["name"],
+            ),
+        ],
+    )
 
     def list(self, request, *args, **kwargs):
         check_sync(self, request)
@@ -103,7 +110,6 @@ class ManufacturerListView(NautobotUIViewSet):
             )
 
         # POST
-        print("entrou aqui 4?")
         form = ManufacturerBulkImportForm(request.POST)
         if form.is_valid():
             pk_list = request.POST.getlist("pk")
@@ -125,6 +131,17 @@ class DeviceTypeListView(NautobotUIViewSet):
     filterset_form_class = DeviceTypeImportFilterForm
     action_buttons = ()
     serializer_class = serializers.Serializer
+
+    object_detail_content = ObjectDetailContent(
+        panels=[
+            ObjectFieldsPanel(
+                weight=100,
+                section=SectionChoices.LEFT_HALF,
+                label="DeviceType Import",
+                fields=["name"],
+            ),
+        ],
+    )
 
     def list(self, request, *args, **kwargs):
         check_sync(self, request)

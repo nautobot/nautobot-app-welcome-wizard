@@ -23,7 +23,7 @@ class ManufacturerImport(BaseModel):
 
     def get_absolute_url(self, api=False):
         """Return the absolute url for ManufacturerImport."""
-        return reverse("plugins:welcome_wizard:manufacturer", kwargs={"pk": self.pk})
+        return reverse("plugins:welcome_wizard:manufacturerimport", kwargs={"pk": self.pk})
 
 
 class DeviceTypeImport(BaseModel):
@@ -56,4 +56,4 @@ class DeviceTypeImport(BaseModel):
 
     def get_absolute_url(self, api=False):
         """Return the absolute url for DeviceTypeImport."""
-        return reverse("plugins:welcome_wizard:devicetype", kwargs={"pk": self.pk})
+        return reverse("plugins:welcome_wizard:devicetypeimport", kwargs={"pk": self.pk})
