@@ -69,6 +69,8 @@ class ManufacturerListView(NautobotUIViewSet):
     filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
     serializer_class = serializers.Serializer
+    bulk_update_form_class = None
+    bulk_destroy_form_class = None
 
     def list(self, request, *args, **kwargs):
         check_sync(self, request)
