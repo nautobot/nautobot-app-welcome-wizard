@@ -96,14 +96,14 @@ class ManufacturerListView(NautobotUIViewSet):
             form = ManufacturerBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
 
-            bulk_import_url = "plugins:welcome_wizard:manufacturer_import"
+            bulk_import_url = "plugins:welcome_wizard:manufacturerimport_import_wizard"
             return render(
                 request,
                 "welcome_wizard/import.html",
                 {
                     "form": form,
                     "obj": obj,
-                    "return_url": "plugins:welcome_wizard:manufacturers",
+                    "return_url": "plugins:welcome_wizard:manufacturerimport_list",
                     "bulk_import_url": bulk_import_url,
                     "breadcrumb_name": "Import Manufacturers",
                 },
@@ -119,7 +119,7 @@ class ManufacturerListView(NautobotUIViewSet):
                 JobResult.enqueue_job(job_model=job, user=request.user, manufacturer_name=obj.name)
                 onboarded += 1
             messages.success(request, f"Onboarded {onboarded} objects.")
-        return redirect("plugins:welcome_wizard:manufacturers")
+        return redirect("plugins:welcome_wizard:manufacturerimport_list")
 
 
 class DeviceTypeListView(NautobotUIViewSet):
@@ -161,14 +161,14 @@ class DeviceTypeListView(NautobotUIViewSet):
                 return redirect("plugins:welcome_wizard:devicetypeimport_list")
             form = DeviceTypeBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
-            bulk_import_url = "plugins:welcome_wizard:devicetype_import"
+            bulk_import_url = "plugins:welcome_wizard:devicetypeimport_import_wizard"
             return render(
                 request,
                 "welcome_wizard/import.html",
                 {
                     "form": form,
                     "obj": obj,
-                    "return_url": "plugins:welcome_wizard:devicetypes",
+                    "return_url": "plugins:welcome_wizard:devicetypeimport_list",
                     "bulk_import_url": bulk_import_url,
                     "breadcrumb_name": "Import Device Types",
                 },
@@ -183,7 +183,7 @@ class DeviceTypeListView(NautobotUIViewSet):
                 JobResult.enqueue_job(job_model=job, user=request.user, filename=obj.filename)
                 onboarded += 1
             messages.success(request, f"Onboarded {onboarded} objects.")
-        return redirect("plugins:welcome_wizard:devicetypes")
+        return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
 
 class WelcomeWizardDashboard(NautobotUIViewSet):
@@ -209,14 +209,14 @@ class WelcomeWizardDashboard(NautobotUIViewSet):
                 "Manufacturers",
                 "dcim:manufacturer_list",
                 "dcim:manufacturer_add",
-                "plugins:welcome_wizard:manufacturer_import",
+                "plugins:welcome_wizard:manufacturerimport_import_wizard",
             ),
             (
                 DeviceType,
                 "Device Types",
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
-                "plugins:welcome_wizard:devicetype_import",
+                "plugins:welcome_wizard:devicetypeimport_import_wizard",
             ),
             (
                 Role,

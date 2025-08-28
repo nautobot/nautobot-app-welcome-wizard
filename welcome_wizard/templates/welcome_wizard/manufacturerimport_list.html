@@ -1,14 +1,14 @@
 {% extends 'generic/object_list.html' %}
 
 {% block breadcrumbs %}
-  <li><a href="{% url 'plugins:welcome_wizard:dashboard' %}">Dashboard</a></li>
-  <li><a href="{% url 'plugins:welcome_wizard:manufacturers' %}">Import Manufacturers</a></li>
+  <li><a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a></li>
+  <li><a href="{% url 'plugins:welcome_wizard:manufacturerimport_list' %}">Import Manufacturers</a></li>
 {% endblock %}
 
 {% block title %}Import Manufacturers{% endblock %}
 
 {% block bulk_buttons %}
-    <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:manufacturer_import" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">
+    <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:manufacturerimport_import_wizard" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">
         <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import Selected
     </button>
 {% endblock %}

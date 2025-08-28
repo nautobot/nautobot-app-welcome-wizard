@@ -7,13 +7,13 @@ from nautobot.apps.tables import BaseTable, ToggleColumn
 from welcome_wizard import models
 
 MANUFACTURER_BUTTONS = """
-<a href="{% url 'plugins:welcome_wizard:manufacturer_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Manufacturer">
+<a href="{% url 'plugins:welcome_wizard:manufacturerimport_import_wizard' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Manufacturer">
     <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
 </a>
 """
 
 DEVICE_TYPE_BUTTONS = """
-<a href="{% url 'plugins:welcome_wizard:devicetype_import' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Device Type">
+<a href="{% url 'plugins:welcome_wizard:devicetypeimport_import_wizard' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Device Type">
     <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
 </a>
 """
