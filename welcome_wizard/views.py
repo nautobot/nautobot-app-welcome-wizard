@@ -3,7 +3,14 @@
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, SectionChoices
+from nautobot.apps.ui import (
+    Breadcrumbs,
+    ObjectDetailContent,
+    ObjectFieldsPanel,
+    SectionChoices,
+    Titles,
+    ViewNameBreadcrumbItem,
+)
 from nautobot.apps.views import (
     NautobotUIViewSet,
     ObjectChangeLogViewMixin,
@@ -61,6 +68,21 @@ class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, Ob
     filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
     serializer_class = serializers.Serializer
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                ViewNameBreadcrumbItem(
+                    view_name="plugins:welcome_wizard:dashboard_list",
+                    label="Dashboard",
+                ),
+                ViewNameBreadcrumbItem(
+                    view_name="plugins:welcome_wizard:manufacturerimport_list",
+                    label="Import Manufacturers",
+                ),
+            ]
+        }
+    )
+    view_titles = Titles(titles={"list": "Import Manufacturers"})
 
     object_detail_content = ObjectDetailContent(
         panels=[
@@ -128,6 +150,21 @@ class DeviceTypeImportUIViewSet(
     filterset_form_class = DeviceTypeImportFilterForm
     action_buttons = ()
     serializer_class = serializers.Serializer
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                ViewNameBreadcrumbItem(
+                    view_name="plugins:welcome_wizard:dashboard_list",
+                    label="Dashboard",
+                ),
+                ViewNameBreadcrumbItem(
+                    view_name="plugins:welcome_wizard:devicetypeimport_list",
+                    label="Import Device Types",
+                ),
+            ]
+        }
+    )
+    view_titles = Titles(titles={"list": "Import Device Types"})
 
     object_detail_content = ObjectDetailContent(
         panels=[
@@ -193,6 +230,10 @@ class MerlinUIViewSet(NautobotUIViewSet):
     filterset_class = None
     filterset_form_class = None
     serializer_class = serializers.Serializer
+    breadcrumbs = Breadcrumbs(
+        items={"list": [ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard")]}
+    )
+    view_titles = Titles(titles={"list": "Welcome Wizard"})
 
     @classmethod
     def check_data(cls):
