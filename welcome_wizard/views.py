@@ -4,7 +4,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, SectionChoices
-from nautobot.apps.views import NautobotUIViewSet
+from nautobot.apps.views import (
+    NautobotUIViewSet,
+    ObjectChangeLogViewMixin,
+    ObjectDetailViewMixin,
+    ObjectListViewMixin,
+)
 from nautobot.circuits.models import CircuitType, Provider
 from nautobot.dcim.models import DeviceType, Location, Manufacturer
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
@@ -24,12 +29,6 @@ from welcome_wizard.forms import (
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
-from nautobot.apps.views import (
-    ObjectDetailViewMixin,
-    ObjectListViewMixin,
-    ObjectChangeLogViewMixin,
-)
-from django.http import HttpResponseForbidden
 
 
 def check_sync(instance, request):
@@ -52,11 +51,7 @@ def check_sync(instance, request):
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
 
 
-class ManufacturerImportUIViewSet(
-    ObjectDetailViewMixin,
-    ObjectListViewMixin,
-    ObjectChangeLogViewMixin,
-):
+class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, ObjectChangeLogViewMixin):  # pylint: disable=abstract-method
     """List view for ManufacturerImport."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
@@ -123,7 +118,7 @@ class DeviceTypeImportUIViewSet(
     ObjectDetailViewMixin,
     ObjectListViewMixin,
     ObjectChangeLogViewMixin,
-):
+):  # pylint: disable=abstract-method
     """List view for DeviceTypeImport."""
 
     permission_required = "welcome_wizard.view_devicetypeimport"

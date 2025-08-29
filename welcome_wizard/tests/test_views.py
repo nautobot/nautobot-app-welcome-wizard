@@ -137,7 +137,10 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         """Tests the ManufacturerImport Bulk Import View with correct permissions."""
         ManufacturerImport.objects.create(name="Onyx")
         self.add_permissions(
-            "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
+            "dcim.add_manufacturer",
+            "dcim.view_manufacturer",
+            "welcome_wizard.view_manufacturerimport",
+            "welcome_wizard.bulk_import_manufacturerimport",
         )
         data = {"pk": [ManufacturerImport.objects.first().pk]}
         response = self.client.post(
@@ -148,7 +151,10 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_manufacturer_bulk_import_get(self):
         ManufacturerImport.objects.create(name="Acme")
         self.add_permissions(
-            "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
+            "dcim.add_manufacturer",
+            "dcim.view_manufacturer",
+            "welcome_wizard.view_manufacturerimport",
+            "welcome_wizard.bulk_import_manufacturerimport",
         )
 
         lookup_key = ManufacturerImport.objects.first().pk
@@ -159,9 +165,12 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
 
     def test_manufacturer_bulk_import_get_empty(self):
         self.add_permissions(
-            "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
+            "dcim.add_manufacturer",
+            "dcim.view_manufacturer",
+            "welcome_wizard.view_manufacturerimport",
+            "welcome_wizard.bulk_import_manufacturerimport",
         )
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturer_import"), follow=True)
+        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), follow=True)
 
         self.assertRedirects(response, reverse("plugins:welcome_wizard:manufacturerimport_list"), status_code=302)
 
@@ -241,6 +250,7 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
             "dcim.add_devicetype",
             "dcim.view_devicetype",
             "welcome_wizard.view_devicetypeimport",
+            "welcome_wizard.bulk_import_devicetypeimport",
         )
         data = {"pk": [DeviceTypeImport.objects.first().pk]}
         response = self.client.post(
