@@ -85,8 +85,6 @@ class ManufacturerListView(NautobotUIViewSet):
 
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
-        if not request.user.has_perm("dcim.add_manufacturer"):
-            return HttpResponseForbidden()
 
         if request.method.lower() == "get":
             pk = request.GET.get("pk")
@@ -152,8 +150,6 @@ class DeviceTypeListView(NautobotUIViewSet):
 
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
-        if not request.user.has_perm("dcim.add_devicetype"):
-            return HttpResponseForbidden()
 
         if request.method.lower() == "get":
             pk = request.GET.get("pk")
