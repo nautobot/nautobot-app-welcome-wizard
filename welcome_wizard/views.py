@@ -24,6 +24,12 @@ from welcome_wizard.forms import (
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
+from nautobot.apps.views import (
+    ObjectDetailViewMixin,
+    ObjectListViewMixin,
+    ObjectChangeLogViewMixin,
+)
+from django.http import HttpResponseForbidden
 
 
 def check_sync(instance, request):
@@ -46,7 +52,11 @@ def check_sync(instance, request):
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
 
 
-class ManufacturerImportUIViewSet(NautobotUIViewSet):
+class ManufacturerImportUIViewSet(
+    ObjectDetailViewMixin,
+    ObjectListViewMixin,
+    ObjectChangeLogViewMixin,
+):
     """List view for ManufacturerImport."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
@@ -56,8 +66,6 @@ class ManufacturerImportUIViewSet(NautobotUIViewSet):
     filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
     serializer_class = serializers.Serializer
-    bulk_update_form_class = None
-    bulk_destroy_form_class = None
 
     object_detail_content = ObjectDetailContent(
         panels=[
@@ -111,7 +119,11 @@ class ManufacturerImportUIViewSet(NautobotUIViewSet):
         return redirect("plugins:welcome_wizard:manufacturerimport_list")
 
 
-class DeviceTypeImportUIViewSet(NautobotUIViewSet):
+class DeviceTypeImportUIViewSet(
+    ObjectDetailViewMixin,
+    ObjectListViewMixin,
+    ObjectChangeLogViewMixin,
+):
     """List view for DeviceTypeImport."""
 
     permission_required = "welcome_wizard.view_devicetypeimport"
