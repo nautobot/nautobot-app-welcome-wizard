@@ -1,20 +1,18 @@
 """Views for Welcome Wizard."""
 
-from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-from django.views.generic import View
+from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, SectionChoices
+from nautobot.apps.views import NautobotUIViewSet
 from nautobot.circuits.models import CircuitType, Provider
-from nautobot.core.utils.permissions import get_permission_for_model
-from nautobot.core.views import generic
-from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
 from nautobot.dcim.models import DeviceType, Location, Manufacturer
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
 from nautobot.virtualization.models import ClusterType
+from rest_framework import serializers
+from rest_framework.decorators import action
 
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.forms import (
@@ -26,13 +24,6 @@ from welcome_wizard.forms import (
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
-from nautobot.apps.views import NautobotUIViewSet
-
-from rest_framework.decorators import action
-from nautobot.extras.models import Job, JobResult
-from rest_framework import serializers
-from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, SectionChoices
-from nautobot.core.templatetags.helpers import placeholder
 
 
 def check_sync(instance, request):
@@ -55,9 +46,9 @@ def check_sync(instance, request):
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
 
 
-
-class ManufacturerListView(NautobotUIViewSet):
+class ManufacturerImportUIViewSet(NautobotUIViewSet):
     """List view for ManufacturerImport."""
+
     permission_required = "welcome_wizard.view_manufacturerimport"
     queryset = ManufacturerImport.objects.all()
     table_class = ManufacturerImportTable
@@ -80,16 +71,16 @@ class ManufacturerListView(NautobotUIViewSet):
     )
 
     def list(self, request, *args, **kwargs):
+        """Return the list view for ManufacturerImport objects."""
         check_sync(self, request)
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
-
+        """Handle bulk import of ManufacturerImport objects."""
         if request.method.lower() == "get":
             pk = request.GET.get("pk")
             if not pk:
-                # volta pra lista padrão gerada pelo router
                 return redirect("plugins:welcome_wizard:manufacturerimport_list")
             form = ManufacturerBulkImportForm(initial={"pk": [pk]})
             obj = self.queryset.model.objects.get(pk=pk)
@@ -120,8 +111,9 @@ class ManufacturerListView(NautobotUIViewSet):
         return redirect("plugins:welcome_wizard:manufacturerimport_list")
 
 
-class DeviceTypeListView(NautobotUIViewSet):
+class DeviceTypeImportUIViewSet(NautobotUIViewSet):
     """List view for DeviceTypeImport."""
+
     permission_required = "welcome_wizard.view_devicetypeimport"
     queryset = DeviceTypeImport.objects.select_related("manufacturer")
     table_class = DeviceTypeImportTable
@@ -142,15 +134,17 @@ class DeviceTypeListView(NautobotUIViewSet):
     )
 
     def list(self, request, *args, **kwargs):
+        """Return the list view for DeviceTypeImport objects."""
         check_sync(self, request)
         return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
+        """Redirect create requests to the DeviceTypeImport list view."""
         return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
     def bulk_import(self, request):
-
+        """Handle bulk import of DeviceTypeImport objects."""
         if request.method.lower() == "get":
             pk = request.GET.get("pk")
             if not pk:
@@ -182,8 +176,9 @@ class DeviceTypeListView(NautobotUIViewSet):
         return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
 
-class WelcomeWizardDashboard(NautobotUIViewSet):
-    """Dashboard do Welcome Wizard."""
+class MerlinUIViewSet(NautobotUIViewSet):
+    """Welcome Wizard Dashboard."""
+
     action_buttons = ()
     permission_required = "welcome_wizard.view_merlin"
     queryset = Merlin.objects.all()
@@ -258,7 +253,7 @@ class WelcomeWizardDashboard(NautobotUIViewSet):
             )
 
     def get_extra_context(self, request, *args, **kwargs):
-        # remove o filtro dinâmico
+        """Customize context by removing dynamic filters and search forms."""
         context = super().get_extra_context(request, *args, **kwargs)
         context["dynamic_filter_form"] = None
         context["table_config_form"] = None
@@ -266,5 +261,6 @@ class WelcomeWizardDashboard(NautobotUIViewSet):
         return context
 
     def list(self, request, *args, **kwargs):
+        """Render the Welcome Wizard dashboard with updated data."""
         self.check_data()
         return super().list(request, *args, **kwargs)

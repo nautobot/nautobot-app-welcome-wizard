@@ -14,12 +14,6 @@ from nautobot.virtualization.models import Cluster, ClusterType
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from nautobot.dcim.models import Manufacturer as NBManufacturer
-from nautobot.dcim.models import DeviceType as NBDeviceType
-
-
 User = get_user_model()
 
 
@@ -129,7 +123,9 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         ManufacturerImport.objects.create(name="Alcatel")
         self.add_permissions("welcome_wizard.view_manufacturerimport")
         data = {"pk": [ManufacturerImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 403)
         try:
             name = Manufacturer.objects.get(name="Alcatel")
@@ -144,7 +140,9 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
             "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
         )
         data = {"pk": [ManufacturerImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_bulk_import_get(self):
@@ -154,7 +152,9 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         )
 
         lookup_key = ManufacturerImport.objects.first().pk
-        response = self.client.get(f'{reverse("plugins:welcome_wizard:manufacturerimport_import_wizard")}?pk={lookup_key}')
+        response = self.client.get(
+            f'{reverse("plugins:welcome_wizard:manufacturerimport_import_wizard")}?pk={lookup_key}'
+        )
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_bulk_import_get_empty(self):
@@ -180,9 +180,7 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         """Tests the ManufacturerImport Detail View"""
         self.add_permissions("welcome_wizard.view_manufacturerimport")
         manufacturer = ManufacturerImport.objects.create(name="Onyx")
-        response = self.client.get(
-            reverse("plugins:welcome_wizard:manufacturerimport", kwargs={"pk": manufacturer.id})
-        )
+        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport", kwargs={"pk": manufacturer.id}))
         self.assertHttpStatus(response, 200)
 
 
@@ -211,7 +209,9 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         )
         self.add_permissions("welcome_wizard.view_devicetypeimport")
         data = {"pk": [DeviceTypeImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 403)
         try:
             DeviceType.objects.get(model="shelf-4he")
@@ -243,11 +243,15 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
             "welcome_wizard.view_devicetypeimport",
         )
         data = {"pk": [DeviceTypeImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 200)
 
         # Test a duplicate import
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 200)
 
     def test_devicetype_list(self):
