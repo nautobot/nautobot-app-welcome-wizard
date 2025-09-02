@@ -14,6 +14,7 @@ from nautobot.dcim.models import (
     FrontPortTemplate,
     InterfaceTemplate,
     Manufacturer,
+    ModuleBayTemplate,
     PowerOutletTemplate,
     PowerPortTemplate,
     RearPortTemplate,
@@ -30,6 +31,7 @@ COMPONENTS["interfaces"] = InterfaceTemplate
 COMPONENTS["rear-ports"] = RearPortTemplate
 COMPONENTS["front-ports"] = FrontPortTemplate
 COMPONENTS["device-bays"] = DeviceBayTemplate
+COMPONENTS["module-bays"] = ModuleBayTemplate
 
 STRIP_KEYWORDS = {
     "interfaces": ["poe_mode", "poe_type"],
