@@ -4,12 +4,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from nautobot.apps.ui import (
-    Breadcrumbs,
     ObjectDetailContent,
     ObjectFieldsPanel,
     SectionChoices,
-    Titles,
-    ViewNameBreadcrumbItem,
 )
 from nautobot.apps.views import (
     NautobotUIViewSet,
@@ -23,9 +20,9 @@ from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_
 from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
 from nautobot.virtualization.models import ClusterType
-from rest_framework import serializers
 from rest_framework.decorators import action
 
+from welcome_wizard.api import serializers
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.forms import (
     DeviceTypeBulkImportForm,
@@ -67,22 +64,7 @@ class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, Ob
     filterset_class = ManufacturerImportFilterSet
     filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
-    serializer_class = serializers.Serializer
-    breadcrumbs = Breadcrumbs(
-        items={
-            "list": [
-                ViewNameBreadcrumbItem(
-                    view_name="plugins:welcome_wizard:dashboard_list",
-                    label="Dashboard",
-                ),
-                ViewNameBreadcrumbItem(
-                    view_name="plugins:welcome_wizard:manufacturerimport_list",
-                    label="Import Manufacturers",
-                ),
-            ]
-        }
-    )
-    view_titles = Titles(titles={"list": "Import Manufacturers"})
+    serializer_class = serializers.ManufacturerImportSerializer
 
     object_detail_content = ObjectDetailContent(
         panels=[
@@ -100,8 +82,17 @@ class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, Ob
         check_sync(self, request)
         return super().list(request, *args, **kwargs)
 
+    def get_required_permission(self):
+        """Return the required permission for the current action."""
+        view_action = self.get_action()
+        if view_action == "import_wizard":
+            return [
+                *self.get_permissions_for_model(Manufacturer, ["add"]),
+            ]
+        return super().get_required_permission()
+
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
-    def bulk_import(self, request):
+    def import_wizard(self, request):
         """Handle bulk import of ManufacturerImport objects."""
         if request.method.lower() == "get":
             pk = request.GET.get("pk")
@@ -127,12 +118,11 @@ class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, Ob
         form = ManufacturerBulkImportForm(request.POST)
         if form.is_valid():
             pk_list = request.POST.getlist("pk")
-            onboarded = 0
+            objects_to_onboard = self.queryset.filter(pk__in=pk_list)
             job = Job.objects.get(name="Welcome Wizard - Import Manufacturer")
-            for obj in self.queryset.filter(pk__in=pk_list):
+            for obj in objects_to_onboard:
                 JobResult.enqueue_job(job_model=job, user=request.user, manufacturer_name=obj.name)
-                onboarded += 1
-            messages.success(request, f"Onboarded {onboarded} objects.")
+            messages.success(request, f"Onboarded {objects_to_onboard.count()} objects.")
         return redirect("plugins:welcome_wizard:manufacturerimport_list")
 
 
@@ -143,28 +133,12 @@ class DeviceTypeImportUIViewSet(
 ):  # pylint: disable=abstract-method
     """List view for DeviceTypeImport."""
 
-    permission_required = "welcome_wizard.view_devicetypeimport"
     queryset = DeviceTypeImport.objects.select_related("manufacturer")
     table_class = DeviceTypeImportTable
     filterset_class = DeviceTypeImportFilterSet
     filterset_form_class = DeviceTypeImportFilterForm
     action_buttons = ()
-    serializer_class = serializers.Serializer
-    breadcrumbs = Breadcrumbs(
-        items={
-            "list": [
-                ViewNameBreadcrumbItem(
-                    view_name="plugins:welcome_wizard:dashboard_list",
-                    label="Dashboard",
-                ),
-                ViewNameBreadcrumbItem(
-                    view_name="plugins:welcome_wizard:devicetypeimport_list",
-                    label="Import Device Types",
-                ),
-            ]
-        }
-    )
-    view_titles = Titles(titles={"list": "Import Device Types"})
+    serializer_class = serializers.DeviceTypeImportSerializer
 
     object_detail_content = ObjectDetailContent(
         panels=[
@@ -177,17 +151,22 @@ class DeviceTypeImportUIViewSet(
         ],
     )
 
+    def get_required_permission(self):
+        """Return the required permission for the current action."""
+        view_action = self.get_action()
+        if view_action == "import_wizard":
+            return [
+                *self.get_permissions_for_model(DeviceType, ["add"]),
+            ]
+        return super().get_required_permission()
+
     def list(self, request, *args, **kwargs):
         """Return the list view for DeviceTypeImport objects."""
         check_sync(self, request)
         return super().list(request, *args, **kwargs)
 
-    def create(self, request, *args, **kwargs):
-        """Redirect create requests to the DeviceTypeImport list view."""
-        return redirect("plugins:welcome_wizard:devicetypeimport_list")
-
     @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
-    def bulk_import(self, request):
+    def import_wizard(self, request):
         """Handle bulk import of DeviceTypeImport objects."""
         if request.method.lower() == "get":
             pk = request.GET.get("pk")
@@ -211,12 +190,11 @@ class DeviceTypeImportUIViewSet(
         form = DeviceTypeBulkImportForm(request.POST)
         if form.is_valid():
             pk_list = request.POST.getlist("pk")
-            onboarded = 0
+            objects_to_onboard = self.queryset.filter(pk__in=pk_list)
             job = Job.objects.get(name="Welcome Wizard - Import Device Type")
-            for obj in self.queryset.filter(pk__in=pk_list):
+            for obj in objects_to_onboard:
                 JobResult.enqueue_job(job_model=job, user=request.user, filename=obj.filename)
-                onboarded += 1
-            messages.success(request, f"Onboarded {onboarded} objects.")
+            messages.success(request, f"Onboarded {objects_to_onboard.count()} objects.")
         return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
 
@@ -227,13 +205,6 @@ class MerlinUIViewSet(NautobotUIViewSet):
     permission_required = "welcome_wizard.view_merlin"
     queryset = Merlin.objects.all()
     table_class = DashboardTable
-    filterset_class = None
-    filterset_form_class = None
-    serializer_class = serializers.Serializer
-    breadcrumbs = Breadcrumbs(
-        items={"list": [ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard")]}
-    )
-    view_titles = Titles(titles={"list": "Welcome Wizard"})
 
     @classmethod
     def check_data(cls):

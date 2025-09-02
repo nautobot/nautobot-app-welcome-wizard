@@ -1,4 +1,32 @@
-{% extends 'generic/object_list.html' %}
+{% extends "generic/object_list.html" %}
+
+{% block header %}
+<div class="row noprint">
+  <div class="col-sm-8 col-md-9">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a></li>
+      <li class="active">
+        <a href="{% url 'plugins:welcome_wizard:manufacturerimport_list' %}">Import Manufacturers</a>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-4 col-md-3">
+    <form action="" method="get">
+      <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search {{ verbose_name_plural }}" />
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-primary">
+            <span class="mdi mdi-magnify" aria-hidden="true"></span>
+          </button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block title %}Import Manufacturers{% endblock %}
 
 {% block bulk_buttons %}
     <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:manufacturerimport_import_wizard" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">

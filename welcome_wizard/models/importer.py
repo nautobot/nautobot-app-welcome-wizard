@@ -3,7 +3,6 @@
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import ValidationError
 from django.db import models
-from django.urls import reverse
 from nautobot.core.models import BaseModel
 
 
@@ -20,10 +19,6 @@ class ManufacturerImport(BaseModel):
     def __str__(self):
         """Return name for string method."""
         return self.name
-
-    def get_absolute_url(self, api=False):
-        """Return the absolute url for ManufacturerImport."""
-        return reverse("plugins:welcome_wizard:manufacturerimport", kwargs={"pk": self.pk})
 
 
 class DeviceTypeImport(BaseModel):
@@ -53,7 +48,3 @@ class DeviceTypeImport(BaseModel):
     def __str__(self):
         """Return name for string method."""
         return self.name
-
-    def get_absolute_url(self, api=False):
-        """Return the absolute url for DeviceTypeImport."""
-        return reverse("plugins:welcome_wizard:devicetypeimport", kwargs={"pk": self.pk})
