@@ -20,8 +20,10 @@ DEVICE_TYPE_BUTTONS = """
 
 IMPORT_BUTTONS = """
 <a href="{% url record.nautobot_add_link %}" class="btn btn-xs btn-success" title="Add"><i class="mdi mdi-plus-thick"></i></a>
-{% if record.merlin_link %}
-<a href="{% url record.merlin_link %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
+{% if record.nautobot_model == "dcim.Manufacturer" %}
+<a href="{% url 'plugins:welcome_wizard:manufacturerimport_import_wizard' %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
+{% elif record.nautobot_model == "dcim.DeviceType" %}
+<a href="{% url 'plugins:welcome_wizard:devicetypeimport_import_wizard' %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
 {% endif %}
 """
 

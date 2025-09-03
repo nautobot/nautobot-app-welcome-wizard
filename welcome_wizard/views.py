@@ -34,6 +34,11 @@ from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
 
+# DEPRECATION NOTICE:
+# Merlin's *_link fields (nautobot_add_link, nautobot_list_link, merlin_link) are deprecated.
+# Do NOT introduce new code that reads/writes these fields. New code must derive URLs
+# from `Merlin.nautobot_model`, not from DB-stored links.
+
 
 def check_sync(instance, request):
     """If Device Type Library is enabled and no data in queryset, run the sync."""
@@ -212,7 +217,7 @@ class MerlinUIViewSet(NautobotUIViewSet):
         # Check the status of each of the Merlin Items
         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
         # wise.
-        for nautobot_object, var_name, list_url, new_url, wizard_url in [
+        for model, name, nautobot_list_link, nautobot_add_link, merlin_link in [
             (Location, "Locations", "dcim:location_list", "dcim:location_add", ""),
             (
                 Manufacturer,
@@ -258,16 +263,16 @@ class MerlinUIViewSet(NautobotUIViewSet):
                 "",
             ),
         ]:
-            completed = nautobot_object.objects.exists()
+            completed = model.objects.exists()
             Merlin.objects.update_or_create(
-                name=var_name,
+                name=name,
                 defaults={
                     "completed": completed,
                     "ignored": False,
-                    "nautobot_model": nautobot_object._meta.label,
-                    "nautobot_add_link": new_url,
-                    "merlin_link": wizard_url,
-                    "nautobot_list_link": list_url,
+                    "nautobot_model": model._meta.label,
+                    "nautobot_add_link": nautobot_add_link,
+                    "merlin_link": merlin_link,
+                    "nautobot_list_link": nautobot_list_link,
                 },
             )
 
