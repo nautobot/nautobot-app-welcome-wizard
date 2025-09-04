@@ -20,3 +20,11 @@ class DeviceTypeImportViewSet(NautobotModelViewSet):  # pylint: disable=too-many
     queryset = models.DeviceTypeImport.objects.all()
     serializer_class = serializers.DeviceTypeImportSerializer
     filterset_class = filters.DeviceTypeImportFilterSet
+
+
+class MerlinViewSet(NautobotModelViewSet):  # pylint: disable=too-many-ancestors
+    """Merlin viewset."""
+
+    queryset = models.Merlin.objects.all()
+    serializer_class = serializers.MerlinSerializer
+    filterset_class = filters.MerlinFilterSet

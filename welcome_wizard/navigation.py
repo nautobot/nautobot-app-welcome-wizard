@@ -4,7 +4,7 @@ from nautobot.apps.ui import NavMenuGroup, NavMenuItem, NavMenuTab
 
 items = (
     NavMenuItem(
-        link="plugins:welcome_wizard:dashboard",
+        link="plugins:welcome_wizard:dashboard_list",
         name="Welcome Wizard Dashboard",
         permissions=["welcome_wizard.view_dashboard"],
     ),
