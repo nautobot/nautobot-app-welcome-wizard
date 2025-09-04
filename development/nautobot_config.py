@@ -90,7 +90,9 @@ if not _TESTING:
                 "datefmt": "%H:%M:%S",
             },
             "verbose": {
-                "format": "%(asctime)s.%(msecs)03d %(levelname)-7s %(name)-20s %(filename)-15s %(funcName)30s() : %(message)s",
+                "format": (
+                    "%(asctime)s.%(msecs)03d %(levelname)-7s %(name)-20s %(filename)-15s %(funcName)30s() : %(message)s"
+                ),
                 "datefmt": "%H:%M:%S",
             },
         },
@@ -124,9 +126,9 @@ PLUGINS = ["welcome_wizard"]
 
 # Apps configuration settings. These settings are used by various Apps that the user may have installed.
 # Each key in the dictionary is the name of an installed App and its value is a dictionary of settings.
-# PLUGINS_CONFIG = {
-#     'welcome_wizard': {
-#         'foo': 'bar',
-#         'buzz': 'bazz'
-#     }
-# }
+PLUGINS_CONFIG = {
+    "welcome_wizard": {
+        "manufacturer_uppercase": is_truthy(os.getenv("WELCOME_WIZARD_MANUFACTURER_UPPERCASE", "false")),
+        "manufacturer_map": {},
+    }
+}

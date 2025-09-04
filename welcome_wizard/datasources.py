@@ -4,10 +4,34 @@ import os
 from pathlib import Path
 
 import yaml
+from django.conf import settings
+from nautobot.core.settings_funcs import is_truthy
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+
+
+def get_manufacturer_name(name: str) -> str:
+    """Get the manufacturer name to use based on settings.
+
+    Args:
+        name (str): Original manufacturer name from YAML configuration.
+
+    Returns:
+        str: Manufacturer name, possibly uppercased or transformed based on dictionary mapping.
+    """
+    manufacturer_name = name
+    config = settings.PLUGINS_CONFIG.get("welcome_wizard", {})
+
+    if config:
+        manufacturer_map = config.get("manufacturer_map", {})
+        if manufacturer_name in manufacturer_map:
+            manufacturer_name = manufacturer_map[manufacturer_name]
+        elif config.get("manufacturer_uppercase") is True:
+            manufacturer_name = manufacturer_name.upper()
+
+    return manufacturer_name
 
 
 def retrieve_device_types_from_filesystem(path):
@@ -21,15 +45,38 @@ def retrieve_device_types_from_filesystem(path):
     """
     manufacturers = set()
     device_types = {}
+    manufacturer_names = {}
 
     device_type_path = os.path.join(path, "device-types")
     files = (filename for filename in Path(device_type_path).rglob("*") if filename.suffix in [".yml", ".yaml"])
+
+    # If manufacturer_uppercase is not set in settings, check environment variable
+    if (
+        "manufacturer_uppercase" not in settings.PLUGINS_CONFIG.get("welcome_wizard", {})
+        and "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ
+    ):
+        settings.PLUGINS_CONFIG.get("welcome_wizard", {})["manufacturer_uppercase"] = is_truthy(
+            os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
+        )
+
     for filename in files:
         with open(filename, encoding="utf8") as file:
             data = yaml.safe_load(file)
 
-        manufacturers.add(data["manufacturer"])
+        # Transform manufacturer name based on settings if needed
+        if data["manufacturer"] in manufacturer_names:
+            manufacturer_name = manufacturer_names[data["manufacturer"]]
+        else:
+            manufacturer_name = get_manufacturer_name(data["manufacturer"])
+            manufacturer_names[data["manufacturer"]] = manufacturer_name
+
+        if data["manufacturer"] != manufacturer_name:
+            # Update the manufacturer name in the data to the transformed name
+            data["manufacturer"] = manufacturer_name
+
+        manufacturers.add(manufacturer_name)
         device_types[filename.name] = data
+
     return (manufacturers, device_types)
 
 

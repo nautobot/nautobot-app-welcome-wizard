@@ -40,9 +40,13 @@ PLUGINS = ["welcome_wizard"]
 #   "welcome_wizard": {
 #     "enable_devicetype-library": True,
 #     "enable_welcome_banner": True,
+#     "manufacturer_uppercase": False,
+#     "manufacturer_map": {},
 #   }
 # }
 ```
+
+`manufacturer_uppercase` transformation can also be configured using `$WELCOME_WIZARD_MANUFACTURER_UPPERCASE` environment variable (which can be set to a string that can be converted to `True` or `False` using Nautobot's `is_truthy()` function), examples: `true`, `True`, `y`, `yes`, `on`, `1`.
 
 Once the Nautobot configuration is updated, run the Post Upgrade command (`nautobot-server post_upgrade`) to run migrations and clear any cache:
 
@@ -68,3 +72,5 @@ The app behavior can be controlled with the following list of settings:
 | ------- | ------ | -------- | ------------------------------------- |
 | `enable_devicetype-library` | `True` | `True` | If enabled, the [device type](https://github.com/nautobot/devicetype-library) git repository will be automatically added for you. |
 | `enable_welcome_banner` | `True` | `True` | If enabled, the Welcome Wizard banner will display on the home screen for authenticated users. |
+| `manufacturer_uppercase` | `True` | `False` | If enabled, all Manufacturer names will be converted to upper case. |
+| `manufacturer_map` | `{"Arista": "Arista Networks", "Cisco": "Cisco Systems"}` | `{}` | If dictionary is defined, all manufacturer names matching its keys will be transformed to corresponding mapping values. |

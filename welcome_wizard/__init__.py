@@ -15,15 +15,17 @@ class WelcomeWizardConfig(NautobotAppConfig):
     author = "Network to Code, LLC"
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
-    required_settings = []
+    required_settings: list = []
     min_version = "2.0.0"
     max_version = "2.9999"
     default_settings = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
         "enable_welcome_banner": True,
+        "manufacturer_uppercase": False,
+        "manufacturer_map": {},
     }
-    caching_config = {}
+    caching_config: dict = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard"
     docs_view_name = "plugins:welcome_wizard:docs"
