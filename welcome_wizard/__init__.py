@@ -27,7 +27,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     }
     caching_config: dict = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
-    home_view_name = "plugins:welcome_wizard:dashboard"
+    home_view_name = "plugins:welcome_wizard:dashboard_list"
     docs_view_name = "plugins:welcome_wizard:docs"
 
     def ready(self):
