@@ -64,11 +64,9 @@ def retrieve_device_types_from_filesystem(path):
             data = yaml.safe_load(file)
 
         # Transform manufacturer name based on settings if needed
-        if data["manufacturer"] in manufacturer_names:
-            manufacturer_name = manufacturer_names[data["manufacturer"]]
-        else:
-            manufacturer_name = get_manufacturer_name(data["manufacturer"])
-            manufacturer_names[data["manufacturer"]] = manufacturer_name
+        manufacturer_name = manufacturer_names.setdefault(
+            data["manufacturer"], get_manufacturer_name(data["manufacturer"])
+        )
 
         if data["manufacturer"] != manufacturer_name:
             # Update the manufacturer name in the data to the transformed name
