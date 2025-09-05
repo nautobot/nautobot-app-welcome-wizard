@@ -45,3 +45,15 @@ class DeviceTypeImportFilterSet(NautobotFilterSet):  # pylint: disable=too-many-
 
         # add any fields from the model that you would like to filter your searches by using those
         fields = "__all__"
+
+
+class MerlinFilterSet(NautobotFilterSet):
+    """Filter for Merlin."""
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.Merlin
+
+        # add any fields from the model that you would like to filter your searches by using those
+        fields = "__all__"

@@ -1,0 +1,15 @@
+{% extends "generic/object_list.html" %}
+
+{% block header %}
+<div class="row noprint">
+  <div class="col-sm-12">
+    <ol class="breadcrumb">
+      <li class="active">
+        <a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a>
+      </li>
+    </ol>
+  </div>
+</div>
+{% endblock %}
+
+{% block title %}Welcome Wizard{% endblock %}
