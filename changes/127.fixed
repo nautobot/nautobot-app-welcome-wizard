@@ -1,0 +1,1 @@
+Fixed issue with `ModuleBayTemplate` components not being created when importing DeviceTypes. With this fix, `ModuleBayTemplate` components are getting created.
