@@ -4,6 +4,7 @@ import os
 from unittest.mock import MagicMock
 
 from django.conf import settings
+from django.test import override_settings
 from nautobot.apps.testing import TransactionTestCase
 from nautobot.extras.models import JobResult
 
@@ -18,6 +19,7 @@ from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 class TestDatasources(TransactionTestCase):
     """Test Datasources."""
 
+    @override_settings(PLUGINS_CONFIG={"welcome_wizard": {}})
     def test_retrieve_device_types_from_filesystem_without_manufacturer_transformation(self):
         """test retrieval of Manufacturers and DeviceTypes from the filesystem without Manufacturer name transformation."""
         # provided by device_type_fixture.yaml
@@ -72,8 +74,6 @@ class TestDatasources(TransactionTestCase):
             },
         }
 
-        # Unset settings.PLUGINS_CONFIG["welcome_wizard"] to avoid transformation
-        settings.PLUGINS_CONFIG["welcome_wizard"] = {}
         # Ensure environment variable is not set
         if "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ:
             del os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
@@ -278,15 +278,18 @@ class TestDatasources(TransactionTestCase):
         self.assertIsNotNone(manufacturer)
         self.assertIsNotNone(device_type)
 
+    @override_settings(
+        PLUGINS_CONFIG={
+            "welcome_wizard": {
+                "manufacturer_map": {
+                    "juniper": "Juniper Networks",
+                    "cisco": "Cisco Systems",
+                },
+            }
+        }
+    )
     def test_get_manufacturer_name_without_uppercase_transformation(self):
         """Test get_manufacturer_name() does not apply transformation when transformation is not defined."""
-
-        settings.PLUGINS_CONFIG["welcome_wizard"] = {
-            "manufacturer_map": {
-                "juniper": "Juniper Networks",
-                "cisco": "Cisco Systems",
-            },
-        }
 
         # Should use the map
         self.assertEqual(get_manufacturer_name("juniper"), "Juniper Networks")
@@ -303,16 +306,19 @@ class TestDatasources(TransactionTestCase):
         # Should not transform manufacturer name if not in map
         self.assertEqual(get_manufacturer_name("arista"), "arista")
 
+    @override_settings(
+        PLUGINS_CONFIG={
+            "welcome_wizard": {
+                "manufacturer_map": {
+                    "juniper": "Juniper Networks",
+                    "cisco": "Cisco Systems",
+                },
+                "manufacturer_uppercase": True,  # Should not apply if map is used
+            }
+        }
+    )
     def test_get_manufacturer_name_with_transformation(self):
         """Test get_manufacturer_name() applies transformation from settings.PLUGINS_CONFIG."""
-
-        settings.PLUGINS_CONFIG["welcome_wizard"] = {
-            "manufacturer_map": {
-                "juniper": "Juniper Networks",
-                "cisco": "Cisco Systems",
-            },
-            "manufacturer_uppercase": True,  # Should not apply if map is used
-        }
         # Ensure environment variable is not set
         if "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ:
             del os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
