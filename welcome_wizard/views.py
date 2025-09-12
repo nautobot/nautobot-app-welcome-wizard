@@ -3,15 +3,10 @@
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from nautobot.apps.ui import (
-    ObjectDetailContent,
-    ObjectFieldsPanel,
-    SectionChoices,
-)
+from nautobot.apps.ui import BaseBreadcrumbItem, Breadcrumbs, ModelBreadcrumbItem, ViewNameBreadcrumbItem
 from nautobot.apps.views import (
     NautobotUIViewSet,
     ObjectChangeLogViewMixin,
-    ObjectDetailViewMixin,
     ObjectListViewMixin,
 )
 from nautobot.circuits.models import CircuitType, Provider
@@ -60,7 +55,7 @@ def check_sync(instance, request):
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
 
 
-class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, ObjectChangeLogViewMixin):  # pylint: disable=abstract-method
+class ManufacturerImportUIViewSet(ObjectListViewMixin, ObjectChangeLogViewMixin):  # pylint: disable=abstract-method
     """List view for ManufacturerImport."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
@@ -70,16 +65,14 @@ class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, Ob
     filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
     serializer_class = serializers.ManufacturerImportSerializer
-
-    object_detail_content = ObjectDetailContent(
-        panels=[
-            ObjectFieldsPanel(
-                weight=100,
-                section=SectionChoices.LEFT_HALF,
-                label="Manufacturer Import",
-                fields=["name"],
-            ),
-        ],
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+                ModelBreadcrumbItem(model=ManufacturerImport),
+            ],
+        }
     )
 
     def list(self, request, *args, **kwargs):
@@ -132,7 +125,6 @@ class ManufacturerImportUIViewSet(ObjectDetailViewMixin, ObjectListViewMixin, Ob
 
 
 class DeviceTypeImportUIViewSet(
-    ObjectDetailViewMixin,
     ObjectListViewMixin,
     ObjectChangeLogViewMixin,
 ):  # pylint: disable=abstract-method
@@ -144,16 +136,14 @@ class DeviceTypeImportUIViewSet(
     filterset_form_class = DeviceTypeImportFilterForm
     action_buttons = ()
     serializer_class = serializers.DeviceTypeImportSerializer
-
-    object_detail_content = ObjectDetailContent(
-        panels=[
-            ObjectFieldsPanel(
-                weight=100,
-                section=SectionChoices.LEFT_HALF,
-                label="DeviceType Import",
-                fields=["name"],
-            ),
-        ],
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+                ModelBreadcrumbItem(model=DeviceTypeImport),
+            ],
+        }
     )
 
     def get_required_permission(self):
@@ -210,6 +200,15 @@ class MerlinUIViewSet(NautobotUIViewSet):
     permission_required = "welcome_wizard.view_merlin"
     queryset = Merlin.objects.all()
     table_class = DashboardTable
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+            ],
+
+        }
+    )
 
     @classmethod
     def check_data(cls):
