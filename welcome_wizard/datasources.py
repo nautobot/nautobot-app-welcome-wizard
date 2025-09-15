@@ -28,8 +28,8 @@ def get_manufacturer_name(name: str) -> str:
         manufacturer_map = config.get("manufacturer_map", {})
         if manufacturer_name in manufacturer_map:
             manufacturer_name = manufacturer_map[manufacturer_name]
-        elif config.get("manufacturer_uppercase") is True:
-            manufacturer_name = manufacturer_name.upper()
+        elif config.get("manufacturer_transform_func") and callable(config["manufacturer_transform_func"]):
+            manufacturer_name = config["manufacturer_transform_func"](manufacturer_name)
 
     return manufacturer_name
 
@@ -49,15 +49,6 @@ def retrieve_device_types_from_filesystem(path):
 
     device_type_path = os.path.join(path, "device-types")
     files = (filename for filename in Path(device_type_path).rglob("*") if filename.suffix in [".yml", ".yaml"])
-
-    # If manufacturer_uppercase is not set in settings, check environment variable
-    if (
-        "manufacturer_uppercase" not in settings.PLUGINS_CONFIG.get("welcome_wizard", {})
-        and "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ
-    ):
-        settings.PLUGINS_CONFIG.get("welcome_wizard", {})["manufacturer_uppercase"] = is_truthy(
-            os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
-        )
 
     for filename in files:
         with open(filename, encoding="utf8") as file:

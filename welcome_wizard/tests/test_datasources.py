@@ -74,18 +74,6 @@ class TestDatasources(TransactionTestCase):
             },
         }
 
-        # Ensure environment variable is not set
-        if "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ:
-            del os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
-
-        manufacturers, device_types = retrieve_device_types_from_filesystem("welcome_wizard/tests/fixtures")
-
-        self.assertEqual({"Cisco", "cIsCo"}, manufacturers)
-        self.assertEqual(device_types_data, device_types)
-
-        # Check that $WELCOME_WIZARD_MANUFACTURER_UPPERCASE env var also works
-        os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"] = "false"
-
         manufacturers, device_types = retrieve_device_types_from_filesystem("welcome_wizard/tests/fixtures")
 
         self.assertEqual({"Cisco", "cIsCo"}, manufacturers)
@@ -147,20 +135,7 @@ class TestDatasources(TransactionTestCase):
 
         # Set settings.PLUGINS_CONFIG["welcome_wizard"] to force transformation
         settings.PLUGINS_CONFIG["welcome_wizard"] = {
-            "manufacturer_uppercase": True,
-            "manufacturer_map": {
-                "cIsCo": "CiScO",
-            },
-        }
-
-        manufacturers, device_types = retrieve_device_types_from_filesystem("welcome_wizard/tests/fixtures")
-
-        self.assertEqual({"CISCO", "CiScO"}, manufacturers)
-        self.assertEqual(device_types_data, device_types)
-
-        # Check that $WELCOME_WIZARD_MANUFACTURER_UPPERCASE env var also works
-        os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"] = "true"
-        settings.PLUGINS_CONFIG["welcome_wizard"] = {
+            "manufacturer_transform_func": str.upper,
             "manufacturer_map": {
                 "cIsCo": "CiScO",
             },
@@ -180,29 +155,6 @@ class TestDatasources(TransactionTestCase):
 
         # Unset settings.PLUGINS_CONFIG["welcome_wizard"] to avoid transformation
         settings.PLUGINS_CONFIG["welcome_wizard"] = {}
-        # Ensure environment variable is not set
-        if "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ:
-            del os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
-
-        refresh_git_import_wizard(repository_record=repository_record, job_result=job_result)
-
-        manufacturer = ManufacturerImport.objects.get(name="Cisco")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9500-32QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
-
-        manufacturer = ManufacturerImport.objects.get(name="cIsCo")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9600-33QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
-
-        manufacturer = ManufacturerImport.objects.get(name="Cisco")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9700-34QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
-
-        # Check that $WELCOME_WIZARD_MANUFACTURER_UPPERCASE env var also works
-        os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"] = "false"
 
         refresh_git_import_wizard(repository_record=repository_record, job_result=job_result)
 
@@ -230,32 +182,7 @@ class TestDatasources(TransactionTestCase):
 
         # Set settings.PLUGINS_CONFIG["welcome_wizard"] to force transformation
         settings.PLUGINS_CONFIG["welcome_wizard"] = {
-            "manufacturer_uppercase": True,
-            "manufacturer_map": {
-                "cIsCo": "CiScO",
-            },
-        }
-
-        refresh_git_import_wizard(repository_record=repository_record, job_result=job_result)
-
-        manufacturer = ManufacturerImport.objects.get(name="CISCO")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9500-32QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
-
-        manufacturer = ManufacturerImport.objects.get(name="CiScO")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9600-33QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
-
-        manufacturer = ManufacturerImport.objects.get(name="CISCO")
-        device_type = DeviceTypeImport.objects.get(name="Catalyst 9700-34QC")
-        self.assertIsNotNone(manufacturer)
-        self.assertIsNotNone(device_type)
-
-        # Check that $WELCOME_WIZARD_MANUFACTURER_UPPERCASE env var also works
-        os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"] = "true"
-        settings.PLUGINS_CONFIG["welcome_wizard"] = {
+            "manufacturer_transform_func": str.upper,
             "manufacturer_map": {
                 "cIsCo": "CiScO",
             },
@@ -297,15 +224,6 @@ class TestDatasources(TransactionTestCase):
         # Should not transform manufacturer name if not in map
         self.assertEqual(get_manufacturer_name("arista"), "arista")
 
-        # Check that $WELCOME_WIZARD_MANUFACTURER_UPPERCASE env var also works
-        os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"] = "false"
-
-        # Should use the map
-        self.assertEqual(get_manufacturer_name("juniper"), "Juniper Networks")
-        self.assertEqual(get_manufacturer_name("cisco"), "Cisco Systems")
-        # Should not transform manufacturer name if not in map
-        self.assertEqual(get_manufacturer_name("arista"), "arista")
-
     @override_settings(
         PLUGINS_CONFIG={
             "welcome_wizard": {
@@ -313,16 +231,12 @@ class TestDatasources(TransactionTestCase):
                     "juniper": "Juniper Networks",
                     "cisco": "Cisco Systems",
                 },
-                "manufacturer_uppercase": True,  # Should not apply if map is used
+                "manufacturer_transform_func": str.upper,  # Should not apply if map is used
             }
         }
     )
     def test_get_manufacturer_name_with_transformation(self):
         """Test get_manufacturer_name() applies transformation from settings.PLUGINS_CONFIG."""
-        # Ensure environment variable is not set
-        if "WELCOME_WIZARD_MANUFACTURER_UPPERCASE" in os.environ:
-            del os.environ["WELCOME_WIZARD_MANUFACTURER_UPPERCASE"]
-
         # Should use the map, not uppercase
         self.assertEqual(get_manufacturer_name("juniper"), "Juniper Networks")
         self.assertEqual(get_manufacturer_name("cisco"), "Cisco Systems")

@@ -1,6 +1,4 @@
 Two new (optional) configuration parameters are made available to be used within `PLUGINS_CONFIG["welcome_wizard"]` in `nautobot_config.py` - to enable defining Manufacturer name transformations:
 
-- `manufacturer_uppercase` - True or False value that allows converting Manufacturer names to upper case
+- `manufacturer_transform_func` - String transformation function to be applied to all `manufacturer` names (example: `str.upper` to make all Manufacturer names in upper case)
 - `manufacturer_map` - dictionary that allows converting Manufacturer names to desired names (when `manufacturer` in YAML configuration files do not match desired names)
-
-Upper case transformation can also be configured using `$WELCOME_WIZARD_MANUFACTURER_UPPERCASE` environment variable instead of including `manufacturer_uppercase` within PLUGINS_CONFIG.

@@ -128,7 +128,7 @@ PLUGINS = ["welcome_wizard"]
 # Each key in the dictionary is the name of an installed App and its value is a dictionary of settings.
 PLUGINS_CONFIG = {
     "welcome_wizard": {
-        "manufacturer_uppercase": is_truthy(os.getenv("WELCOME_WIZARD_MANUFACTURER_UPPERCASE", "false")),
+        "manufacturer_transform_func": None,
         "manufacturer_map": {},
     }
 }
