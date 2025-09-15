@@ -206,7 +206,6 @@ class MerlinUIViewSet(NautobotUIViewSet):
                 BaseBreadcrumbItem(label="Welcome Wizard"),
                 ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
             ],
-
         }
     )
 
