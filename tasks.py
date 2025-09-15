@@ -12,12 +12,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import json
 import os
 import re
 import shutil
 import sys
 from pathlib import Path
 from time import sleep
+from urllib.parse import quote
+from urllib.request import urlopen, Request
 
 from invoke.collection import Collection
 from invoke.exceptions import Exit, UnexpectedExit
@@ -52,7 +55,7 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "2.4.2",
+            "nautobot_ver": "2.4.16",
             "project_name": "nautobot-welcome-wizard",
             "python_ver": "3.11",
             "local": False,
@@ -719,15 +722,22 @@ def help_task(context):
 @task(
     help={
         "version": "Version of Welcome Wizard to generate the release notes for.",
+        "date": "Date of the release, if not specified, today's date will be used.",
+        "keep": "Keep the changelog fragments after generating the release notes (default: False).",
     }
 )
-def generate_release_notes(context, version=""):
+def generate_release_notes(context, version="", date="", keep=False):
     """Generate Release Notes using Towncrier."""
     command = "poetry run towncrier build"
-    if version:
-        command += f" --version {version}"
-    else:
-        command += " --version `poetry version -s`"
+    if not version:
+        version = context.run("poetry version --short", hide=True).stdout.strip()
+    command += f" --version {version}"
+    if date:
+        command += f" --date {date}"
+    command += " --keep" if keep else " --yes"
+    version_major_minor = ".".join(version.split(".")[:2])
+    context.run(f"poetry run python development/bin/ensure_release_notes.py --version {version_major_minor}")
+
     # Due to issues with git repo ownership in the containers, this must always run locally.
     context.run(command)
 
@@ -984,3 +994,118 @@ def validate_app_config(context):
         file="development/app_config_schema.py",
         env={"APP_CONFIG_SCHEMA_COMMAND": "validate"},
     )
+
+
+@task(
+    help={
+        "version": "Version of Welcome Wizard to generate the release for or valid poetry bump rule(default: current version).",
+        "ltm": "If specified, create a release for LTM branch (default: None).",
+        "date": "Date of the release (default: today).",
+        "previous-version": "Previous version to compare against when generating contributors (default: latest git tag).",
+    }
+)
+def prepare_release(context, version="", ltm="", date="", previous_version=""):
+    """
+    Create a draft GitHub release with the changelog since the last tag.
+    Then generates release notes and creates a PR against main with the release notes.
+    Requires GITHUB_TOKEN environment variable to be set with a token that has repo access.
+    """
+    # Update git first
+    context.run("git fetch", hide=True)
+    # If not on a release branch, exit with an error
+    current_branch = context.run("git rev-parse --abbrev-ref HEAD", hide=True).stdout.strip()
+    if not current_branch.startswith("release"):
+        print(f"Error: Not on a release branch (current: {current_branch})")
+        return
+    # Generate draft release notes first
+    if not version:
+        version = context.run("poetry version --short", hide=True).stdout.strip()
+    context.run(f"poetry version {version}", hide=False)
+    # print(f"Generating draft release notes for version: {version}")
+    towncrier_command = f"poetry run towncrier build --version {version} --draft"
+    if date:
+        towncrier_command += f" --date {date}"
+    notes = context.run(towncrier_command, hide=True).stdout.strip()
+
+    if not previous_version:
+        # Get the previous release version from git tags
+        previous_version = context.run("git describe --tags --abbrev=0", hide=True)
+        print(f"Previous version: {previous_version.stdout.strip()}")
+
+    # Generate contributors since last tag using Github API
+    generate_notes_url = (
+        "https://api.github.com/repos/nautobot/nautobot-app-welcome-wizard/releases/generate-notes"
+    )
+    # request_url = (
+    #     f"https://api.github.com/repos/nautobot/nautobot-app-welcome-wizard/compare/{previous_version.stdout.strip()}...{last_commit.stdout.strip()[:7]}"
+    # )
+    headers = {
+        "User-Agent": "Nautobot-Release-Script/1.0",
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    try:
+        commitish = "develop"
+        if ltm:
+            commitish = ltm
+        req = Request(generate_notes_url, headers=headers, method="POST", data=json.dumps({"tag_name": version, "previous_tag_name": previous_version.stdout.strip(), "target_commitish": commitish}).encode())
+        with urlopen(req) as response:
+            if response.status != 200:
+                print(f"Error fetching release notes: {response.status} {response.reason}")
+                return
+            notes_response = response.read().decode("utf-8")
+            # print(notes)
+            notes_json = json.loads(notes_response)
+            github_notes = notes_json.get("body", "")
+            # Parse out the @usernames from the release notes sort and deduplicate
+            usernames = set(re.findall(r"by @([a-zA-Z0-9-]+)", github_notes))
+            # Keep the ## New Contributors section and everything after
+            if "## New Contributors" in github_notes:
+                github_notes = github_notes[github_notes.index("## New Contributors"):].strip()
+            else:
+                github_notes = github_notes[github_notes.index("**Full Changelog**"):].strip()
+            ##github_notes += "\n\n## Contributors\n"
+            notes += "\n\n## Contributors\n"
+            for username in sorted(usernames):
+                if username not in ["dependabot[bot]", "nautobot-bot"]:
+                    notes += f"* @{username}\n"
+            notes += "\n" + github_notes
+    except Exception as exc:
+        print(f"Error fetching contributors from GitHub API: {exc}")
+
+    # Create the release in GitHub
+    release_url = "https://api.github.com/repos/nautobot/nautobot-app-welcome-wizard/releases"
+    try:
+        req = Request(release_url, headers=headers, method="POST", data=json.dumps({
+            "tag_name": version,
+            "target_commitish": ltm if ltm else "main",
+            "name": f"{version}",
+            "body": notes,
+            "draft": True,
+            "prerelease": bool(re.match(r".*(a|b|rc)\d*$", version)),
+            "latest": not bool(ltm or re.match(r".*(a|b|rc)\d*$", version)),
+        }).encode())
+        with urlopen(req) as response:
+            if response.status != 201:
+                print(f"Error creating release: {response.status} {response.reason}")
+                return
+            release_response = response.read().decode("utf-8")
+            release_json = json.loads(release_response)
+            html_url = release_json.get("html_url", "")
+            print(f"Draft release created: {html_url}")
+    except Exception as exc:
+        print(f"Error creating release in GitHub: {exc}")
+        return
+
+    generate_release_notes(context, version=version, date=date, keep=False)
+
+
+
+    # command = "poetry run towncrier build"
+    # if version:
+    #     command += f" --version {version}"
+    # else:
+    #     command += " --version `poetry version -s`"
+    # # Due to issues with git repo ownership in the containers, this must always run locally.
+    # context.run(command)

@@ -10,6 +10,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Added Python 3.12 support.
 - Switch default repository to Nautobot's devicetype-library.
 
+<!-- towncrier release notes start -->
 ## [v2.1.0 (2024-10-24)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v2.1.0)
 
 ### Added
