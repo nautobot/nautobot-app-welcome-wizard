@@ -899,7 +899,7 @@ def unittest(  # noqa: PLR0913
 @task
 def unittest_coverage(context):
     """Report on code test coverage as measured by 'invoke unittest --coverage'."""
-    command = "coverage report --skip-covered -m"
+    command = "coverage report --skip-covered"
 
     run_command(context, command)
 
