@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('welcome_wizard', '0005_fix_sites_and_roles_in_merlin'),
+        ("welcome_wizard", "0005_fix_sites_and_roles_in_merlin"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='merlin',
-            options={'verbose_name_plural': 'Welcome Wizard'},
+            name="merlin",
+            options={"verbose_name_plural": "Welcome Wizard"},
         ),
     ]
