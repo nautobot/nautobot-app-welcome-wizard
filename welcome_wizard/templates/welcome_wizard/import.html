@@ -24,8 +24,8 @@
         {% csrf_token %}
         {{ form }}
         <button class="btn btn-info btn-sm" type="submit">
-            <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import
+            <span aria-hidden="true" class="mdi mdi-database-import-outline"></span> Import
         </button>
-        <a href="{% url return_url %}" class="btn btn-default">Cancel</a>
+        <a class="btn btn-default" href="{% url return_url %}">Cancel</a>
     </form>
 {% endblock content %}

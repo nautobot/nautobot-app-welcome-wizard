@@ -4,6 +4,6 @@
 
 {% block bulk_buttons %}
     <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:manufacturerimport_import_wizard" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">
-        <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import Selected
+        <span aria-hidden="true" class="mdi mdi-database-import-outline"></span> Import Selected
     </button>
 {% endblock bulk_buttons %}
