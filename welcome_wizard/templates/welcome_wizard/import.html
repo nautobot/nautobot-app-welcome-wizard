@@ -6,17 +6,19 @@
 {% load static %}
 {% load tz %}
 
-{% block header %}
-    <div class="row d-print-none">
-        <div class="col-md-8 col-lg-9">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{% url return_url %}">{{ breadcrumb_name }}</a></li>
-                <li class="breadcrumb-item">{{ obj.name }}</li>
-            </ol>
-        </div>
-    </div>
-{% endblock header %}
+{% block title %}
+    Import {{ obj.name }}
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <nav aria-label="Breadcrumbs" class="mt-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url return_url %}">{{ breadcrumb_name }}</a></li>
+            <li class="breadcrumb-item">{{ obj.name }}</li>
+        </ol>
+    </nav>
+{% endblock breadcrumbs %}
 
 {% block content %}
     <h1>Would you like import {{ obj.name }}?</h1>

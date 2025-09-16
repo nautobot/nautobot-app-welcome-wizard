@@ -20,7 +20,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     required_settings = []
     min_version = "3.0.0a1"  # TODO: Update to 3.0.0 when Nautobot v3.0.0 is released
     max_version = "3.9999"
-    default_settings = {
+    default_settings: dict[str, Any] = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
         "enable_welcome_banner": True,
