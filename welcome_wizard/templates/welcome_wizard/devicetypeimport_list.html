@@ -3,7 +3,7 @@
 {% block title %}Import Device Types{% endblock title %}
 
 {% block bulk_buttons %}
-    <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:devicetypeimport_import_wizard" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-sm">
+    <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:devicetypeimport_import_wizard" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-md">
         <span aria-hidden="true" class="mdi mdi-database-import-outline"></span> Import Selected
     </button>
 {% endblock bulk_buttons %}
