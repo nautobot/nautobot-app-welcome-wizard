@@ -10,8 +10,6 @@
         "project_slug": "nautobot-app-welcome-wizard",
         "repo_url": "https://github.com/nautobot/nautobot-app-welcome-wizard",
         "base_url": "welcome_wizard",
-        "min_nautobot_version": "2.0.0",
-        "max_nautobot_version": "2.9999",
         "camel_name": "NautobotWelcomeWizard",
         "project_short_description": "Nautobot's Getting Started Wizard",
         "model_class_name": "ManufacturerImport",
@@ -21,13 +19,17 @@
         "_drift_manager": {
             "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
             "template_dir": "nautobot-app",
-            "template_ref": "nautobot-app-v2.5.1",
+            "template_ref": "nautobot-app-v2.6.0",
             "cookie_dir": "",
             "branch_prefix": "drift-manager",
-            "pull_request_strategy": "create",
+            "pull_request_strategy": "update-or-create",
             "post_actions": [],
             "draft": false,
+<<<<<<< HEAD
             "baked_commit_ref": "d0be2106f40e73812e4fb8fbfb7d90bc6d5daaf6"
+=======
+            "baked_commit_ref": "7f18398423d8aec90798505f5e7eabbeb82becc3"
+>>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
         }
     }
 }

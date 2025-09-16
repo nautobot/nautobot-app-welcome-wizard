@@ -1,12 +1,45 @@
 """Forms for welcome_wizard."""
 
 from django import forms
+<<<<<<< HEAD
 from nautobot.apps.forms import BootstrapMixin, DynamicModelMultipleChoiceField, NautobotFilterForm
+=======
+from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+from nautobot.apps.forms import NautobotBulkEditForm, NautobotFilterForm, NautobotModelForm, TagsBulkEditFormMixin
+>>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 from welcome_wizard import models
 
 
+<<<<<<< HEAD
 class ManufacturerImportFilterForm(NautobotFilterForm):  # pylint: disable=too-many-ancestors
+=======
+class ManufacturerImportForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport creation/edit form."""
+
+    class Meta:
+        """Meta attributes."""
+
+        model = models.ManufacturerImport
+        fields = "__all__"
+
+
+class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport bulk edit form."""
+
+    pk = forms.ModelMultipleChoiceField(queryset=models.ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
+    description = forms.CharField(required=False, max_length=CHARFIELD_MAX_LENGTH)
+
+    class Meta:
+        """Meta attributes."""
+
+        nullable_fields = [
+            "description",
+        ]
+
+
+class ManufacturerImportFilterForm(NautobotFilterForm):
+>>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
     """Filter form to filter searches."""
 
     model = models.ManufacturerImport

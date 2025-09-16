@@ -17,6 +17,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     author = "Network to Code, LLC"
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
+<<<<<<< HEAD
     required_settings: list = []
     min_version = "2.0.0"
     max_version = "2.9999"
@@ -30,7 +31,13 @@ class WelcomeWizardConfig(NautobotAppConfig):
     caching_config: dict = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard_list"
+=======
+    required_settings = []
+    default_settings = {}
+    caching_config = {}
+>>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
     docs_view_name = "plugins:welcome_wizard:docs"
+    searchable_models = ["manufacturerimport"]
 
     def ready(self):
         """Callback when this app is loaded."""
