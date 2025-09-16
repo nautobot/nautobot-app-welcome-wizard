@@ -1,6 +1,5 @@
 """Tests for Welcome Wizard Datasources."""
 
-import os
 from unittest.mock import MagicMock
 
 from django.conf import settings

@@ -5,7 +5,6 @@ from pathlib import Path
 
 import yaml
 from django.conf import settings
-from nautobot.core.settings_funcs import is_truthy
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
 
