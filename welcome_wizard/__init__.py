@@ -18,11 +18,10 @@ class NautobotWelcomeWizardConfig(NautobotAppConfig):
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
     required_settings = []
-    min_version = "2.0.0"
-    max_version = "2.9999"
     default_settings = {}
     caching_config = {}
     docs_view_name = "plugins:welcome_wizard:docs"
+    searchable_models = ["manufacturerimport"]
 
 
 config = NautobotWelcomeWizardConfig  # pylint:disable=invalid-name

@@ -1,6 +1,7 @@
 """Forms for welcome_wizard."""
 
 from django import forms
+from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
 from nautobot.apps.forms import NautobotBulkEditForm, NautobotFilterForm, NautobotModelForm, TagsBulkEditFormMixin
 
 from welcome_wizard import models
@@ -20,7 +21,7 @@ class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm
     """ManufacturerImport bulk edit form."""
 
     pk = forms.ModelMultipleChoiceField(queryset=models.ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
-    description = forms.CharField(required=False)
+    description = forms.CharField(required=False, max_length=CHARFIELD_MAX_LENGTH)
 
     class Meta:
         """Meta attributes."""
