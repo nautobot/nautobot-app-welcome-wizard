@@ -32,7 +32,7 @@ class Merlin(BaseModel):
     class Meta:
         """Meta definition."""
 
-        verbose_name_plural = "merlin"
+        verbose_name_plural = "Welcome Wizard"
 
     def __str__(self):
         """Return name."""

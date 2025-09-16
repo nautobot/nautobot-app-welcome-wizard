@@ -52,7 +52,7 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-            "nautobot_ver": "2.4.2",
+            "nautobot_ver": "2.4.16",
             "project_name": "nautobot-welcome-wizard",
             "python_ver": "3.11",
             "local": False,
@@ -572,7 +572,9 @@ def dbshell(context, db_name="", input_file="", output_file="", query=""):
 @task(
     help={
         "db-name": "Database name to create (default: Nautobot database)",
-        "input-file": "SQL dump file to replace the existing database with. This can be generated using `invoke backup-db` (default: `dump.sql`).",
+        "input-file": (
+            "SQL dump file to replace the existing database with. This can be generated using `invoke backup-db` (default: `dump.sql`)."
+        ),
     }
 )
 def import_db(context, db_name="", input_file="dump.sql"):
@@ -779,7 +781,9 @@ def autoformat(context):
 
 @task(
     help={
-        "action": "Available values are `['lint', 'format']`. Can be used multiple times. (default: `['lint', 'format']`)",
+        "action": (
+            "Available values are `['lint', 'format']`. Can be used multiple times. (default: `['lint', 'format']`)"
+        ),
         "target": "File or directory to inspect, repeatable (default: all files in the project will be inspected)",
         "fix": "Automatically fix selected actions. May not be able to fix all issues found. (default: False)",
         "output_format": "See https://docs.astral.sh/ruff/settings/#output-format for details. (default: `concise`)",
