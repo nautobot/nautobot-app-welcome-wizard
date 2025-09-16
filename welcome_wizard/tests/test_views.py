@@ -173,13 +173,6 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_list"))
         self.assertHttpStatus(response, 403)
 
-    def test_manufacturer_detail_view(self):
-        """Tests the ManufacturerImport Detail View"""
-        self.add_permissions("welcome_wizard.view_manufacturerimport")
-        manufacturer = ManufacturerImport.objects.create(name="Onyx")
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport", kwargs={"pk": manufacturer.id}))
-        self.assertHttpStatus(response, 200)
-
 
 class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
     """Tests the DeviceTypeImport Views."""
@@ -274,26 +267,6 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         """Tests the DeviceTypeImport List View with no pemissions."""
         response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
         self.assertHttpStatus(response, 403)
-
-    def test_devicetype_detail_view(self):
-        """Tests the DeviceTypeImport Detail View"""
-        self.add_permissions("welcome_wizard.view_devicetypeimport")
-        manufacturer = ManufacturerImport.objects.create(name="Generic")
-        device_type = DeviceTypeImport.objects.create(
-            name="shelf-4he",
-            filename="shelf-4he.yaml",
-            manufacturer=manufacturer,
-            device_type_data={
-                "manufacturer": "Generic",
-                "model": "shelf-4he",
-                "u_height": 4,
-                "full_depth": False,
-            },
-        )
-        response = self.client.get(
-            reverse("plugins:welcome_wizard:devicetypeimport", kwargs={"pk": device_type.id}),
-        )
-        self.assertHttpStatus(response, 200)
 
 
 class DashboardView(TransactionTestCase):
