@@ -1,5 +1,7 @@
 """App declaration for welcome_wizard."""
 
+from typing import Any
+
 from nautobot.apps import NautobotAppConfig
 
 # Needs to be resolved: This is due to a bug tracked by issue #86
@@ -22,10 +24,12 @@ class WelcomeWizardConfig(NautobotAppConfig):
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
         "enable_welcome_banner": True,
+        "manufacturer_transform_func": None,
+        "manufacturer_map": {},
     }
-    caching_config = {}
+    caching_config: dict = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
-    home_view_name = "plugins:welcome_wizard:dashboard"
+    home_view_name = "plugins:welcome_wizard:dashboard_list"
     docs_view_name = "plugins:welcome_wizard:docs"
 
     def ready(self):

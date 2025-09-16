@@ -11,6 +11,14 @@ class Merlin(BaseModel):
 
     Args:
         models (model): Django model
+
+    DEPRECATION NOTICE:
+    - The *_link fields (nautobot_add_link, merlin_link, nautobot_list_link) are deprecated.
+      Do not use them in new code; derive URLs from `nautobot_model` instead.
+
+    Todo:
+    - Change `nautobot_model` to ForeignKey(ContentType).
+    - Make `name` a computed property based on `Merlin.nautobot_model._meta.verbose_name_plural.title()`.
     """
 
     name = models.CharField(max_length=100, default="")
@@ -24,7 +32,7 @@ class Merlin(BaseModel):
     class Meta:
         """Meta definition."""
 
-        verbose_name_plural = "merlin"
+        verbose_name_plural = "Welcome Wizard"
 
     def __str__(self):
         """Return name."""

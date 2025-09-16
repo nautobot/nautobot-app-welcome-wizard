@@ -10,7 +10,7 @@ from nautobot.apps.filters import (
 from welcome_wizard import models
 
 
-class ManufacturerImportFilterSet(NautobotFilterSet, NameSearchFilterSet):  # pylint: disable=too-many-ancestors
+class ManufacturerImportFilterSet(NameSearchFilterSet, NautobotFilterSet):  # pylint: disable=too-many-ancestors
     """Filter for ManufacturerImport."""
 
     class Meta:
@@ -42,6 +42,18 @@ class DeviceTypeImportFilterSet(NautobotFilterSet):  # pylint: disable=too-many-
         """Meta attributes for filter."""
 
         model = models.DeviceTypeImport
+
+        # add any fields from the model that you would like to filter your searches by using those
+        fields = "__all__"
+
+
+class MerlinFilterSet(NautobotFilterSet):
+    """Filter for Merlin."""
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.Merlin
 
         # add any fields from the model that you would like to filter your searches by using those
         fields = "__all__"
