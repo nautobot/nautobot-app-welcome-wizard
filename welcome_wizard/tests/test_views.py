@@ -287,8 +287,7 @@ class DashboardView(TransactionTestCase):
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        # 9th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 9)
+        self.assertContains(resp, "mdi-plus-thick", 8)
         self.assertContains(resp, "mdi-checkbox-blank-outline", 8)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
 
@@ -303,8 +302,7 @@ class DashboardView(TransactionTestCase):
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        # 9th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 9)
+        self.assertContains(resp, "mdi-plus-thick", 8)
         self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
 
