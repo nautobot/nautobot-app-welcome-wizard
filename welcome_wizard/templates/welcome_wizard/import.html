@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load buttons %}
 {% load custom_links %}
 {% load helpers %}
@@ -16,7 +16,7 @@
             </ol>
         </div>
     </div>
-{% endblock %}
+{% endblock header %}
 
 {% block content %}
     <h1>Would you like import {{ obj.name }}?</h1>
@@ -28,4 +28,4 @@
         </button>
         <a href="{% url return_url %}" class="btn btn-default">Cancel</a>
     </form>
-{% endblock %}
+{% endblock content %}
