@@ -67,10 +67,37 @@ class TestWelcomeWizardJobs(TransactionTestCase):
                     },
                 ],
                 "console-ports": [{"name": "Console", "type": "rj-45"}],
+                "module-bays": [
+                    {"name": "psu-1a", "label": "1A", "position": "1"},
+                    {"name": "psu-2a", "label": "2A", "position": "2"},
+                    {"name": "psu-3a", "label": "3A", "position": "3"},
+                    {"name": "psu-1b", "label": "1B", "position": "4"},
+                    {"name": "psu-2b", "label": "2B", "position": "5"},
+                    {"name": "psu-3b", "label": "3B", "position": "6"},
+                ],
             },
         )
+
         job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80.yaml")
         device_type = DeviceType.objects.get(model="MX80")
         self.assertIsNotNone(device_type)
         log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
         self.assertIn("Imported DeviceType MX80 successfully", log_entries)
+
+        interfaces = device_type.interface_templates.all()
+        console_ports = device_type.console_port_templates.all()
+        power_ports = device_type.power_port_templates.all()
+        module_bays = device_type.module_bay_templates.all()
+
+        self.assertEqual(interfaces.count(), 5)
+        self.assertEqual(power_ports.count(), 2)
+        self.assertEqual(console_ports.count(), 1)
+        self.assertEqual(module_bays.count(), 6)
+
+        # Test that the job raises an error if we try to import the same DeviceType again
+        job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn(
+            "Unable to import this device_type, a DeviceType with this model (MX80) and manufacturer (Juniper) already exist.",
+            log_entries,
+        )

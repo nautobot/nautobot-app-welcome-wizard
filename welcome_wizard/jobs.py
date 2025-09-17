@@ -113,9 +113,7 @@ class WelcomeWizardImportDeviceType(Job):
         try:
             devtype = import_device_type(device_type_data)
         except ValueError as exc:
-            self.logger.error(  # pylint: disable=logging-fstring-interpolation
-                f"Unable to import {device_type}, a DeviceType with this model and manufacturer ({manufacturer}) already exist. {exc}"
-            )
+            self.logger.error(str(exc))
             raise exc
 
         self.logger.info(  # pylint: disable=logging-fstring-interpolation
