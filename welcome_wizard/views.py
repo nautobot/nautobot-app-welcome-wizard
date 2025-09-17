@@ -1,6 +1,5 @@
 """Views for Welcome Wizard."""
 
-<<<<<<< HEAD
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -17,11 +16,6 @@ from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
 from nautobot.virtualization.models import ClusterType
 from rest_framework.decorators import action
-=======
-from nautobot.apps.views import NautobotUIViewSet
-from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, ObjectTablePanel, SectionChoices
-from nautobot.core.templatetags import helpers
->>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 from welcome_wizard.api import serializers
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
@@ -71,7 +65,6 @@ class ManufacturerImportUIViewSet(ObjectListViewMixin, ObjectChangeLogViewMixin)
     filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
     serializer_class = serializers.ManufacturerImportSerializer
-<<<<<<< HEAD
     breadcrumbs = Breadcrumbs(
         items={
             "list": [
@@ -293,37 +286,3 @@ class MerlinUIViewSet(NautobotUIViewSet):
         """Render the Welcome Wizard dashboard with updated data."""
         self.check_data()
         return super().list(request, *args, **kwargs)
-=======
-    table_class = tables.ManufacturerImportTable
-
-    # Here is an example of using the UI  Component Framework for the detail view.
-    # More information can be found in the Nautobot documentation:
-    # https://docs.nautobot.com/projects/core/en/stable/development/core/ui-component-framework/
-    object_detail_content = ObjectDetailContent(
-        panels=[
-            ObjectFieldsPanel(
-                weight=100,
-                section=SectionChoices.LEFT_HALF,
-                fields="__all__",
-                # Alternatively, you can specify a list of field names:
-                # fields=[
-                #     "name",
-                #     "description",
-                # ],
-                # Some fields may require additional configuration, we can use value_transforms
-                # value_transforms={
-                #     "name": [helpers.bettertitle]
-                # },
-            ),
-            # If there is a ForeignKey or M2M with this model we can use ObjectTablePanel
-            # to display them in a table format.
-            # ObjectTablePanel(
-                # weight=200,
-                # section=SectionChoices.RIGHT_HALF,
-                # table_class=tables.ManufacturerImportTable,
-                # You will want to filter the table using the related_name
-                # filter="manufacturerimports",
-            # ),
-        ],
-    )
->>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)

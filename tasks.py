@@ -783,13 +783,7 @@ def autoformat(context):
 
 @task(
     help={
-<<<<<<< HEAD
-        "action": (
-            "Available values are `['lint', 'format']`. Can be used multiple times. (default: `['lint', 'format']`)"
-        ),
-=======
         "action": "Available values are `['lint', 'format']`. Can be used multiple times. (default: `--action lint --action format`)",
->>>>>>> 8deaff5 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
         "target": "File or directory to inspect, repeatable (default: all files in the project will be inspected)",
         "fix": "Automatically fix selected actions. May not be able to fix all issues found. (default: False)",
         "output_format": "See https://docs.astral.sh/ruff/settings/#output-format for details. (default: `concise`)",
