@@ -115,14 +115,12 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
     # Refresh Device Types
     manufacturer_names, device_types = retrieve_device_types_from_filesystem(repository_record.filesystem_path)
     for manufacturer in manufacturer_names:
-        # Create or update an ManufacturerImport record based on the provided data
-        manufacturer_record = manufacturers.setdefault(
-            manufacturer, ManufacturerImport.objects.update_or_create(name=manufacturer)[0]
-        )
         # Record the outcome in the JobResult record
         job_result.log(
             "Successfully created/updated manufacturer",
-            obj=manufacturer_record,
+            obj=manufacturers.setdefault(
+                manufacturer, ManufacturerImport.objects.update_or_create(name=manufacturer)[0]
+            ),
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
         )
@@ -152,14 +150,12 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
     manufacturer_names, module_types = retrieve_module_types_from_filesystem(repository_record.filesystem_path)
 
     for manufacturer in manufacturer_names:
-        # Create or update an ManufacturerImport record based on the provided data
-        manufacturer_record = manufacturers.setdefault(
-            manufacturer, ManufacturerImport.objects.update_or_create(name=manufacturer)[0]
-        )
         # Record the outcome in the JobResult record
         job_result.log(
             "Successfully created/updated manufacturer",
-            obj=manufacturer_record,
+            obj=manufacturers.setdefault(
+                manufacturer, ManufacturerImport.objects.update_or_create(name=manufacturer)[0]
+            ),
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
         )
