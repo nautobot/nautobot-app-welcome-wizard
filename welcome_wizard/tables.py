@@ -18,12 +18,20 @@ DEVICE_TYPE_BUTTONS = """
 </a>
 """
 
+MODULE_TYPE_BUTTONS = """
+<a href="{% url 'plugins:welcome_wizard:moduletypeimport_import_wizard' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Module Type">
+    <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
+</a>
+"""
+
 IMPORT_BUTTONS = """
 <a href="{% url record.nautobot_add_link %}" class="btn btn-xs btn-success" title="Add"><i class="mdi mdi-plus-thick"></i></a>
 {% if record.nautobot_model == "dcim.Manufacturer" %}
 <a href="{% url 'plugins:welcome_wizard:manufacturerimport_import_wizard' %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
 {% elif record.nautobot_model == "dcim.DeviceType" %}
 <a href="{% url 'plugins:welcome_wizard:devicetypeimport_import_wizard' %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
+{% elif record.nautobot_model == "dcim.ModuleType" %}
+<a href="{% url 'plugins:welcome_wizard:moduletypeimport_import_wizard' %}" class="btn btn-xs btn-info" title="Import"><i class="mdi mdi-wizard-hat"></i></a>
 {% endif %}
 """
 
@@ -70,6 +78,25 @@ class DeviceTypeImportTable(BaseTable):
         """Meta for DeviceTypeImport Table."""
 
         model = models.DeviceTypeImport
+        fields = ("pk", "name", "manufacturer", "actions")
+        default_columns = ("pk", "name", "manufacturer", "actions")
+        empty_text = "Add or Sync a Welcome Wizard Import Wizard GitRepository"
+        if settings.PLUGINS_CONFIG["welcome_wizard"].get("enable_devicetype-library"):
+            empty_text = "Adding data from GitRepository, please refresh"
+
+
+class ModuleTypeImportTable(BaseTable):
+    """Table to show the ModuleTypeImport List."""
+
+    pk = ToggleColumn()
+    name = tables.Column(accessor="name", verbose_name="Name")
+    manufacturer = tables.Column(accessor="manufacturer", verbose_name="Manufacturer")
+    actions = tables.TemplateColumn(MODULE_TYPE_BUTTONS)
+
+    class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
+        """Meta for ModuleTypeImport Table."""
+
+        model = models.ModuleTypeImport
         fields = ("pk", "name", "manufacturer", "actions")
         default_columns = ("pk", "name", "manufacturer", "actions")
         empty_text = "Add or Sync a Welcome Wizard Import Wizard GitRepository"

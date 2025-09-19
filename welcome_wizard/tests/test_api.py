@@ -7,7 +7,7 @@ from nautobot.users.models import Token
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 
 User = get_user_model()
 
@@ -25,6 +25,13 @@ class PlaceholderAPITest(TestCase):
     def test_device_type_import_api(self):
         """Verify that device type import can be listed."""
         url = reverse("plugins-api:welcome_wizard-api:devicetypeimport-list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 0)
+
+    def test_module_type_import_api(self):
+        """Verify that module type import can be listed."""
+        url = reverse("plugins-api:welcome_wizard-api:moduletypeimport-list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 0)
@@ -50,6 +57,25 @@ class PlaceholderAPITest(TestCase):
         self.assertEqual(response.data["count"], 1)
 
         url = reverse("plugins-api:welcome_wizard-api:devicetypeimport-detail", kwargs={"pk": devicetype.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "acme10")
+        self.assertEqual(response.data["filename"], "acme10.yaml")
+
+    def test_moduletype_with_data(self):
+        """Verify that module type import shows moduletype."""
+        manufacturer = ManufacturerImport(name="Acme")
+        manufacturer.save()
+        moduletype = ModuleTypeImport(
+            name="acme10", manufacturer=manufacturer, filename="acme10.yaml", module_type_data={"test": "foo"}
+        )
+        moduletype.save()
+        url = reverse("plugins-api:welcome_wizard-api:moduletypeimport-list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+
+        url = reverse("plugins-api:welcome_wizard-api:moduletypeimport-detail", kwargs={"pk": moduletype.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "acme10")

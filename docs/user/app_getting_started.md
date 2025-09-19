@@ -16,7 +16,7 @@ You can also begin by selecting `Plugins -> Nautobot Welcome Wizard -> Welcome W
 
 You are shown a set of Nautobot objects that lay the groundwork for other Nautobot objects. The goal of the dashboard is to help introduce features of Nautobot and keep track of their use. For instance, Sites are used in a number of objects inside of Nautobot. A Site is used when creating Devices, Racks, and Rack Groups. In addition, they are optional in many other objects.
 
-From the dashboard, you can click on the green Add button in the Sites role to take you directly to the form for adding a Site. For Manufacturers and Device Types, you can click on the blue wizard hat to take you to the Welcome Wizard Import page.
+From the dashboard, you can click on the green Add button in the Sites role to take you directly to the form for adding a Site. For Manufacturers, Device Types and Module Types, you can click on the blue wizard hat to take you to the Welcome Wizard Import page.
 
 ### Import Manufacturers
 
@@ -43,14 +43,14 @@ Navigating to Manufacturers inside Nautobot will confirm these manufacturers wer
 
 ![Nautobot Manufacturers](../images/manufacturers_confirmed.png)
 
-### Import Device Types
+### Import Device Types and Module Types
 
-You can browse to the `Import Device Types` page to easily import selected device types into Nautobot.  If the [Git Repository](git_datasource.md) 
-has not yet been synced, this page will initially be blank but the repository will be automatically synced (and created if necessary). Once the repository sync has completed, you can refresh the page to see the device types.
+You can browse to the `Import Device Types` or `Import Module Types` page to easily import selected device types or module types into Nautobot.  If the [Git Repository](git_datasource.md) 
+has not yet been synced, this page will initially be blank but the repository will be automatically synced (and created if necessary). Once the repository sync has completed, you can refresh the page to see the device or module types.
 
 ![Import Device Types](../images/merlin_import_device_type.png)
 
-Importing Device Types happens the same way as Manufacturers. Device Types can also be filtered by Manufacturer by using the search function or the Manufacturer dropdown.
+Importing Device and Module Types happens the same way as Manufacturers. Device and Module Types can also be filtered by Manufacturer by using the search function or the Manufacturer dropdown.
 
 ![Device Type Filtered](../images/merlin_import_device_type_filtered.png)
 

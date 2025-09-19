@@ -1,10 +1,10 @@
 """Tests for Welcome Wizard Jobs."""
 
 from nautobot.apps.testing import TransactionTestCase, run_job_for_testing
-from nautobot.dcim.models import DeviceType, Manufacturer
+from nautobot.dcim.models import DeviceType, Manufacturer, ModuleType
 from nautobot.extras.models import Job, JobLogEntry
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 
 
 class TestWelcomeWizardJobs(TransactionTestCase):
@@ -18,6 +18,9 @@ class TestWelcomeWizardJobs(TransactionTestCase):
         )
         self.import_devicetype_job = Job.objects.get(
             job_class_name="WelcomeWizardImportDeviceType",
+        )
+        self.import_moduletype_job = Job.objects.get(
+            job_class_name="WelcomeWizardImportModuleType",
         )
         # Super() is required here to ensure the database is properly populated
         return super().setUp()
@@ -99,5 +102,65 @@ class TestWelcomeWizardJobs(TransactionTestCase):
         log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
         self.assertIn(
             "Unable to import this device_type, a DeviceType with this model (MX80) and manufacturer (Juniper) already exist.",
+            log_entries,
+        )
+
+    def test_welcome_wizard_import_moduletype(self):
+        """Successfully import a ModuleType with a Job."""
+        manufacturer = ManufacturerImport.objects.create(name="Juniper")
+        Manufacturer.objects.create(name="Juniper")
+        ModuleTypeImport.objects.create(
+            name="MX80",
+            filename="MX80.yaml",
+            manufacturer=manufacturer,
+            module_type_data={
+                "manufacturer": "Juniper",
+                "model": "MX80",
+                "is_full_depth": True,
+                "u_height": 2,
+                "interfaces": [
+                    {"name": "fxp0", "type": "1000base-t", "mgmt_only": True},
+                    {"name": "xe-0/0/0", "type": "10gbase-x-xfp"},
+                    {"name": "xe-0/0/1", "type": "10gbase-x-xfp"},
+                    {"name": "xe-0/0/2", "type": "10gbase-x-xfp"},
+                    {"name": "xe-0/0/3", "type": "10gbase-x-xfp"},
+                ],
+                "power-ports": [
+                    {
+                        "name": "PEM0",
+                        "type": "iec-60320-c14",
+                        "maximum_draw": 500,
+                        "allocated_draw": 365,
+                    },
+                    {
+                        "name": "PEM1",
+                        "type": "iec-60320-c14",
+                        "maximum_draw": 500,
+                        "allocated_draw": 365,
+                    },
+                ],
+                "console-ports": [{"name": "Console", "type": "rj-45"}],
+            },
+        )
+
+        job_result = run_job_for_testing(self.import_moduletype_job, dryrun=False, filename="MX80.yaml")
+        module_type = ModuleType.objects.get(model="MX80")
+        self.assertIsNotNone(module_type)
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn("Imported ModuleType MX80 successfully", log_entries)
+
+        interfaces = module_type.interface_templates.all()
+        console_ports = module_type.console_port_templates.all()
+        power_ports = module_type.power_port_templates.all()
+
+        self.assertEqual(interfaces.count(), 5)
+        self.assertEqual(power_ports.count(), 2)
+        self.assertEqual(console_ports.count(), 1)
+
+        # Test that the job raises an error if we try to import the same ModuleType again
+        job_result = run_job_for_testing(self.import_moduletype_job, dryrun=False, filename="MX80.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn(
+            "Unable to import this module_type, a ModuleType with this model (MX80) and manufacturer (Juniper) already exist.",
             log_entries,
         )

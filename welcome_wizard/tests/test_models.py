@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from nautobot.dcim.models import Location
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 from welcome_wizard.models.merlin import Merlin
 
 
@@ -78,3 +78,30 @@ class DeviceTypeImportModelTest(TestCase):
         )
         with self.assertRaises(ValidationError):
             devicetype.clean()
+
+
+class ModuleTypeImportModelTest(TestCase):
+    """ModuleTypeImport Model Tests."""
+
+    def setUp(self):
+        """Setup ManufacturerImport for tests."""
+        self.manufacturer = ManufacturerImport(name="Acme")
+
+    def test_moduletype_setup(self):
+        """Run Tests with valid data."""
+        moduletype = ModuleTypeImport(
+            name="FS12", filename="FS12.yaml", manufacturer=self.manufacturer, module_type_data={"test": "foo"}
+        )
+        self.assertEqual(moduletype.name, "FS12")
+        self.assertEqual(moduletype.filename, "FS12.yaml")
+        self.assertEqual(moduletype.manufacturer, self.manufacturer)
+        self.assertEqual(moduletype.module_type_data, {"test": "foo"})
+        self.assertEqual(str(moduletype), "FS12")
+
+    def test_moduletype_invalid_data(self):
+        """Run Tests with invalid data."""
+        moduletype = ModuleTypeImport(
+            name="FS12", filename="FS12.yaml", manufacturer=self.manufacturer, module_type_data="bad_data"
+        )
+        with self.assertRaises(ValidationError):
+            moduletype.clean()

@@ -7,12 +7,12 @@ from nautobot.apps.testing import TransactionTestCase
 from nautobot.core.testing.utils import extract_form_failures
 from nautobot.core.testing.views import TestCase
 from nautobot.core.utils import permissions
-from nautobot.dcim.models import DeviceType, Location, LocationType, Manufacturer
+from nautobot.dcim.models import DeviceType, Location, LocationType, Manufacturer, ModuleType
 from nautobot.extras.models import Status
 from nautobot.users import models as users_models
 from nautobot.virtualization.models import Cluster, ClusterType
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 
 User = get_user_model()
 
@@ -162,6 +162,13 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
 
         self.assertRedirects(response, reverse("plugins:welcome_wizard:manufacturerimport_list"), status_code=302)
 
+    @override_settings(
+        PLUGINS_CONFIG={
+            "welcome_wizard": {
+                "enable_devicetype-library": True,
+            }
+        },
+    )
     def test_manufacturer_list(self):
         """Tests the ManufacturerImport List View with correct permissions."""
         self.add_permissions("welcome_wizard.view_manufacturerimport")
@@ -244,6 +251,25 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         )
         self.assertHttpStatus(response, 200)
 
+        # Test GET import_wizard request without pk param
+        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), follow=True)
+        self.assertHttpStatus(response, 200)
+
+        # Test GET import_wizard request with pk param
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"),
+            data=data,
+            follow=True,
+        )
+        self.assertHttpStatus(response, 200)
+
+    @override_settings(
+        PLUGINS_CONFIG={
+            "welcome_wizard": {
+                "enable_devicetype-library": True,
+            }
+        },
+    )
     def test_devicetype_list(self):
         """Tests the DeviceTypeImport List View with correct pemissions."""
         self.add_permissions("welcome_wizard.view_devicetypeimport")
@@ -269,6 +295,116 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         self.assertHttpStatus(response, 403)
 
 
+class ModuleTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
+    """Tests the ModuleTypeImport Views."""
+
+    databases = ("default", "job_logs")
+
+    def setUp(self):
+        super().setUpWizard()
+
+    def test_moduletype_bulk_import_permission_denied(self):
+        """Tests the ModuleTypeImport Bulk Import View with no pemissions."""
+        manufacturer = ManufacturerImport.objects.create(name="Generic")
+        Manufacturer.objects.create(name="Generic")
+        ModuleTypeImport.objects.create(
+            name="shelf-4he",
+            filename="shelf-4he.yaml",
+            manufacturer=manufacturer,
+            module_type_data={
+                "manufacturer": "Generic",
+                "model": "shelf-4he",
+            },
+        )
+        self.add_permissions("welcome_wizard.view_moduletypeimport")
+        data = {"pk": [ModuleTypeImport.objects.first().pk]}
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:moduletypeimport_import_wizard"), data=data, follow=True
+        )
+        self.assertHttpStatus(response, 403)
+        try:
+            ModuleType.objects.get(model="shelf-4he")
+            self.fail("ModuleType Object should not exist.")
+        except ModuleType.DoesNotExist:
+            pass
+
+    def test_moduletype_bulk_import(self):
+        """Tests the ModuleTypeImport Bulk Import View with correct pemissions."""
+        manufacturer = ManufacturerImport.objects.create(name="Generic")
+        Manufacturer.objects.create(name="Generic")
+        ModuleTypeImport.objects.create(
+            name="shelf-1he",
+            filename="shelf-1he.yaml",
+            manufacturer=manufacturer,
+            module_type_data={
+                "manufacturer": "Generic",
+                "model": "shelf-1he",
+            },
+        )
+        # Ensure we can add a new moduletype
+        self.add_permissions(
+            "dcim.add_manufacturer",
+            "dcim.view_manufacturer",
+            "dcim.add_moduletype",
+            "dcim.view_moduletype",
+            "welcome_wizard.view_moduletypeimport",
+        )
+        data = {"pk": [ModuleTypeImport.objects.first().pk]}
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:moduletypeimport_import_wizard"), data=data, follow=True
+        )
+        self.assertHttpStatus(response, 200)
+
+        # Test a duplicate import
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:moduletypeimport_import_wizard"), data=data, follow=True
+        )
+        self.assertHttpStatus(response, 200)
+
+        # Test GET import_wizard request without pk param
+        response = self.client.get(reverse("plugins:welcome_wizard:moduletypeimport_import_wizard"), follow=True)
+        self.assertHttpStatus(response, 200)
+
+        # Test GET import_wizard request with pk param
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:moduletypeimport_import_wizard"),
+            data=data,
+            follow=True,
+        )
+        self.assertHttpStatus(response, 200)
+
+    @override_settings(
+        PLUGINS_CONFIG={
+            "welcome_wizard": {
+                "enable_devicetype-library": True,
+            }
+        },
+    )
+    def test_moduletype_list(self):
+        """Tests the ModuleTypeImport List View with correct pemissions."""
+        self.add_permissions("welcome_wizard.view_moduletypeimport")
+        response = self.client.get(reverse("plugins:welcome_wizard:moduletypeimport_list"))
+        self.assertHttpStatus(response, 200)
+
+    @override_settings(
+        PLUGINS_CONFIG={
+            "welcome_wizard": {
+                "enable_devicetype-library": False,
+            }
+        },
+    )
+    def test_moduletype_list_override(self):
+        """Tests the ModuleTypeImport List View with enable_devicetype-library False."""
+        self.add_permissions("welcome_wizard.view_moduletypeimport")
+        response = self.client.get(reverse("plugins:welcome_wizard:moduletypeimport_list"))
+        self.assertHttpStatus(response, 200)
+
+    def test_moduletype_list_permission_denied(self):
+        """Tests the ModuleTypeImport List View with no pemissions."""
+        response = self.client.get(reverse("plugins:welcome_wizard:moduletypeimport_list"))
+        self.assertHttpStatus(response, 403)
+
+
 class DashboardView(TransactionTestCase):
     """Tests for dashboard view.
 
@@ -286,10 +422,10 @@ class DashboardView(TransactionTestCase):
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
-        self.assertContains(resp, "mdi-wizard-hat", 2)
+        self.assertContains(resp, "mdi-wizard-hat", 3)
         # 9th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 9)
-        self.assertContains(resp, "mdi-checkbox-blank-outline", 8)
+        self.assertContains(resp, "mdi-plus-thick", 10)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 9)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
 
     def test_dashboard_view_with_content(self):
@@ -302,10 +438,10 @@ class DashboardView(TransactionTestCase):
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
-        self.assertContains(resp, "mdi-wizard-hat", 2)
+        self.assertContains(resp, "mdi-wizard-hat", 3)
         # 9th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 9)
-        self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
+        self.assertContains(resp, "mdi-plus-thick", 10)
+        self.assertContains(resp, "mdi-checkbox-blank-outline", 7)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
 
     def test_dashboard_view_permission_denied(self):
@@ -323,9 +459,20 @@ class MiddlewareTestCase(TransactionTestCase):
         self.add_permissions(
             "dcim.add_devicetype",
             "dcim.view_devicetype",
+            "dcim.add_moduletype",
+            "dcim.view_moduletype",
         )
 
         response = self.client.get(reverse("dcim:devicetype_add"))
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(
+            str(messages[0]),
+            "You need to configure a <a href='/dcim/manufacturers/add/'>Manufacturer</a> before you create this item.",
+        )
+        self.assertHttpStatus(response, 200)
+
+        response = self.client.get(reverse("dcim:moduletype_add"))
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 1)
         self.assertEqual(
@@ -340,9 +487,16 @@ class MiddlewareTestCase(TransactionTestCase):
         self.add_permissions(
             "dcim.add_devicetype",
             "dcim.view_devicetype",
+            "dcim.add_moduletype",
+            "dcim.view_moduletype",
         )
 
         response = self.client.get(reverse("dcim:devicetype_add"))
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 0)
+        self.assertHttpStatus(response, 200)
+
+        response = self.client.get(reverse("dcim:moduletype_add"))
         messages = list(response.context["messages"])
         self.assertEqual(len(messages), 0)
         self.assertHttpStatus(response, 200)

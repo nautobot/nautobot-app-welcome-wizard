@@ -29,7 +29,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard_list"
     docs_view_name = "plugins:welcome_wizard:docs"
-    searchable_models = ["manufacturerimport", "devicetypeimport"]
+    searchable_models = ["manufacturerimport", "devicetypeimport", "moduletypeimport"]
 
     def ready(self):
         """Callback when this app is loaded."""

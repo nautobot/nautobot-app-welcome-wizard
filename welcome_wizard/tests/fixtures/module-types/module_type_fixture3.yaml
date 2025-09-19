@@ -1,0 +1,12 @@
+---
+manufacturer: "Cisco"
+model: "Catalyst 9700-34QC"
+slug: "cisco-c9700-34qc"
+part_number: "C9700-34QC"
+interfaces:
+  - name: "GigabitEthernet0/0"
+    type: "1000base-t"
+    mgmt_only: true
+  - name: "FortyGigabitEthernet1/0/1"
+    type: "40gbase-x-qsfpp"
+  - name: "FortyGigabitEthernet1/0/2"
