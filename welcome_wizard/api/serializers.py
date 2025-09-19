@@ -25,6 +25,16 @@ class DeviceTypeImportSerializer(NautobotModelSerializer):  # pylint: disable=to
         fields = "__all__"
 
 
+class ModuleTypeImportSerializer(NautobotModelSerializer):  # pylint: disable=too-many-ancestors
+    """ModuleTypeImport Serializer."""
+
+    class Meta:
+        """Meta attributes."""
+
+        model = models.ModuleTypeImport
+        fields = "__all__"
+
+
 class MerlinSerializer(NautobotModelSerializer):  # pylint: disable=too-many-ancestors
     """Merlin Serializer."""
 

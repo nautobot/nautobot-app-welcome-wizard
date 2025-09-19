@@ -10,7 +10,7 @@ from nautobot.apps.views import (
     ObjectListViewMixin,
 )
 from nautobot.circuits.models import CircuitType, Provider
-from nautobot.dcim.models import DeviceType, Location, Manufacturer
+from nautobot.dcim.models import DeviceType, Location, Manufacturer, ModuleType
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
@@ -18,16 +18,18 @@ from nautobot.virtualization.models import ClusterType
 from rest_framework.decorators import action
 
 from welcome_wizard.api import serializers
-from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
+from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet, ModuleTypeImportFilterSet
 from welcome_wizard.forms import (
     DeviceTypeBulkImportForm,
     DeviceTypeImportFilterForm,
     ManufacturerBulkImportForm,
     ManufacturerImportFilterForm,
+    ModuleTypeBulkImportForm,
+    ModuleTypeImportFilterForm,
 )
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 from welcome_wizard.models.merlin import Merlin
-from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
+from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable, ModuleTypeImportTable
 
 # DEPRECATION NOTICE:
 # Merlin's *_link fields (nautobot_add_link, nautobot_list_link, merlin_link) are deprecated.
@@ -193,6 +195,75 @@ class DeviceTypeImportUIViewSet(
         return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
 
+class ModuleTypeImportUIViewSet(
+    ObjectListViewMixin,
+    ObjectChangeLogViewMixin,
+):  # pylint: disable=abstract-method
+    """List view for ModuleTypeImport."""
+
+    queryset = ModuleTypeImport.objects.select_related("manufacturer")
+    table_class = ModuleTypeImportTable
+    filterset_class = ModuleTypeImportFilterSet
+    filterset_form_class = ModuleTypeImportFilterForm
+    action_buttons = ()
+    serializer_class = serializers.ModuleTypeImportSerializer
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+                ModelBreadcrumbItem(model=ModuleTypeImport),
+            ],
+        }
+    )
+
+    def get_required_permission(self):
+        """Return the required permission for the current action."""
+        view_action = self.get_action()
+        if view_action == "import_wizard":
+            return [
+                *self.get_permissions_for_model(ModuleType, ["add"]),
+            ]
+        return super().get_required_permission()
+
+    def list(self, request, *args, **kwargs):
+        """Return the list view for ModuleTypeImport objects."""
+        check_sync(self, request)
+        return super().list(request, *args, **kwargs)
+
+    @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
+    def import_wizard(self, request):
+        """Handle bulk import of ModuleTypeImport objects."""
+        if request.method.lower() == "get":
+            pk = request.GET.get("pk")
+            if not pk:
+                return redirect("plugins:welcome_wizard:moduletypeimport_list")
+            form = ModuleTypeBulkImportForm(initial={"pk": [pk]})
+            obj = self.queryset.model.objects.get(pk=pk)
+            bulk_import_url = "plugins:welcome_wizard:moduletypeimport_import_wizard"
+            return render(
+                request,
+                "welcome_wizard/import.html",
+                {
+                    "form": form,
+                    "obj": obj,
+                    "return_url": "plugins:welcome_wizard:moduletypeimport_list",
+                    "bulk_import_url": bulk_import_url,
+                    "breadcrumb_name": "Import Module Types",
+                },
+            )
+
+        form = ModuleTypeBulkImportForm(request.POST)
+        if form.is_valid():
+            pk_list = request.POST.getlist("pk")
+            objects_to_onboard = self.queryset.filter(pk__in=pk_list)
+            job = Job.objects.get(name="Welcome Wizard - Import Module Type")
+            for obj in objects_to_onboard:
+                JobResult.enqueue_job(job_model=job, user=request.user, filename=obj.filename)
+            messages.success(request, f"Onboarded {objects_to_onboard.count()} objects.")
+        return redirect("plugins:welcome_wizard:moduletypeimport_list")
+
+
 class MerlinUIViewSet(NautobotUIViewSet):
     """Welcome Wizard Dashboard."""
 
@@ -230,6 +301,13 @@ class MerlinUIViewSet(NautobotUIViewSet):
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
                 "plugins:welcome_wizard:devicetypeimport_import_wizard",
+            ),
+            (
+                ModuleType,
+                "Module Types",
+                "dcim:moduletype_list",
+                "dcim:moduletype_add",
+                "plugins:welcome_wizard:moduletypeimport_import_wizard",
             ),
             (
                 Role,

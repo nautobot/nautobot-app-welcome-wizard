@@ -8,6 +8,7 @@ router = OrderedDefaultRouter()
 # add the name of your api endpoint, usually hyphenated model name in plural, e.g. "my-model-classes"
 router.register("manufacturerimport", views.ManufacturerImportViewSet)
 router.register("devicetypeimport", views.DeviceTypeImportViewSet)
+router.register("moduletypeimport", views.ModuleTypeImportViewSet)
 router.register("merlin", views.MerlinViewSet)
 
 app_name = "welcome_wizard-api"

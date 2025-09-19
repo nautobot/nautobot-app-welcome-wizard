@@ -38,6 +38,24 @@ class DeviceTypeImportFilterForm(NautobotFilterForm):  # pylint: disable=too-man
     )
 
 
+class ModuleTypeImportFilterForm(NautobotFilterForm):  # pylint: disable=too-many-ancestors
+    """Filter form to filter searches."""
+
+    model = models.ModuleTypeImport
+    field_order = ["q", "manufacturer"]
+
+    q = forms.CharField(
+        required=False,
+        label="Search",
+    )
+    manufacturer = DynamicModelMultipleChoiceField(
+        queryset=models.ManufacturerImport.objects.all(),
+        to_field_name="name",
+        required=False,
+        label="Manufacturer",
+    )
+
+
 class ManufacturerBulkImportForm(BootstrapMixin, forms.Form):
     """Bulk Import Form for Manufacturer."""
 
@@ -51,4 +69,12 @@ class DeviceTypeBulkImportForm(BootstrapMixin, forms.Form):
 
     pk = forms.ModelMultipleChoiceField(
         queryset=models.DeviceTypeImport.objects.all(), widget=forms.MultipleHiddenInput
+    )
+
+
+class ModuleTypeBulkImportForm(BootstrapMixin, forms.Form):
+    """Bulk Import Form for Module Type."""
+
+    pk = forms.ModelMultipleChoiceField(
+        queryset=models.ModuleTypeImport.objects.all(), widget=forms.MultipleHiddenInput
     )

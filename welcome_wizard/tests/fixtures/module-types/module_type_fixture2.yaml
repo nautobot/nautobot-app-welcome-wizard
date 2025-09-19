@@ -1,0 +1,12 @@
+---
+manufacturer: "cIsCo"
+model: "Catalyst 9600-33QC"
+slug: "cisco-c9600-33qc"
+part_number: "C9600-33QC"
+interfaces:
+  - name: "GigabitEthernet0/0"
+    type: "1000base-t"
+    mgmt_only: true
+  - name: "FortyGigabitEthernet1/0/1"
+    type: "40gbase-x-qsfpp"
+  - name: "FortyGigabitEthernet1/0/2"

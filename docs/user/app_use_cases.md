@@ -4,7 +4,7 @@ This document describes common use-cases and scenarios for this App.
 
 ## General Usage
 
-The Nautobot Welcome Wizard includes a great dashboard to help you get started with Nautobot. One annoyance when using Nautobot is finding item dependencies only after you've filled out half a form. For example, when creating a `device` only to find out you need a `device type`. Then discovering you also need a manufacturer when trying to create the `device type`.
+The Nautobot Welcome Wizard includes a great dashboard to help you get started with Nautobot. One annoyance when using Nautobot is finding item dependencies only after you've filled out half a form. For example, when creating a `device` only to find out you need a `device type` or `module type`. Then discovering you also need a manufacturer when trying to create the `device type`.
 
 ### The Dashboard
 
@@ -60,7 +60,7 @@ If multiple required fields have missing resources you will get a message for ea
 
 ## Use-cases and common workflows
 
-For adding community defined Device Types and Manufacturers into Nautobot, check out the [Import Wizard](app_getting_started.md#import-manufacturers).
+For adding community defined Device Types, Module Types and Manufacturers into Nautobot, check out the [Import Wizard](app_getting_started.md#import-manufacturers).
 
 Welcome Wizard includes settings that are enabled by default to ease the user in setting up and syncing from a [Git Repository Data Source](git_datasource.md).
 

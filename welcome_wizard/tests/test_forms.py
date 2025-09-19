@@ -2,8 +2,8 @@
 
 from django.test import TestCase
 
-from welcome_wizard.forms import DeviceTypeBulkImportForm, ManufacturerBulkImportForm
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.forms import DeviceTypeBulkImportForm, ManufacturerBulkImportForm, ModuleTypeBulkImportForm
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 
 
 class ManufacturerTestCase(TestCase):
@@ -47,5 +47,29 @@ class DeviceTypeTestCase(TestCase):
     def test_devicetype_bulk_import_invalid(self):
         """Ensure form with invalid data is invalid."""
         form = DeviceTypeBulkImportForm(data={"pk": ""})
+
+        self.assertFalse(form.is_valid())
+
+
+class ModuleTypeTestCase(TestCase):
+    """Tests the ModuleTypeImport Forms."""
+
+    @classmethod
+    def setUpTestData(cls):
+        """Setup Testing data."""
+        manufacturer = ManufacturerImport.objects.create(name="Acme")
+        ModuleTypeImport.objects.create(
+            filename="fs12.yml", name="FS12", manufacturer=manufacturer, module_type_data={"foo": "test"}
+        )
+
+    def test_moduletype_bulk_import(self):
+        """Ensure form with valid data is valid."""
+        form = ModuleTypeBulkImportForm(data={"pk": [ModuleTypeImport.objects.first().pk]})
+
+        self.assertTrue(form.is_valid())
+
+    def test_moduletype_bulk_import_invalid(self):
+        """Ensure form with invalid data is invalid."""
+        form = ModuleTypeBulkImportForm(data={"pk": ""})
 
         self.assertFalse(form.is_valid())

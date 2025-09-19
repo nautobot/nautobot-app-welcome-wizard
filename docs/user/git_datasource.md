@@ -6,7 +6,7 @@ The Nautobot Welcome Wizard makes use of the [Git™ as a Data Source](https://d
 
 This set of instructions will walk an operator through setting up the Import Wizard repository.
 
-Import Wizard uses the file and folder structure of [devicetype-library](https://github.com/nautobot/devicetype-library). Currently, [Import Wizard](app_getting_started.md#import-manufacturers) looks for a folder in the root directory called `device-types`. Convention has folders for manufacturers and the device type YAML files underneath the manufacturers folder. The [README](https://github.com/nautobot/devicetype-library/blob/main/README.md) for the [devicetype-library](https://github.com/nautobot/devicetype-library) goes into the details of what is required in the YAML files.
+Import Wizard uses the file and folder structure of [devicetype-library](https://github.com/nautobot/devicetype-library). Currently, [Import Wizard](app_getting_started.md#import-manufacturers) looks for a folder in the root directory called `device-types` (for Device Type import) or `module-types` (for Module Type import). Convention has folders for manufacturers, device type and module type YAML files underneath the manufacturers folder. The [README](https://github.com/nautobot/devicetype-library/blob/main/README.md) for the [devicetype-library](https://github.com/nautobot/devicetype-library) goes into the details of what is required in the YAML files.
 
 !!! note
     The [devicetype-library](https://github.com/nautobot/devicetype-library) is not required to be used. You can swap it with your own repo as long as it follows the same structure.

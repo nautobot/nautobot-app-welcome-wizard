@@ -5,10 +5,11 @@ from pathlib import Path
 
 import yaml
 from django.conf import settings
+from django.db.utils import IntegrityError
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport, ModuleTypeImport
 
 
 def get_manufacturer_name(name: str) -> str:
@@ -68,36 +69,117 @@ def retrieve_device_types_from_filesystem(path):
     return (manufacturers, device_types)
 
 
+def retrieve_module_types_from_filesystem(path):
+    """Retrieve Manufacturers and Module Types from the file system.
+
+    Args:
+        path (str): Filesystem path to the repo holding the Module Types.
+
+    Returns:
+        tuple: a Set of Manufacturers and a dictionary of Module Types.
+    """
+    manufacturers = set()
+    module_types = {}
+    manufacturer_names = {}
+
+    module_type_path = os.path.join(path, "module-types")
+    files = (filename for filename in Path(module_type_path).rglob("*") if filename.suffix in [".yml", ".yaml"])
+
+    for filename in files:
+        with open(filename, encoding="utf8") as file:
+            data = yaml.safe_load(file)
+
+        # Transform manufacturer name based on settings if needed
+        manufacturer_name = manufacturer_names.setdefault(
+            data["manufacturer"], get_manufacturer_name(data["manufacturer"])
+        )
+
+        if data["manufacturer"] != manufacturer_name:
+            # Update the manufacturer name in the data to the transformed name
+            data["manufacturer"] = manufacturer_name
+
+        manufacturers.add(manufacturer_name)
+        module_types[filename.name] = data
+
+    return (manufacturers, module_types)
+
+
 def refresh_git_import_wizard(repository_record, job_result, delete=False):
     """Callback for GitRepository updates - refresh Device Types managed by it."""
     if "welcome_wizard.import_wizard" not in repository_record.provided_contents or delete:
         # TODO Handle delete.
         return
 
-    manufacturers, device_types = retrieve_device_types_from_filesystem(repository_record.filesystem_path)
-    for manufacturer in manufacturers:
-        # Create or update an ManufacturerImport record based on the provided data
-        manufacturer_record, _ = ManufacturerImport.objects.update_or_create(name=manufacturer)
+    manufacturers = {}
+
+    # Refresh Device Types
+    manufacturer_names, device_types = retrieve_device_types_from_filesystem(repository_record.filesystem_path)
+    for manufacturer in manufacturer_names:
         # Record the outcome in the JobResult record
         job_result.log(
             "Successfully created/updated manufacturer",
-            obj=manufacturer_record,
+            obj=manufacturers.setdefault(
+                manufacturer, ManufacturerImport.objects.update_or_create(name=manufacturer)[0]
+            ),
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
         )
+
     for device_type, device_data in device_types.items():
-        device_type_record, _ = DeviceTypeImport.objects.update_or_create(
-            filename=device_type,
-            name=device_data["model"],
-            manufacturer=ManufacturerImport.objects.filter(name=device_data["manufacturer"])[0],
-            defaults={"device_type_data": device_data},
-        )
+        try:
+            device_type_record, _ = DeviceTypeImport.objects.update_or_create(
+                filename=device_type,
+                name=device_data["model"],
+                manufacturer=manufacturers[device_data["manufacturer"]],
+                defaults={"device_type_data": device_data},
+            )
+            job_result.log(
+                "Successfully created/updated device_type",
+                obj=device_type_record,
+                level_choice=LogLevelChoices.LOG_INFO,
+                grouping="welcome_wizard",
+            )
+        except IntegrityError as exc:
+            job_result.log(
+                f"Failed to create/update device_type {device_type} - {str(exc)}",
+                level_choice=LogLevelChoices.LOG_WARNING,
+                grouping="welcome_wizard",
+            )
+
+    # Refresh Module Types
+    manufacturer_names, module_types = retrieve_module_types_from_filesystem(repository_record.filesystem_path)
+
+    for manufacturer in manufacturer_names:
+        # Record the outcome in the JobResult record
         job_result.log(
-            "Successfully created/updated device_type",
-            obj=device_type_record,
+            "Successfully created/updated manufacturer",
+            obj=manufacturers.setdefault(
+                manufacturer, ManufacturerImport.objects.update_or_create(name=manufacturer)[0]
+            ),
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
         )
+
+    for module_type, module_data in module_types.items():
+        try:
+            module_type_record, _ = ModuleTypeImport.objects.update_or_create(
+                filename=module_type,
+                name=module_data["model"],
+                manufacturer=manufacturers[module_data["manufacturer"]],
+                defaults={"module_type_data": module_data},
+            )
+            job_result.log(
+                "Successfully created/updated module_type",
+                obj=module_type_record,
+                level_choice=LogLevelChoices.LOG_INFO,
+                grouping="welcome_wizard",
+            )
+        except IntegrityError as exc:
+            job_result.log(
+                f"Failed to create/update module_type {module_type} - {str(exc)}",
+                level_choice=LogLevelChoices.LOG_WARNING,
+                grouping="welcome_wizard",
+            )
 
 
 # Register that records can be loaded from a Git repository,
