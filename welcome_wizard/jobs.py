@@ -33,9 +33,19 @@ COMPONENTS["front-ports"] = FrontPortTemplate
 COMPONENTS["device-bays"] = DeviceBayTemplate
 COMPONENTS["module-bays"] = ModuleBayTemplate
 
-STRIP_KEYWORDS = {
-    "interfaces": ["poe_mode", "poe_type"],
-}
+
+def import_components(device_type: DeviceType, data: dict):
+    """Import components for a given device type."""
+    for key, component_class in COMPONENTS.items():
+        if key in data:
+            component_list = [
+                component_class(
+                    device_type=device_type,
+                    **{k: v for k, v in item.items() if hasattr(component_class, k)},
+                )
+                for item in data[key]
+            ]
+            component_class.objects.bulk_create(component_list)
 
 
 def import_device_type(data):
@@ -51,16 +61,7 @@ def import_device_type(data):
     devtype = dtif.save()
 
     # Import All Components
-    for key, component_class in COMPONENTS.items():
-        if key in data:
-            component_list = [
-                component_class(
-                    device_type=devtype,
-                    **{k: v for k, v in item.items() if k not in STRIP_KEYWORDS.get(key, [])},
-                )
-                for item in data[key]
-            ]
-            component_class.objects.bulk_create(component_list)
+    import_components(devtype, data)
     return devtype
 
 
@@ -113,7 +114,7 @@ class WelcomeWizardImportDeviceType(Job):
         try:
             devtype = import_device_type(device_type_data)
         except ValueError as exc:
-            self.logger.error(str(exc))
+            self.logger.error(f"Failed to import '{manufacturer}' device type using '{filename}' file: {str(exc)}")
             raise exc
 
         self.logger.info(  # pylint: disable=logging-fstring-interpolation
