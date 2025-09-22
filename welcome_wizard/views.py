@@ -115,7 +115,11 @@ class ManufacturerImportUIViewSet(ObjectListViewMixin, ObjectChangeLogViewMixin)
         # POST
         form = ManufacturerBulkImportForm(request.POST)
         if form.is_valid():
-            pk_list = request.POST.getlist("pk")
+            pk_list = (
+                self.filterset_class(request.GET, queryset=self.queryset).qs.values_list("pk", flat=True)
+                if request.POST.get("_all") == "on"
+                else request.POST.getlist("pk")
+            )
             objects_to_onboard = self.queryset.filter(pk__in=pk_list)
             job = Job.objects.get(name="Welcome Wizard - Import Manufacturer")
             for obj in objects_to_onboard:
@@ -184,7 +188,11 @@ class DeviceTypeImportUIViewSet(
 
         form = DeviceTypeBulkImportForm(request.POST)
         if form.is_valid():
-            pk_list = request.POST.getlist("pk")
+            pk_list = (
+                self.filterset_class(request.GET, queryset=self.queryset).qs.values_list("pk", flat=True)
+                if request.POST.get("_all") == "on"
+                else request.POST.getlist("pk")
+            )
             objects_to_onboard = self.queryset.filter(pk__in=pk_list)
             job = Job.objects.get(name="Welcome Wizard - Import Device Type")
             for obj in objects_to_onboard:
