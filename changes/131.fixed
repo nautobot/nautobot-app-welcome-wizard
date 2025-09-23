@@ -1,0 +1,1 @@
+Fixed issue with YAML configuration files containing (possibly) unexpected template model parameters - which resulted in device type failures. Model retrospection (attribute lookup) is now used to skip unexpected attributes, creating template components containing only expected attributes.
