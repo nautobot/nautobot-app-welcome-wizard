@@ -3,6 +3,7 @@
 import contextlib
 from collections import OrderedDict
 
+from django.db import IntegrityError
 from nautobot.apps.jobs import Job, StringVar
 from nautobot.core.celery import register_jobs
 from nautobot.dcim.forms import DeviceTypeImportForm
@@ -45,10 +46,13 @@ def import_components(device_type: DeviceType, data: dict):
                 )
                 for item in data[key]
             ]
-            component_class.objects.bulk_create(component_list)
+            try:
+                component_class.objects.bulk_create(component_list)
+            except IntegrityError as exc:
+                raise ValueError(f"Failed to create {component_class.__name__} component(s): {str(exc)}") from exc
 
 
-def import_device_type(data):
+def import_device_type(data: dict) -> None:
     """Import DeviceType."""
     manufacturer = Manufacturer.objects.get(name=data.get("manufacturer"))
     model = data.get("model")
@@ -62,7 +66,6 @@ def import_device_type(data):
 
     # Import All Components
     import_components(devtype, data)
-    return devtype
 
 
 name = "Welcome Wizard"  # pylint: disable=invalid-name
@@ -101,24 +104,24 @@ class WelcomeWizardImportDeviceType(Job):
 
     def run(self, filename):  # pylint: disable=arguments-differ
         """Tries to import the selected Device Type into Nautobot."""
-        # device_type = data.get("device_type_filename", "none.yaml")
         device_type = filename if filename else "none.yaml"
-
         device_type_data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
-
         manufacturer = device_type_data.get("manufacturer")
-        Manufacturer.objects.update_or_create(
-            name=manufacturer,
-        )
+        model = device_type_data.get("model")
 
+        Manufacturer.objects.update_or_create(name=manufacturer)
+
+        self.logger.info(  # pylint: disable=logging-fstring-interpolation
+            f"Importing {manufacturer} DeviceType {model}", extra={"object": device_type_data}
+        )
         try:
-            devtype = import_device_type(device_type_data)
-        except ValueError as exc:
-            self.logger.error(f"Failed to import '{manufacturer}' device type using '{filename}' file: {str(exc)}")
+            import_device_type(device_type_data)
+        except (ValueError, IntegrityError) as exc:
+            self.logger.error(str(exc))
             raise exc
 
         self.logger.info(  # pylint: disable=logging-fstring-interpolation
-            f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype}
+            f"Imported {manufacturer} DeviceType {model} successfully"
         )
 
 
