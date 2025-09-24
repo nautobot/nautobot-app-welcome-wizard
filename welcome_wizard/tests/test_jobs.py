@@ -217,31 +217,30 @@ class TestWelcomeWizardJobs(TransactionTestCase):
         log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
         self.assertIn("PowerPortTemplate with name 'PEM2' does not exist for DeviceType 'MX80'.", log_entries)
 
+    def test_welcome_wizard_import_devicetype_handles_rearporttemplate_doesnotexist(self):
+        """Validates that import_components() handles case when referenced rear_port does not exist."""
+        manufacturer = ManufacturerImport.objects.create(name="Juniper")
+        Manufacturer.objects.create(name="Juniper")
+        DeviceTypeImport.objects.create(
+            name="MX80",
+            filename="MX80.yaml",
+            manufacturer=manufacturer,
+            device_type_data={
+                "manufacturer": "Juniper",
+                "model": "MX80",
+                "is_full_depth": True,
+                "u_height": 2,
+                "rear-ports": [
+                    {"name": "et-0/0/0", "type": "1000base-t"},
+                    {"name": "et-0/0/1", "type": "1000base-t"},
+                ],
+                "front-ports": [
+                    {"name": "et-0/0/0", "type": "1000base-t", "rear_port": "et-0/0/0"},
+                    {"name": "et-0/0/2", "type": "1000base-t", "rear_port": "et-0/0/2"},
+                ],
+            },
+        )
 
-def test_welcome_wizard_import_devicetype_handles_rearporttemplate_doesnotexist(self):
-    """Validates that import_components() handles case when referenced rear_port does not exist."""
-    manufacturer = ManufacturerImport.objects.create(name="Juniper")
-    Manufacturer.objects.create(name="Juniper")
-    DeviceTypeImport.objects.create(
-        name="MX80",
-        filename="MX80.yaml",
-        manufacturer=manufacturer,
-        device_type_data={
-            "manufacturer": "Juniper",
-            "model": "MX80",
-            "is_full_depth": True,
-            "u_height": 2,
-            "rear-ports": [
-                {"name": "et-0/0/0", "type": "1000base-t"},
-                {"name": "et-0/0/1", "type": "1000base-t"},
-            ],
-            "front-ports": [
-                {"name": "et-0/0/0", "type": "1000base-t", "rear_port": "et-0/0/0"},
-                {"name": "et-0/0/2", "type": "1000base-t", "rear_port": "et-0/0/2"},
-            ],
-        },
-    )
-
-    job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80.yaml")
-    log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
-    self.assertIn("RearPortTemplate with name 'et-0/0/2' does not exist for DeviceType 'MX80'.", log_entries)
+        job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn("RearPortTemplate with name 'et-0/0/2' does not exist for DeviceType 'MX80'.", log_entries)
