@@ -39,13 +39,35 @@ def import_components(device_type: DeviceType, data: dict):
     """Import components for a given device type."""
     for key, component_class in COMPONENTS.items():
         if key in data:
-            component_list = [
-                component_class(
-                    device_type=device_type,
-                    **{k: v for k, v in item.items() if hasattr(component_class, k)},
-                )
-                for item in data[key]
-            ]
+            component_list = []
+
+            for item in data[key]:
+                item_data = {k: v for k, v in item.items() if hasattr(component_class, k)}
+
+                if key == "power-outlets" and "power_port" in item:
+                    # Special case for PowerOutletTemplate to handle the FK to PowerPortTemplate
+                    try:
+                        item_data["power_port_template"] = PowerPortTemplate.objects.get(
+                            device_type=device_type, name=item["power_port"]
+                        )
+                    except PowerPortTemplate.DoesNotExist as exc:
+                        raise ValueError(
+                            f"PowerPortTemplate with name '{item['power_port']}' does not exist for DeviceType '{device_type}'."
+                        ) from exc
+
+                elif key == "front-ports" and "rear_port" in item:
+                    # Special case for FrontPortTemplate to handle the FK to RearPortTemplate
+                    try:
+                        item_data["rear_port_template"] = RearPortTemplate.objects.get(
+                            device_type=device_type, name=item["rear_port"]
+                        )
+                    except RearPortTemplate.DoesNotExist as exc:
+                        raise ValueError(
+                            f"RearPortTemplate with name '{item['rear_port']}' does not exist for DeviceType '{device_type}'."
+                        ) from exc
+
+                component_list.append(component_class(device_type=device_type, **item_data))
+
             try:
                 component_class.objects.bulk_create(component_list)
             except IntegrityError as exc:
