@@ -42,7 +42,7 @@ def retrieve_device_types_from_filesystem(path):
     Returns:
         tuple: a Set of Manufacturers and a dictionary of Device Types.
     """
-    from pathlib import Path
+    from pathlib import Path  # pylint: disable=import-outside-toplevel
 
     manufacturers = set()
     device_types = {}
@@ -79,9 +79,9 @@ def retrieve_device_type_images_from_filesystem(path) -> list:
     Returns:
         images: a list containing in-memory loaded device type image files.
     """
-    from pathlib import Path
+    from pathlib import Path  # pylint: disable=import-outside-toplevel
 
-    from django.core.files.uploadedfile import InMemoryUploadedFile
+    from django.core.files.uploadedfile import InMemoryUploadedFile  # pylint: disable=import-outside-toplevel
 
     images = []
 
