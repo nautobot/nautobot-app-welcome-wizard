@@ -1,1 +1,1 @@
-Device type image import added. NOTICE: this feature requires re-synching device type library so images can be imported, and re-importing devices in order for images to be associated to DeviceType instances.
+Device type image import added. NOTICE: this feature requires re-syncing device type library so images can be imported, and re-importing devices in order for images to be associated to DeviceType instances.
