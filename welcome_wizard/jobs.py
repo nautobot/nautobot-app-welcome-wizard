@@ -149,7 +149,8 @@ class WelcomeWizardImportDeviceType(Job):
                 self.logger.warning(str(exc))
 
         self.logger.info(  # pylint: disable=logging-fstring-interpolation
-            f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype}  # type: ignore
+            f"Imported DeviceType {device_type_data.get('model')} successfully",
+            extra={"object": devtype},  # type: ignore
         )
 
 
