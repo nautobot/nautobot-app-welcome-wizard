@@ -1,14 +1,14 @@
 """Datasources for Welcome Wizard."""
 
 import os
-from pathlib import Path
+from io import BytesIO
 
 import yaml
 from django.conf import settings
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImageImport, DeviceTypeImport, ManufacturerImport
 
 
 def get_manufacturer_name(name: str) -> str:
@@ -42,6 +42,8 @@ def retrieve_device_types_from_filesystem(path):
     Returns:
         tuple: a Set of Manufacturers and a dictionary of Device Types.
     """
+    from pathlib import Path
+
     manufacturers = set()
     device_types = {}
     manufacturer_names = {}
@@ -66,6 +68,43 @@ def retrieve_device_types_from_filesystem(path):
         device_types[filename.name] = data
 
     return (manufacturers, device_types)
+
+
+def retrieve_device_type_images_from_filesystem(path) -> list:
+    """Retrieve Device Type Images from the file system.
+
+    Args:
+        path (str): Filesystem path to the repo holding the Device Type Images.
+
+    Returns:
+        images: a list containing in-memory loaded device type image files.
+    """
+    from pathlib import Path
+
+    from django.core.files.uploadedfile import InMemoryUploadedFile
+
+    images = []
+
+    image_path = os.path.join(path, "elevation-images")
+    files = (filename for filename in Path(image_path).rglob("*") if filename.suffix in [".png", ".jpg", "jpeg"])
+
+    for filename in files:
+        with open(filename, "rb") as file:
+            content = file.read()
+            image_bytes = BytesIO(content)
+
+        images.append(
+            InMemoryUploadedFile(
+                file=image_bytes,
+                field_name=None,
+                name=filename.name,
+                content_type=f"image/{'png' if filename.suffix == '.png' else 'jpeg'}",
+                size=len(content),
+                charset=None,
+            )
+        )
+
+    return images
 
 
 def refresh_git_import_wizard(repository_record, job_result, delete=False):
@@ -95,6 +134,19 @@ def refresh_git_import_wizard(repository_record, job_result, delete=False):
         job_result.log(
             "Successfully created/updated device_type",
             obj=device_type_record,
+            level_choice=LogLevelChoices.LOG_INFO,
+            grouping="welcome_wizard",
+        )
+
+    job_result.log("Loading Device Type Images", level_choice=LogLevelChoices.LOG_INFO, grouping="welcome_wizard")
+    images = retrieve_device_type_images_from_filesystem(repository_record.filesystem_path)
+
+    if images:
+        for image in images:
+            DeviceTypeImageImport.objects.update_or_create(name=image.name, image=image)
+
+        job_result.log(
+            "Successfully loaded Device Type Images",
             level_choice=LogLevelChoices.LOG_INFO,
             grouping="welcome_wizard",
         )

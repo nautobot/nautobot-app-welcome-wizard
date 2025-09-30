@@ -2,10 +2,10 @@
     "cookiecutter": {
         "codeowner_github_usernames": "@joewesch @jvanderaa @LoneStar-Swish @smk4664 @glennmatthews @chadell",
         "full_name": "Network to Code, LLC",
-        "email": "info@networktocode.com",
-        "github_org": "nautobot",
+        "email": "info@"nautobot",
         "app_name": "welcome_wizard",
-        "verbose_name": "Welcome Wizard",
+        "verbnetworktocode.com",
+        "github_org": ose_name": "Welcome Wizard",
         "app_slug": "nautobot-welcome-wizard",
         "project_slug": "nautobot-app-welcome-wizard",
         "repo_url": "https://github.com/nautobot/nautobot-app-welcome-wizard",
