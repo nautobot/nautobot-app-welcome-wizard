@@ -17,9 +17,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     author = "Network to Code, LLC"
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
-    required_settings = []
-    min_version = "3.0.0a1"  # TODO: Update to 3.0.0 when Nautobot v3.0.0 is released
-    max_version = "3.9999"
+    required_settings: list = []
     default_settings: dict[str, Any] = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
@@ -31,6 +29,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard_list"
     docs_view_name = "plugins:welcome_wizard:docs"
+    searchable_models = ["manufacturerimport", "devicetypeimport"]
 
     def ready(self):
         """Callback when this app is loaded."""
