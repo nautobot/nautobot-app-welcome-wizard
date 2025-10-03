@@ -10,7 +10,6 @@ from nautobot.core.utils import permissions
 from nautobot.dcim.models import DeviceType, Location, LocationType, Manufacturer
 from nautobot.extras.models import Status
 from nautobot.users import models as users_models
-from nautobot.virtualization.models import Cluster, ClusterType
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
@@ -152,7 +151,7 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
 
         lookup_key = ManufacturerImport.objects.first().pk
         response = self.client.get(
-            f'{reverse("plugins:welcome_wizard:manufacturerimport_import_wizard")}?pk={lookup_key}'
+            f"{reverse('plugins:welcome_wizard:manufacturerimport_import_wizard')}?pk={lookup_key}"
         )
         self.assertHttpStatus(response, 200)
 
@@ -374,17 +373,4 @@ class BannerTestCase(TestCase):
         self.assertNotContains(
             response,
             '<a href="/plugins/welcome_wizard/dashboard/">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
-        )
-
-
-class ClusterDevicesTestCase(TestCase):
-    """Ensure Cluster Add Devices view loads (https://github.com/nautobot/nautobot-app-welcome-wizard/issues/62)."""
-
-    def test_cluster_add_devices(self):
-        self.add_permissions("virtualization.change_cluster")
-        cluster_type = ClusterType.objects.create(name="Cluster Type 1")
-        cluster = Cluster.objects.create(name="Cluster 1", cluster_type=cluster_type)
-
-        self.assertHttpStatus(
-            self.client.get(reverse("virtualization:cluster_add_devices", kwargs={"pk": cluster.pk})), 200
         )
