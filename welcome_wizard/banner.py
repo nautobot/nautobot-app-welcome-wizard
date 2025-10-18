@@ -5,11 +5,11 @@ from typing import Optional
 from django.conf import settings
 from django.urls import reverse
 from django.utils.html import format_html
+from nautobot.apps.ui import Banner
 from nautobot.extras.choices import BannerClassChoices
-from nautobot.extras.plugins import PluginBanner
 
 
-def banner(context, *args, **kwargs) -> Optional[PluginBanner]:
+def banner(context, *args, **kwargs) -> Optional[Banner]:
     """
     Construct the Welcome Wizard Banner on the Home Page.
 
@@ -30,5 +30,5 @@ def banner(context, *args, **kwargs) -> Optional[PluginBanner]:
             '<a href="{}">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
             reverse("plugins:welcome_wizard:dashboard_list"),
         )
-        return PluginBanner(content=content, banner_class=BannerClassChoices.CLASS_SUCCESS)
+        return Banner(content=content, banner_class=BannerClassChoices.CLASS_SUCCESS)
     return None
