@@ -19,7 +19,6 @@ class NautobotWelcomeWizardConfig(NautobotAppConfig):
     base_url = "welcome_wizard"
     required_settings = []
     default_settings = {}
-    caching_config = {}
     docs_view_name = "plugins:welcome_wizard:docs"
     searchable_models = ["manufacturerimport"]
 
