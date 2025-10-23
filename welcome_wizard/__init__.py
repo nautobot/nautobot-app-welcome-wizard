@@ -17,6 +17,7 @@ class WelcomeWizardConfig(NautobotAppConfig):
     author = "Network to Code, LLC"
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
+<<<<<<< HEAD
     required_settings: list = []
     default_settings: dict[str, Any] = {
         # Add devicetype-library to Nautobot Git Repositories
@@ -28,6 +29,10 @@ class WelcomeWizardConfig(NautobotAppConfig):
     caching_config: dict = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard_list"
+=======
+    required_settings = []
+    default_settings = {}
+>>>>>>> 4d1fa3d (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
     docs_view_name = "plugins:welcome_wizard:docs"
     searchable_models = ["manufacturerimport", "devicetypeimport"]
 

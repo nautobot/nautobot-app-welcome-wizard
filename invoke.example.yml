@@ -1,7 +1,12 @@
 ---
 welcome_wizard:
+<<<<<<< HEAD
   nautobot_ver: "2.4.16"
   python_ver: "3.11"
+=======
+  nautobot_ver: "2.4.20"
+  python_ver: "3.12"
+>>>>>>> 4d1fa3d (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
   # local: false
   # compose_dir: "/full/path/to/nautobot-app-welcome-wizard/development"
 
