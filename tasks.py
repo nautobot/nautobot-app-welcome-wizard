@@ -52,11 +52,7 @@ namespace = Collection("welcome_wizard")
 namespace.configure(
     {
         "welcome_wizard": {
-<<<<<<< HEAD
-            "nautobot_ver": "2.4.16",
-=======
             "nautobot_ver": "2.4.20",
->>>>>>> 4d1fa3d (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
             "project_name": "nautobot-welcome-wizard",
             "python_ver": "3.12",
             "local": False,
