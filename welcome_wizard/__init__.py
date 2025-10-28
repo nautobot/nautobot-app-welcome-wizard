@@ -25,7 +25,6 @@ class WelcomeWizardConfig(NautobotAppConfig):
         "manufacturer_transform_func": None,
         "manufacturer_map": {},
     }
-    caching_config: dict = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
     home_view_name = "plugins:welcome_wizard:dashboard_list"
     docs_view_name = "plugins:welcome_wizard:docs"
