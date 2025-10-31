@@ -4,10 +4,7 @@ This document describes all new features and changes in the release. The format 
 
 ## Release Overview
 
-- Introduces two new optional configuration parameters for manufacturer name transformation and mapping.
-- Major internal refactor to adopt Nautobot v3’s NautobotUIViewSet and UI component structure.
-- Upgraded to Bootstrap 5 and cleaned up legacy templates for compatibility with Nautobot v3.
-- Dropped support for Python 3.8.
+- Support for Nautobot v3.0.
 
 ## [v3.0.0a1 (2025-10-31)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0a1)
 
