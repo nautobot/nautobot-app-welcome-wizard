@@ -11,15 +11,6 @@ This document describes all new features and changes in the release. The format 
 
 ## [v3.0.0a1 (2025-10-31)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0a1)
 
-### Added
-
-- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - Added Configuration `manufacturer_transform_func` - String transformation function to be applied to all `manufacturer` names (example: `str.upper` to make all Manufacturer names in upper case)
-- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - Added Configuration `manufacturer_map` - dictionary that allows converting Manufacturer names to desired names (when `manufacturer` in YAML configuration files do not match desired names)
-
-### Changed
-
-- [#381](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/381) - Refactored to use NautobotUIViewSet and UI components.
-
 ### Removed
 
 - [#381](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/381) - Dropped support for Python 3.8.
