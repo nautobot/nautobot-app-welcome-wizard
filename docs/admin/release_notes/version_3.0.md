@@ -13,10 +13,8 @@ This document describes all new features and changes in the release. The format 
 
 ### Added
 
-- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - Two new (optional) configuration parameters are made available to be used within `PLUGINS_CONFIG["welcome_wizard"]` in `nautobot_config.py` - to enable defining Manufacturer name transformations:
-- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - 
-- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - - `manufacturer_transform_func` - String transformation function to be applied to all `manufacturer` names (example: `str.upper` to make all Manufacturer names in upper case)
-- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - - `manufacturer_map` - dictionary that allows converting Manufacturer names to desired names (when `manufacturer` in YAML configuration files do not match desired names)
+- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - Added Configuration `manufacturer_transform_func` - String transformation function to be applied to all `manufacturer` names (example: `str.upper` to make all Manufacturer names in upper case)
+- [#129](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/129) - Added Configuration `manufacturer_map` - dictionary that allows converting Manufacturer names to desired names (when `manufacturer` in YAML configuration files do not match desired names)
 
 ### Changed
 
