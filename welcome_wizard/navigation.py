@@ -1,6 +1,6 @@
 """Menu items."""
 
-from nautobot.apps.ui import NavMenuGroup, NavMenuItem, NavMenuTab
+from nautobot.apps.ui import NavigationIconChoices, NavigationWeightChoices, NavMenuGroup, NavMenuItem, NavMenuTab
 
 items = (
     NavMenuItem(
@@ -13,6 +13,8 @@ items = (
 menu_items = (
     NavMenuTab(
         name="Apps",
-        groups=(NavMenuGroup(name="Welcome Wizard", items=tuple(items)),),
+        icon=NavigationIconChoices.APPS,
+        weight=NavigationWeightChoices.APPS,
+        groups=(NavMenuGroup(name="Welcome Wizard", weight=600, items=tuple(items)),),
     ),
 )
