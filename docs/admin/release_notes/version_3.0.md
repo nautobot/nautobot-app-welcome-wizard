@@ -21,4 +21,4 @@ We will continue to support the previous major release for users of Nautobot LTM
 - Added support for Nautobot 3.0.
 - Added support for Python 3.13.
 
-## [v3.0.0a1 (2025-10-31)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0a1)
+## [v3.0.0a1 (2025-11-14)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0a1)
