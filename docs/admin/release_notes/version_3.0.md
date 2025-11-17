@@ -4,13 +4,21 @@ This document describes all new features and changes in the release. The format 
 
 ## Release Overview
 
-- Support for Nautobot v3.0.
+This major release marks the compatibility of the Welcome Wizard App with Nautobot 3.0.0. Check out the [full details](https://docs.nautobot.com/projects/core/en/stable/release-notes/version-3.0/) of the changes included in this new major release of Nautobot. Highlights:
+
+- Minimum Nautobot version supported is 3.0.
+- Added support for Python 3.13 and removed support for 3.9.
+- Updated UI framework to use latest Bootstrap 5.3.
+
+We will continue to support the previous major release for users of Nautobot LTM 2.4 only with critical bug and security fixes as per the [Software Lifecycle Policy](https://networktocode.com/company/legal/software-lifecycle-policy/).
+
+<!-- towncrier release notes start -->
+
+## [v3.0.0 (2025-11-17)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0)
+
+### Added
+
+- Added support for Nautobot 3.0.
+- Added support for Python 3.13.
 
 ## [v3.0.0a1 (2025-10-31)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0a1)
-
-### Housekeeping
-
-- [#122](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/122) - Changed model_class_name in .cookiecutter.json to a valid model to help with drift management.
-- [#136](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/136) - Removed outdated html templates and cleaned up the view code to limit impact of Nautobot v3 and Bootstrap 5.
-- [#137](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/137) - Add DJLint and DjHTML.
-- [#139](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/139) - Bootstrap 5 Upgrade.
