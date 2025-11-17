@@ -2,20 +2,26 @@
 
 import django_tables2 as tables
 from django.conf import settings
-from nautobot.apps.tables import BaseTable, ToggleColumn
+from nautobot.apps.tables import BaseTable, ButtonsColumn, ToggleColumn
 
 from welcome_wizard import models
 
 MANUFACTURER_BUTTONS = """
-<a href="{% url 'plugins:welcome_wizard:manufacturerimport_import_wizard' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Manufacturer">
-    <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
-</a>
+<li>
+    <a href="{% url 'plugins:welcome_wizard:manufacturerimport_import_wizard' %}?pk={{ record.pk }}" class="dropdown-item text-primary" title="Import Manufacturer">
+        <span class="mdi mdi-database-import-outline" aria-hidden="true"></span>
+        Import Manufacturer
+    </a>
+</li>
 """
 
 DEVICE_TYPE_BUTTONS = """
-<a href="{% url 'plugins:welcome_wizard:devicetypeimport_import_wizard' %}?pk={{ record.pk }}" class="btn btn-xs btn-info" title="Import Device Type">
-    <i class="mdi mdi-database-import-outline" aria-hidden="true"></i>
-</a>
+<li>
+    <a href="{% url 'plugins:welcome_wizard:devicetypeimport_import_wizard' %}?pk={{ record.pk }}" class="dropdown-item text-primary" title="Import Device Type">
+        <span class="mdi mdi-database-import-outline" aria-hidden="true"></span>
+        Import Device Types
+    </a>
+</li>
 """
 
 IMPORT_BUTTONS = """
@@ -45,7 +51,13 @@ class ManufacturerImportTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.Column(accessor="name", verbose_name="Name")
-    actions = tables.TemplateColumn(MANUFACTURER_BUTTONS)
+    actions = ButtonsColumn(
+        model=models.ManufacturerImport,
+        prepend_template=MANUFACTURER_BUTTONS,
+        buttons=[
+            "",
+        ],
+    )
 
     class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
         """Meta for ManufacturerImport Table."""
@@ -64,7 +76,13 @@ class DeviceTypeImportTable(BaseTable):
     pk = ToggleColumn()
     name = tables.Column(accessor="name", verbose_name="Name")
     manufacturer = tables.Column(accessor="manufacturer", verbose_name="Manufacturer")
-    actions = tables.TemplateColumn(DEVICE_TYPE_BUTTONS)
+    actions = ButtonsColumn(
+        model=models.DeviceTypeImport,
+        prepend_template=DEVICE_TYPE_BUTTONS,
+        buttons=[
+            "",
+        ],
+    )
 
     class Meta(BaseTable.Meta):  # pylint: disable=too-few-public-methods
         """Meta for DeviceTypeImport Table."""

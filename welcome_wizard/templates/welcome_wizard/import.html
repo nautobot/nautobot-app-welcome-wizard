@@ -6,26 +6,28 @@
 {% load static %}
 {% load tz %}
 
-{% block header %}
-    <div class="row noprint">
-        <div class="col-sm-8 col-md-9">
-            <ol class="breadcrumb">
-                <li><a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a></li>
-                <li><a href="{% url return_url %}">{{ breadcrumb_name }}</a></li>
-                <li>{{ obj.name }}</li>
-            </ol>
-        </div>
-    </div>
-{% endblock header %}
+{% block title %}
+    Import {{ obj.name }}
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <nav aria-label="Breadcrumbs" class="mt-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'plugins:welcome_wizard:dashboard_list' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url return_url %}">{{ breadcrumb_name }}</a></li>
+            <li class="breadcrumb-item">{{ obj.name }}</li>
+        </ol>
+    </nav>
+{% endblock breadcrumbs %}
 
 {% block content %}
     <h1>Would you like import {{ obj.name }}?</h1>
     <form action="{% url bulk_import_url %}" method="post">
         {% csrf_token %}
         {{ form }}
-        <button class="btn btn-info btn-sm" type="submit">
-            <span class="mdi mdi-database-import-outline" aria-hidden="true"></span> Import
+        <button class="btn btn-info btn-md" type="submit">
+            <span aria-hidden="true" class="mdi mdi-database-import-outline"></span> Import
         </button>
-        <a href="{% url return_url %}" class="btn btn-default">Cancel</a>
+        <a class="btn btn-secondary" href="{% url return_url %}">Cancel</a>
     </form>
 {% endblock content %}
