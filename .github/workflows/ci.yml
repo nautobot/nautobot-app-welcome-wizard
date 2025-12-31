@@ -146,11 +146,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-<<<<<<< HEAD
-        python-version: ["3.11"]
-=======
         python-version: ["3.10"]
->>>>>>> aecdc03 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
         nautobot-version: ["3.0.0"]
     env:
       INVOKE_WELCOME_WIZARD_PYTHON_VER: "${{ matrix.python-version }}"
