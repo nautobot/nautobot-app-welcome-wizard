@@ -1,5 +1,7 @@
 """App declaration for welcome_wizard."""
 
+from typing import Any
+
 from nautobot.apps import NautobotAppConfig
 
 # Needs to be resolved: This is due to a bug tracked by issue #86
@@ -15,18 +17,18 @@ class WelcomeWizardConfig(NautobotAppConfig):
     author = "Network to Code, LLC"
     description = "Nautobot's Getting Started Wizard."
     base_url = "welcome_wizard"
-    required_settings = []
-    min_version = "2.0.0"
-    max_version = "2.9999"
-    default_settings = {
+    required_settings: list = []
+    default_settings: dict[str, Any] = {
         # Add devicetype-library to Nautobot Git Repositories
         "enable_devicetype-library": True,
         "enable_welcome_banner": True,
+        "manufacturer_transform_func": None,
+        "manufacturer_map": {},
     }
-    caching_config = {}
     middleware = ["welcome_wizard.middleware.Prerequisites"]
-    home_view_name = "plugins:welcome_wizard:dashboard"
+    home_view_name = "plugins:welcome_wizard:dashboard_list"
     docs_view_name = "plugins:welcome_wizard:docs"
+    searchable_models = ["manufacturerimport", "devicetypeimport"]
 
     def ready(self):
         """Callback when this app is loaded."""

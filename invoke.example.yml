@@ -1,7 +1,7 @@
 ---
 welcome_wizard:
-  nautobot_ver: "2.0.0"
-  python_ver: "3.11"
+  nautobot_ver: "3.0.0"
+  python_ver: "3.12"
   # local: false
   # compose_dir: "/full/path/to/nautobot-app-welcome-wizard/development"
 

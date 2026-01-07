@@ -1,0 +1,9 @@
+{% extends "generic/object_list.html" %}
+
+{% block title %}Import Manufacturers{% endblock title %}
+
+{% block bulk_buttons %}
+    <button type="submit" name="_import" formaction="{% url "plugins:welcome_wizard:manufacturerimport_import_wizard" %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info btn-md">
+        <span aria-hidden="true" class="mdi mdi-database-import-outline"></span> Import Selected
+    </button>
+{% endblock bulk_buttons %}

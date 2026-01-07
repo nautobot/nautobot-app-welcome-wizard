@@ -1,21 +1,23 @@
 """Views for Welcome Wizard."""
 
-from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-from django.views.generic import View
+from nautobot.apps.ui import BaseBreadcrumbItem, Breadcrumbs, ModelBreadcrumbItem, ViewNameBreadcrumbItem
+from nautobot.apps.views import (
+    NautobotUIViewSet,
+    ObjectChangeLogViewMixin,
+    ObjectListViewMixin,
+)
 from nautobot.circuits.models import CircuitType, Provider
-from nautobot.core.utils.permissions import get_permission_for_model
-from nautobot.core.views import generic
-from nautobot.core.views.mixins import ObjectPermissionRequiredMixin
 from nautobot.dcim.models import DeviceType, Location, Manufacturer
 from nautobot.extras.datasources import enqueue_pull_git_repository_and_refresh_data
 from nautobot.extras.models import GitRepository, Job, JobResult, Role
 from nautobot.ipam.models import RIR
 from nautobot.virtualization.models import ClusterType
+from rest_framework.decorators import action
 
+from welcome_wizard.api import serializers
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.forms import (
     DeviceTypeBulkImportForm,
@@ -26,6 +28,11 @@ from welcome_wizard.forms import (
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 from welcome_wizard.tables import DashboardTable, DeviceTypeImportTable, ManufacturerImportTable
+
+# DEPRECATION NOTICE:
+# Merlin's *_link fields (nautobot_add_link, nautobot_list_link, merlin_link) are deprecated.
+# Do NOT introduce new code that reads/writes these fields. New code must derive URLs
+# from `Merlin.nautobot_model`, not from DB-stored links.
 
 
 def check_sync(instance, request):
@@ -48,140 +55,159 @@ def check_sync(instance, request):
         enqueue_pull_git_repository_and_refresh_data(repo, request.user)
 
 
-class ManufacturerListView(generic.ObjectListView):
-    """Table of all Manufacturers discovered in the Git Repository."""
+class ManufacturerImportUIViewSet(ObjectListViewMixin, ObjectChangeLogViewMixin):  # pylint: disable=abstract-method
+    """List view for ManufacturerImport."""
 
     permission_required = "welcome_wizard.view_manufacturerimport"
-    table = ManufacturerImportTable
     queryset = ManufacturerImport.objects.all()
+    table_class = ManufacturerImportTable
+    filterset_class = ManufacturerImportFilterSet
+    filterset_form_class = ManufacturerImportFilterForm
     action_buttons = ()
-    template_name = "welcome_wizard/manufacturer.html"
-    filterset = ManufacturerImportFilterSet
-    filterset_form = ManufacturerImportFilterForm
+    serializer_class = serializers.ManufacturerImportSerializer
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+                ModelBreadcrumbItem(model=ManufacturerImport),
+            ],
+        }
+    )
 
-    def get(self, request, *args, **kwargs):
-        """Add Check Sync to Get."""
-        check_sync(instance=self, request=request)
-        return super().get(request, *args, **kwargs)
-
-
-class DeviceTypeListView(generic.ObjectListView):
-    """Table of Device Types based on the Manufacturer."""
-
-    permission_required = "welcome_wizard.view_devicetypeimport"
-    table = DeviceTypeImportTable
-    queryset = DeviceTypeImport.objects.prefetch_related("manufacturer")
-    filterset = DeviceTypeImportFilterSet
-    action_buttons = ()
-    template_name = "welcome_wizard/devicetype.html"
-    filterset_form = DeviceTypeImportFilterForm
-
-    def get(self, request, *args, **kwargs):
-        """Add Check Sync to Get."""
-        check_sync(instance=self, request=request)
-        return super().get(request, *args, **kwargs)
-
-
-class BulkImportView(View, ObjectPermissionRequiredMixin):
-    """Generic Bulk Import View."""
-
-    return_url = None
-    model = None
-    form = forms.Form
-    bulk_import_url = None
-    breadcrumb_name = None
-    _permission_action = None
+    def list(self, request, *args, **kwargs):
+        """Return the list view for ManufacturerImport objects."""
+        check_sync(self, request)
+        return super().list(request, *args, **kwargs)
 
     def get_required_permission(self):
-        """Return the specific permission necessary to perform the requested action on an object."""
-        return get_permission_for_model(self.queryset.model, self._permission_action)
+        """Return the required permission for the current action."""
+        view_action = self.get_action()
+        if view_action == "import_wizard":
+            return [
+                *self.get_permissions_for_model(Manufacturer, ["add"]),
+            ]
+        return super().get_required_permission()
 
-    def dispatch(self, request, *args, **kwargs):
-        """Ensures User has permission to add."""
-        # Following Nautobot style of adding self._permission_action inside the dispatch.
-        self._permission_action = "add"  # pylint disable=attribute-defined-outside-init
-        return super().dispatch(request, *args, **kwargs)
+    @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
+    def import_wizard(self, request):
+        """Handle bulk import of ManufacturerImport objects."""
+        if request.method.lower() == "get":
+            pk = request.GET.get("pk")
+            if not pk:
+                return redirect("plugins:welcome_wizard:manufacturerimport_list")
+            form = ManufacturerBulkImportForm(initial={"pk": [pk]})
+            obj = self.queryset.model.objects.get(pk=pk)
 
-    def get(self, request):
-        """Single Import Page."""
-        # The user is expected to get here only by selecting the Import button from a list view.
-        if not request.GET.get("pk"):
-            return redirect(self.return_url)
-        primarykey = request.GET["pk"]
-        initial = {"pk": [primarykey]}
+            bulk_import_url = "plugins:welcome_wizard:manufacturerimport_import_wizard"
+            return render(
+                request,
+                "welcome_wizard/import.html",
+                {
+                    "form": form,
+                    "obj": obj,
+                    "return_url": "plugins:welcome_wizard:manufacturerimport_list",
+                    "bulk_import_url": bulk_import_url,
+                    "breadcrumb_name": "Import Manufacturers",
+                },
+            )
 
-        obj = self.model.objects.get(pk=primarykey)
-
-        form = self.form(initial)
-
-        return render(
-            request,
-            "welcome_wizard/import.html",
-            {
-                "form": form,
-                "obj": obj,
-                "return_url": self.return_url,
-                "bulk_import_url": self.bulk_import_url,
-                "breadcrumb_name": self.breadcrumb_name,
-            },
-        )
-
-    def post(self, request):
-        """Import Processing."""
-        if not self.has_permission():
-            return HttpResponseForbidden()
-        form = self.form(request.POST)
+        # POST
+        form = ManufacturerBulkImportForm(request.POST)
         if form.is_valid():
             pk_list = request.POST.getlist("pk")
-            onboarded = []
-
-            for obj in self.model.objects.filter(pk__in=pk_list):
-                if self.model == ManufacturerImport:
-                    job = Job.objects.get(name="Welcome Wizard - Import Manufacturer")
-                    JobResult.enqueue_job(job_model=job, user=self.request.user, manufacturer_name=obj.name)
-                    onboarded.append(obj.name)
-                elif self.model == DeviceTypeImport:
-                    job = Job.objects.get(name="Welcome Wizard - Import Device Type")
-                    JobResult.enqueue_job(job_model=job, user=self.request.user, filename=obj.filename)
-                    onboarded.append(obj.name)
-            # Currently treat everything as a success...
-            messages.success(request, f"Onboarded {len(onboarded)} objects.")
-
-        return redirect(self.return_url)
+            objects_to_onboard = self.queryset.filter(pk__in=pk_list)
+            job = Job.objects.get(name="Welcome Wizard - Import Manufacturer")
+            for obj in objects_to_onboard:
+                JobResult.enqueue_job(job_model=job, user=request.user, manufacturer_name=obj.name)
+            messages.success(request, f"Onboarded {objects_to_onboard.count()} objects.")
+        return redirect("plugins:welcome_wizard:manufacturerimport_list")
 
 
-class ManufacturerBulkImportView(BulkImportView):
-    """ManufacturerImport Bulk Import View."""
+class DeviceTypeImportUIViewSet(
+    ObjectListViewMixin,
+    ObjectChangeLogViewMixin,
+):  # pylint: disable=abstract-method
+    """List view for DeviceTypeImport."""
 
-    model = ManufacturerImport
-    form = ManufacturerBulkImportForm
-    return_url = "plugins:welcome_wizard:manufacturers"
-    bulk_import_url = "plugins:welcome_wizard:manufacturer_import"
-    permission_required = "dcim.add_manufacturer"
-    queryset = Manufacturer.objects.all()
-    breadcrumb_name = "Import Manufacturers"
+    queryset = DeviceTypeImport.objects.select_related("manufacturer")
+    table_class = DeviceTypeImportTable
+    filterset_class = DeviceTypeImportFilterSet
+    filterset_form_class = DeviceTypeImportFilterForm
+    action_buttons = ()
+    serializer_class = serializers.DeviceTypeImportSerializer
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+                ModelBreadcrumbItem(model=DeviceTypeImport),
+            ],
+        }
+    )
+
+    def get_required_permission(self):
+        """Return the required permission for the current action."""
+        view_action = self.get_action()
+        if view_action == "import_wizard":
+            return [
+                *self.get_permissions_for_model(DeviceType, ["add"]),
+            ]
+        return super().get_required_permission()
+
+    def list(self, request, *args, **kwargs):
+        """Return the list view for DeviceTypeImport objects."""
+        check_sync(self, request)
+        return super().list(request, *args, **kwargs)
+
+    @action(detail=False, methods=["get", "post"], url_path="import-wizard", url_name="import_wizard")
+    def import_wizard(self, request):
+        """Handle bulk import of DeviceTypeImport objects."""
+        if request.method.lower() == "get":
+            pk = request.GET.get("pk")
+            if not pk:
+                return redirect("plugins:welcome_wizard:devicetypeimport_list")
+            form = DeviceTypeBulkImportForm(initial={"pk": [pk]})
+            obj = self.queryset.model.objects.get(pk=pk)
+            bulk_import_url = "plugins:welcome_wizard:devicetypeimport_import_wizard"
+            return render(
+                request,
+                "welcome_wizard/import.html",
+                {
+                    "form": form,
+                    "obj": obj,
+                    "return_url": "plugins:welcome_wizard:devicetypeimport_list",
+                    "bulk_import_url": bulk_import_url,
+                    "breadcrumb_name": "Import Device Types",
+                },
+            )
+
+        form = DeviceTypeBulkImportForm(request.POST)
+        if form.is_valid():
+            pk_list = request.POST.getlist("pk")
+            objects_to_onboard = self.queryset.filter(pk__in=pk_list)
+            job = Job.objects.get(name="Welcome Wizard - Import Device Type")
+            for obj in objects_to_onboard:
+                JobResult.enqueue_job(job_model=job, user=request.user, filename=obj.filename)
+            messages.success(request, f"Onboarded {objects_to_onboard.count()} objects.")
+        return redirect("plugins:welcome_wizard:devicetypeimport_list")
 
 
-class DeviceTypeBulkImportView(BulkImportView):
-    """DeviceTypeImport Bulk Import View."""
-
-    model = DeviceTypeImport
-    form = DeviceTypeBulkImportForm
-    return_url = "plugins:welcome_wizard:devicetypes"
-    bulk_import_url = "plugins:welcome_wizard:devicetype_import"
-    permission_required = "dcim.add_devicetype"
-    queryset = DeviceType.objects.prefetch_related("manufacturer")
-    breadcrumb_name = "Import Device Types"
-
-
-class WelcomeWizardDashboard(generic.ObjectListView):
-    """Welcome Wizard dashboard view.
-
-    Args:
-        View (View): Django View
-    """
+class MerlinUIViewSet(NautobotUIViewSet):
+    """Welcome Wizard Dashboard."""
 
     action_buttons = ()
+    permission_required = "welcome_wizard.view_merlin"
+    queryset = Merlin.objects.all()
+    table_class = DashboardTable
+    breadcrumbs = Breadcrumbs(
+        items={
+            "list": [
+                BaseBreadcrumbItem(label="Welcome Wizard"),
+                ViewNameBreadcrumbItem(view_name="plugins:welcome_wizard:dashboard_list", label="Dashboard"),
+            ],
+        }
+    )
 
     @classmethod
     def check_data(cls):
@@ -189,21 +215,21 @@ class WelcomeWizardDashboard(generic.ObjectListView):
         # Check the status of each of the Merlin Items
         # To not have a Merlin import set the `wizard_url` to an empty string `""` so that it will not be processed link
         # wise.
-        for nautobot_object, var_name, list_url, new_url, wizard_url in [
+        for model, name, nautobot_list_link, nautobot_add_link, merlin_link in [
             (Location, "Locations", "dcim:location_list", "dcim:location_add", ""),
             (
                 Manufacturer,
                 "Manufacturers",
                 "dcim:manufacturer_list",
                 "dcim:manufacturer_add",
-                "plugins:welcome_wizard:manufacturer_import",
+                "plugins:welcome_wizard:manufacturerimport_import_wizard",
             ),
             (
                 DeviceType,
                 "Device Types",
                 "dcim:devicetype_list",
                 "dcim:devicetype_add",
-                "plugins:welcome_wizard:devicetype_import",
+                "plugins:welcome_wizard:devicetypeimport_import_wizard",
             ),
             (
                 Role,
@@ -235,51 +261,28 @@ class WelcomeWizardDashboard(generic.ObjectListView):
                 "",
             ),
         ]:
-            completed = nautobot_object.objects.exists()
-            try:
-                Merlin.objects.filter(name=var_name).update(completed=completed)
-                merlin_id = Merlin.objects.get(name=var_name)
-            except Merlin.DoesNotExist:
-                merlin_id = None
+            completed = model.objects.exists()
+            Merlin.objects.update_or_create(
+                name=name,
+                defaults={
+                    "completed": completed,
+                    "ignored": False,
+                    "nautobot_model": model._meta.label,
+                    "nautobot_add_link": nautobot_add_link,
+                    "merlin_link": merlin_link,
+                    "nautobot_list_link": nautobot_list_link,
+                },
+            )
 
-            if merlin_id is None:
-                Merlin.objects.create(
-                    name=var_name,
-                    completed=completed,
-                    ignored=False,
-                    nautobot_model=nautobot_object,
-                    nautobot_add_link=new_url,
-                    merlin_link=wizard_url,
-                    nautobot_list_link=list_url,
-                )
+    def get_extra_context(self, request, *args, **kwargs):
+        """Customize context by removing dynamic filters and search forms."""
+        context = super().get_extra_context(request, *args, **kwargs)
+        context["dynamic_filter_form"] = None
+        context["table_config_form"] = None
+        context["search_form"] = None
+        return context
 
-    def get(self, request, *args, **kwargs):
-        """Get request."""
+    def list(self, request, *args, **kwargs):
+        """Render the Welcome Wizard dashboard with updated data."""
         self.check_data()
-        return super().get(request, *args, **kwargs)
-
-    def extra_context(self):
-        """Override search and table config."""
-        return {
-            "table_config_form": None,
-            "search_form": None,
-        }
-
-    permission_required = "welcome_wizard.view_merlin"
-    queryset = Merlin.objects.all()
-    template_name = "welcome_wizard/dashboard.html"
-    table = DashboardTable
-
-
-class ManufacturerImportDetailView(generic.ObjectView):
-    """Detail view for ManufacturerImport."""
-
-    permission_required = "welcome_wizard.view_manufacturerimport"
-    queryset = ManufacturerImport.objects.all()
-
-
-class DeviceTypeImportDetailView(generic.ObjectView):
-    """Detail view for DeviceTypeImport."""
-
-    permission_required = "welcome_wizard.view_devicetypeimport"
-    queryset = DeviceTypeImport.objects.all()
+        return super().list(request, *args, **kwargs)

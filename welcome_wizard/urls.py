@@ -1,32 +1,19 @@
-"""Django urlpatterns declaration for Welcome Wizard app."""
+"""Django urlpatterns declaration for welcome_wizard app."""
 
 from django.templatetags.static import static
 from django.urls import path
 from django.views.generic import RedirectView
+from nautobot.apps.urls import NautobotUIViewSetRouter
 
 from . import views
 
 app_name = "welcome_wizard"
 
+router = NautobotUIViewSetRouter()
+router.register("manufacturers", views.ManufacturerImportUIViewSet, basename="manufacturerimport")
+router.register("devicetypes", views.DeviceTypeImportUIViewSet, basename="devicetypeimport")
+router.register("dashboard", views.MerlinUIViewSet, basename="dashboard")
+
 urlpatterns = [
-    path("dashboard/", views.WelcomeWizardDashboard.as_view(), name="dashboard"),
-    path("manufacturers/", views.ManufacturerListView.as_view(), name="manufacturers"),
-    path("manufacturer/<pk>", views.ManufacturerImportDetailView.as_view(), name="manufacturer"),
-    path("devicetypes/", views.DeviceTypeListView.as_view(), name="devicetypes"),
-    path("devicetype/<pk>", views.DeviceTypeImportDetailView.as_view(), name="devicetype"),
-    path(
-        "manufacturers/import/",
-        views.ManufacturerBulkImportView.as_view(),
-        name="manufacturer_import",
-    ),
-    path(
-        "devicetypes/import/",
-        views.DeviceTypeBulkImportView.as_view(),
-        name="devicetype_import",
-    ),
-    path(
-        "docs/",
-        RedirectView.as_view(url=static("welcome_wizard/docs/index.html")),
-        name="docs",
-    ),
-]
+    path("docs/", RedirectView.as_view(url=static("welcome_wizard/docs/index.html")), name="docs"),
+] + router.urls

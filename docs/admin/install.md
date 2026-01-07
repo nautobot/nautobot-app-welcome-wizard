@@ -4,7 +4,7 @@ Here you will find detailed instructions on how to **install** and **configure**
 
 ## Prerequisites
 
-- The app is compatible with Nautobot 2.0.0 and higher.
+- The app is compatible with Nautobot 2.4.20 and higher.
 - Databases supported: PostgreSQL, MySQL
 
 !!! note
@@ -40,6 +40,8 @@ PLUGINS = ["welcome_wizard"]
 #   "welcome_wizard": {
 #     "enable_devicetype-library": True,
 #     "enable_welcome_banner": True,
+#     "manufacturer_transform_func": None,
+#     "manufacturer_map": {},
 #   }
 # }
 ```
@@ -68,3 +70,5 @@ The app behavior can be controlled with the following list of settings:
 | ------- | ------ | -------- | ------------------------------------- |
 | `enable_devicetype-library` | `True` | `True` | If enabled, the [device type](https://github.com/nautobot/devicetype-library) git repository will be automatically added for you. |
 | `enable_welcome_banner` | `True` | `True` | If enabled, the Welcome Wizard banner will display on the home screen for authenticated users. |
+| `manufacturer_transform_func` | `str.upper` | `None` | String transformation function (example: `str.upper`). If defined, all Manufacturer names will be transformed using this function. |
+| `manufacturer_map` | `{"Arista": "Arista Networks", "Cisco": "Cisco Systems"}` | `{}` | If dictionary is defined, all manufacturer names matching its keys will be transformed to corresponding mapping values. |

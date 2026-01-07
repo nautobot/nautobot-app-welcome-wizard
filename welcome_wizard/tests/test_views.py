@@ -10,7 +10,6 @@ from nautobot.core.utils import permissions
 from nautobot.dcim.models import DeviceType, Location, LocationType, Manufacturer
 from nautobot.extras.models import Status
 from nautobot.users import models as users_models
-from nautobot.virtualization.models import Cluster, ClusterType
 
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
@@ -123,7 +122,9 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
         ManufacturerImport.objects.create(name="Alcatel")
         self.add_permissions("welcome_wizard.view_manufacturerimport")
         data = {"pk": [ManufacturerImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:manufacturer_import"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 403)
         try:
             name = Manufacturer.objects.get(name="Alcatel")
@@ -134,50 +135,42 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_manufacturer_bulk_import(self):
         """Tests the ManufacturerImport Bulk Import View with correct permissions."""
         ManufacturerImport.objects.create(name="Onyx")
-        self.add_permissions(
-            "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
-        )
+        self.add_permissions("dcim.add_manufacturer", "welcome_wizard.view_manufacturerimport")
         data = {"pk": [ManufacturerImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:manufacturer_import"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_bulk_import_get(self):
         ManufacturerImport.objects.create(name="Acme")
         self.add_permissions(
-            "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
+            "dcim.add_manufacturer",
+            "dcim.view_manufacturer",
         )
 
         lookup_key = ManufacturerImport.objects.first().pk
-        response = self.client.get(f'{reverse("plugins:welcome_wizard:manufacturer_import")}?pk={lookup_key}')
+        response = self.client.get(
+            f"{reverse('plugins:welcome_wizard:manufacturerimport_import_wizard')}?pk={lookup_key}"
+        )
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_bulk_import_get_empty(self):
-        self.add_permissions(
-            "dcim.add_manufacturer", "dcim.view_manufacturer", "welcome_wizard.view_manufacturerimport"
-        )
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturer_import"), follow=True)
+        self.add_permissions("dcim.add_manufacturer", "welcome_wizard.view_manufacturerimport")
+        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_import_wizard"), follow=True)
 
-        self.assertRedirects(response, reverse("plugins:welcome_wizard:manufacturers"), status_code=302)
+        self.assertRedirects(response, reverse("plugins:welcome_wizard:manufacturerimport_list"), status_code=302)
 
     def test_manufacturer_list(self):
         """Tests the ManufacturerImport List View with correct permissions."""
         self.add_permissions("welcome_wizard.view_manufacturerimport")
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturers"))
+        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_list"))
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_list_permission_denied(self):
         """Tests the ManufacturerImport List View with no permissions."""
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturers"))
+        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_list"))
         self.assertHttpStatus(response, 403)
-
-    def test_manufacturer_detail_view(self):
-        """Tests the ManufacturerImport Detail View"""
-        self.add_permissions("welcome_wizard.view_manufacturerimport")
-        manufacturer = ManufacturerImport.objects.create(name="Onyx")
-        response = self.client.get(
-            reverse("plugins:welcome_wizard:manufacturer", kwargs={"pk": manufacturer.id}),
-        )
-        self.assertHttpStatus(response, 200)
 
 
 class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
@@ -205,7 +198,9 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
         )
         self.add_permissions("welcome_wizard.view_devicetypeimport")
         data = {"pk": [DeviceTypeImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetype_import"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 403)
         try:
             DeviceType.objects.get(model="shelf-4he")
@@ -237,17 +232,21 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
             "welcome_wizard.view_devicetypeimport",
         )
         data = {"pk": [DeviceTypeImport.objects.first().pk]}
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetype_import"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 200)
 
         # Test a duplicate import
-        response = self.client.post(reverse("plugins:welcome_wizard:devicetype_import"), data=data, follow=True)
+        response = self.client.post(
+            reverse("plugins:welcome_wizard:devicetypeimport_import_wizard"), data=data, follow=True
+        )
         self.assertHttpStatus(response, 200)
 
     def test_devicetype_list(self):
         """Tests the DeviceTypeImport List View with correct pemissions."""
         self.add_permissions("welcome_wizard.view_devicetypeimport")
-        response = self.client.get(reverse("plugins:welcome_wizard:devicetypes"))
+        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
         self.assertHttpStatus(response, 200)
 
     @override_settings(
@@ -260,33 +259,13 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_devicetype_list_override(self):
         """Tests the DeviceTypeImport List View with enable_devicetype-library False."""
         self.add_permissions("welcome_wizard.view_devicetypeimport")
-        response = self.client.get(reverse("plugins:welcome_wizard:devicetypes"))
+        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
         self.assertHttpStatus(response, 200)
 
     def test_devicetype_list_permission_denied(self):
         """Tests the DeviceTypeImport List View with no pemissions."""
-        response = self.client.get(reverse("plugins:welcome_wizard:devicetypes"))
+        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
         self.assertHttpStatus(response, 403)
-
-    def test_devicetype_detail_view(self):
-        """Tests the DeviceTypeImport Detail View"""
-        self.add_permissions("welcome_wizard.view_devicetypeimport")
-        manufacturer = ManufacturerImport.objects.create(name="Generic")
-        device_type = DeviceTypeImport.objects.create(
-            name="shelf-4he",
-            filename="shelf-4he.yaml",
-            manufacturer=manufacturer,
-            device_type_data={
-                "manufacturer": "Generic",
-                "model": "shelf-4he",
-                "u_height": 4,
-                "full_depth": False,
-            },
-        )
-        response = self.client.get(
-            reverse("plugins:welcome_wizard:devicetype", kwargs={"pk": device_type.id}),
-        )
-        self.assertHttpStatus(response, 200)
 
 
 class DashboardView(TransactionTestCase):
@@ -302,13 +281,12 @@ class DashboardView(TransactionTestCase):
 
     def test_dashboard_view_no_entries(self):
         self.add_permissions("welcome_wizard.view_merlin")
-        url = reverse("plugins:welcome_wizard:dashboard")
+        url = reverse("plugins:welcome_wizard:dashboard_list")
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        # 9th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 9)
+        self.assertContains(resp, "mdi-plus-thick", 8)
         self.assertContains(resp, "mdi-checkbox-blank-outline", 8)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 0)
 
@@ -318,19 +296,18 @@ class DashboardView(TransactionTestCase):
         Manufacturer.objects.create(name="Manufacturer1")
         site, _ = LocationType.objects.get_or_create(name="Site")
         Location.objects.create(name="site01", location_type=site, status=self.active_status)
-        url = reverse("plugins:welcome_wizard:dashboard")
+        url = reverse("plugins:welcome_wizard:dashboard_list")
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
-        # 9th is from nautobot formset javascript
-        self.assertContains(resp, "mdi-plus-thick", 9)
+        self.assertContains(resp, "mdi-plus-thick", 8)
         self.assertContains(resp, "mdi-checkbox-blank-outline", 6)
         self.assertContains(resp, "mdi-checkbox-marked-outline", 2)
 
     def test_dashboard_view_permission_denied(self):
         """Test failed connection."""
-        url = reverse("plugins:welcome_wizard:dashboard")
+        url = reverse("plugins:welcome_wizard:dashboard_list")
         resp = self.client.get(url)
         self.assertHttpStatus(resp, 403)
 
@@ -396,17 +373,4 @@ class BannerTestCase(TestCase):
         self.assertNotContains(
             response,
             '<a href="/plugins/welcome_wizard/dashboard/">The Nautobot Welcome Wizard can help you get started with Nautobot!</a>',
-        )
-
-
-class ClusterDevicesTestCase(TestCase):
-    """Ensure Cluster Add Devices view loads (https://github.com/nautobot/nautobot-app-welcome-wizard/issues/62)."""
-
-    def test_cluster_add_devices(self):
-        self.add_permissions("virtualization.change_cluster")
-        cluster_type = ClusterType.objects.create(name="Cluster Type 1")
-        cluster = Cluster.objects.create(name="Cluster 1", cluster_type=cluster_type)
-
-        self.assertHttpStatus(
-            self.client.get(reverse("virtualization:cluster_add_devices", kwargs={"pk": cluster.pk})), 200
         )
