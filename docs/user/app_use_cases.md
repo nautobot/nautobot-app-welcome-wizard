@@ -10,28 +10,42 @@ The Nautobot Welcome Wizard includes a great dashboard to help you get started w
 
 This is where the Welcome Wizard Dashboard will help. It is a single location you can visit to find links to common dependencies. If a resource in Nautobot requires another it will be listed here. The `Name` column includes links to view a list of the associated resources. The `Completed` column will show if a resource has been created. The `Ignored` column allows the administrator (through the admin panel) to mark a dependency as ignored if that resource will be unused. Finally, the `Actions` column will have two button links. The first is a green plus which will take you to the resource creation form. The blue wizard hat will take you to the [Import Wizard](app_getting_started.md#import-manufacturers) allowing you to import from a git repository.
 
-![Welcome Wizard](../images/welcome_wizard.png)
+<!-- ![Welcome Wizard](../images/welcome_wizard.png) -->
+![Welcome Wizard Dashboard](../images/welcome_wizard_light.png#only-light){ .on-glb }
+![Welcome Wizard Dashboard](../images/welcome-wizard_dark.png#only-dark){ .on-glb }
 
 #### Completed Column
 
 The Welcome Wizard automatically tracks the resources in Nautobot. For instance, once you add a `Site` to Nautobot,
 the column will update (upon page reload) to show as completed.
 
-![Dashboard with Completions](../images/dashboard_with_completions.png)
+<!-- ![Dashboard with Completions](../images/dashboard_with_completions.png) -->
+![Dashboard with Completions](../images/dashboard_with_completions_light.png#only-light){ .on-glb }
+![Dashboard with Completions](../images/dashboard_with_completions_dark.png#only-dark){ .on-glb }
+
 
 #### Ignored Column
 
 Tracking fields that are ignored is done through the Nautobot Admin Panel. Head over to the user menu (top-right), then into the admin panel, and navigate to `Merlin` under the `Nautobot Welcome Wizard` heading.
 
-![Navigate to Merlin](../images/merlin_admin_navigation.png)
+<!-- ![Navigate to Merlin](../images/merlin_admin_navigation.png) -->
+![Navigate to Merlin](../images/merlin_admin_navigation_light.png#only-light){ .on-glb }
+![Navigate to Merlin](../images/merlin_admin_navigation_dark.png#only-dark){ .on-glb }
+
 
 Next choose the `Merlin` field you would like to change. You can click on the Name field to edit.
 
-![Select Merlin Field](../images/merlin_admin_selection.png)
+<!-- ![Select Merlin Field](../images/merlin_admin_selection.png) -->
+![Select Merlin Field](../images/merlin_admin_selection_light.png#only-light){ .on-glb }
+![Select Merlin Field](../images/merlin_admin_selection_dark.png#only-dark){ .on-glb }
+
 
 Once selected, check the `Ignored` checkbox and then `Save`. In the example below, we are ignoring the RIRs.
 
-![Ignored Field](../images/merlin_admin_ignored.png)
+<!-- ![Ignored Field](../images/merlin_admin_ignored.png) -->
+![Ignored Field](../images/merlin_admin_ignored_light.png#only-light){ .on-glb }
+![Ignored Field](../images/merlin_admin_ignored_dark.png#only-dark){ .on-glb }
+
 
 Navigate back to the Getting Started Dashboard to see that your field is marked as ignored.
 
@@ -77,12 +91,18 @@ Welcome Wizard includes settings that are enabled by default to ease the user in
 
 ### Welcome Wizard Dashboard
 
-![Welcome Wizard Dashboard](../images/welcome_wizard.png)
+<!-- ![Welcome Wizard Dashboard](../images/welcome_wizard.png) -->
+![Welcome Wizard Dashboard](../images/welcome_wizard_light.png#only-light){ .on-glb }
+![Welcome Wizard Dashboard](../images/welcome_wizard_dark.png#only-dark){ .on-glb }
 
 ### Welcome Wizard Completions
 
-![Welcome Wizard Completions](../images/dashboard_with_completions.png)
+<!-- ![Welcome Wizard Completions](../images/dashboard_with_completions.png) -->
+![Welcome Wizard Completions](../images/dashboard_with_completions_light.png)
+![Welcome Wizard Completions](../images/dashboard_with_completions_dark.png)
 
 ### Welcome Wizard Import Device Types
 
-![Welcome Wizard Import Device Types](../images/merlin_import_device_type.png)
+<!-- ![Welcome Wizard Import Device Types](../images/merlin_import_device_type.png) -->
+![Welcome Wizard Import Device Types](../images/merlin_import_device_type_dark.png#only-dark){ .on-glb }
+![Welcome Wizard Import Device Types](../images/merlin_import_device_type_light.png#only-light){ .on-glb }
