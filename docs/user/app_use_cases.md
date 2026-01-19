@@ -12,7 +12,7 @@ This is where the Welcome Wizard Dashboard will help. It is a single location yo
 
 <!-- ![Welcome Wizard](../images/welcome_wizard.png) -->
 ![Welcome Wizard Dashboard](../images/welcome_wizard_light.png#only-light){ .on-glb }
-![Welcome Wizard Dashboard](../images/welcome-wizard_dark.png#only-dark){ .on-glb }
+![Welcome Wizard Dashboard](../images/welcome_wizard_dark.png#only-dark){ .on-glb }
 
 #### Completed Column
 
@@ -98,8 +98,8 @@ Welcome Wizard includes settings that are enabled by default to ease the user in
 ### Welcome Wizard Completions
 
 <!-- ![Welcome Wizard Completions](../images/dashboard_with_completions.png) -->
-![Welcome Wizard Completions](../images/dashboard_with_completions_light.png)
-![Welcome Wizard Completions](../images/dashboard_with_completions_dark.png)
+![Welcome Wizard Completions](../images/dashboard_with_completions_light.png#only-light){ .on-glb }
+![Welcome Wizard Completions](../images/dashboard_with_completions_dark.png#only-dark){ .on-glb }
 
 ### Welcome Wizard Import Device Types
 

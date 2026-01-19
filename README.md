@@ -39,11 +39,11 @@ More screenshots can be found in the [Using the App](https://docs.nautobot.com/p
 
 ![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
 
-![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/welcome_wizard.png)
+![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/welcome_wizard_dark.png)
 
-![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/dashboard_with_completions.png)
+![Welcome Wizard Completions](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/dashboard_with_completions_dark.png)
 
-![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_import_device_type.png)
+![Welcome Wizard Import Device Types](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_import_device_type_dark.png)
 
 ## Documentation
 

@@ -48,8 +48,7 @@ Alternatively, you can choose to bulk import Manufacturers. Select the Manufactu
 ![Bulk Manufacturers Import Complete](../images/bulk_import_manufactures_complete_dark.png#only-dark){ .on-glb }
 
 
-
-Navigating to Manufacturers inside Nautobot will confirm these manufacturers were imported.
+Navigating to Manufacturers inside Nautobot will confirm these manufacturers were imported..
 
 ![Nautobot Manufacturers](../images/manufacturers_confirmed_light.png#only-light){ .on-glb }
 ![Nautobot Manufacturers](../images/manufacturers_confirmed_dark.png#only-dark){ .on-glb }
