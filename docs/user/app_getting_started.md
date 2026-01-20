@@ -10,14 +10,14 @@ To install the App, please follow the instructions detailed in the [Installation
 
 Log in to Nautobot and you will be guided through Banners on the top of the pages.
 
-You can also begin by selecting `Plugins -> Nautobot Welcome Wizard -> Welcome Wizard` from the navigation bar (or navigating to `/plugins/welcome_wizard/`) on your Nautobot instance to view the Welcome Wizard dashboard:
+You can also begin by selecting `APPS -> Welcome Wizard Dashboard` from the left sidebar (or navigating to `/plugins/welcome_wizard/dashboard/`) on your Nautobot instance to view the Welcome Wizard dashboard:
 
 ![Welcome Wizard Dashboard](../images/welcome_wizard_light.png#only-light){ .on-glb }
 ![Welcome Wizard Dashboard](../images/welcome_wizard_dark.png#only-dark){ .on-glb }
 
-You are shown a set of Nautobot objects that lay the groundwork for other Nautobot objects. The goal of the dashboard is to help introduce features of Nautobot and keep track of their use. For instance, Sites are used in a number of objects inside of Nautobot. A Site is used when creating Devices, Racks, and Rack Groups. In addition, they are optional in many other objects.
+You are shown a set of Nautobot objects that lay the groundwork for other Nautobot objects. The goal of the dashboard is to help introduce features of Nautobot and keep track of their use. For instance, Locations are used in a number of objects inside of Nautobot. A Location is used when creating Devices, Racks, and Rack Groups. In addition, they are optional in many other objects.
 
-From the dashboard, you can click on the green Add button in the Sites role to take you directly to the form for adding a Site. For Manufacturers and Device Types, you can click on the blue wizard hat to take you to the Welcome Wizard Import page.
+From the dashboard, you can click on the green Add button in the Locations role to take you directly to the form for adding a Location. For Manufacturers and Device Types, you can click on the blue wizard hat to take you to the Welcome Wizard Import page.
 
 ### Import Manufacturers
 
@@ -30,9 +30,10 @@ has not yet been synced, this page will initially be blank but the repository wi
 
 If the `enable_devicetype-library` setting is enabled, an automatic sync of the repository will happen on page load. You may need to refresh the page in order see the manufacturers.
 
-![Refresh Manufacturers](../images/merlin_import_manufacturers_refresh.png)
+![Refresh Manufacturers](../images/merlin_import_manufacturers_refresh_light.png#only-light){ .on-glb }
+![Refresh Manufacturers](../images/merlin_import_manufacturers_refresh_dark.png#only-dark){ .on-glb }
 
-Manufactures on this page are not automatically loaded into Nautobot. This is to keep the Nautobot Manufactures page from being bloated with Manufactures you may not need. Instead, you can choose to import the Manufactures from here. To import a single Manufacturer click on the blue import button in the actions column of the chosen Manufacturer. In the below example we click the import button for Cisco. A confirmation page will load asking to confirm importing the selected Manufacturer. Click `[Import]` to confirm.
+Manufactures on this page are not automatically loaded into Nautobot. This is to keep the Nautobot Manufactures page from being bloated with Manufactures you may not need. Instead, you can choose to import the Manufactures from here. To import a single Manufacturer, click the three dots (kebab menu ⋮) next to the selected Manufacturer and then click the blue Import Manufacturer button. In the below example we click the import button for Cisco. A confirmation page will load asking to confirm importing the selected Manufacturer. Click `[Import]` to confirm.
 
 ![Import Cisco](../images/import_cisco_light.png#only-light){ .on-glb }
 ![Import Cisco](../images/import_cisco_dark.png#only-dark){ .on-glb }
@@ -65,7 +66,8 @@ has not yet been synced, this page will initially be blank but the repository wi
 
 Importing Device Types happens the same way as Manufacturers. Device Types can also be filtered by Manufacturer by using the search function or the Manufacturer dropdown.
 
-![Device Type Filtered](../images/merlin_import_device_type_filtered.png)
+![Device Type Filtered](../images/merlin_import_device_type_filtered_light.png#only-light){ .on-glb }
+![Device Type Filtered](../images/merlin_import_device_type_filtered_dark.png#only-dark){ .on-glb }
 
 ## What are the next steps?
 

@@ -35,9 +35,9 @@ The Welcome Wizard adds four (4) key features:
 
 More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/welcome-wizard/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the app's added functionality:
 
-![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_banner.png)
+![Welcome Wizard Banner](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_banner_dark.png)
 
-![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_middleware_x3.png)
+![Welcome Wizard Middleware](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/merlin_middleware_x3_dark.png)
 
 ![Welcome Wizard Dashboard](https://raw.githubusercontent.com/nautobot/nautobot-app-welcome-wizard/develop/docs/images/welcome_wizard_dark.png)
 
