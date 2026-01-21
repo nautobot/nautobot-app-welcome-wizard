@@ -10,7 +10,7 @@ To install the App, please follow the instructions detailed in the [Installation
 
 Log in to Nautobot and you will be guided through Banners on the top of the pages.
 
-You can also begin by selecting `APPS -> Welcome Wizard Dashboard` from the left sidebar (or navigating to `/plugins/welcome_wizard/dashboard/`) on your Nautobot instance to view the Welcome Wizard dashboard:
+You can also begin by selecting `Plugins -> Nautobot Welcome Wizard -> Welcome Wizard` from the left sidebar (or navigating to `/plugins/welcome_wizard/`) on your Nautobot instance to view the Welcome Wizard dashboard:
 
 ![Welcome Wizard Dashboard](../images/welcome_wizard_light.png#only-light){ .on-glb }
 ![Welcome Wizard Dashboard](../images/welcome_wizard_dark.png#only-dark){ .on-glb }
