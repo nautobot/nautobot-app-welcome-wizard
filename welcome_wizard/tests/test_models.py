@@ -1,10 +1,13 @@
 """Welcome Wizard Tests."""
 
+from io import BytesIO
+
 from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.test import TestCase
 from nautobot.dcim.models import Location
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImageImport, DeviceTypeImport, ManufacturerImport
 from welcome_wizard.models.merlin import Merlin
 
 
@@ -78,3 +81,24 @@ class DeviceTypeImportModelTest(TestCase):
         )
         with self.assertRaises(ValidationError):
             devicetype.clean()
+
+
+class DeviceTypeImageImportModelTest(TestCase):
+    """DeviceTypeImageImport Model Tests."""
+
+    def test_devicetypeimage_setup(self):
+        """Run Tests with valid data."""
+        filename = "juniper-mx80.front.png"
+        content = "fake image data"
+        image = InMemoryUploadedFile(
+            file=BytesIO(b"{content}"),
+            field_name=None,
+            name=filename,
+            content_type="image/png",
+            size=len(content),
+            charset=None,
+        )
+        devicetype_image = DeviceTypeImageImport(name=filename, image=image)
+
+        self.assertEqual(devicetype_image.name, filename)
+        self.assertEqual(str(devicetype_image), filename)
