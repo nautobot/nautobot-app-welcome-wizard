@@ -164,12 +164,16 @@ class ManufacturerTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_manufacturer_list(self):
         """Tests the ManufacturerImport List View with correct permissions."""
         self.add_permissions("welcome_wizard.view_manufacturerimport")
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_list"))
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:manufacturerimport_list"), headers={"HX-Request": "false"}
+        )
         self.assertHttpStatus(response, 200)
 
     def test_manufacturer_list_permission_denied(self):
         """Tests the ManufacturerImport List View with no permissions."""
-        response = self.client.get(reverse("plugins:welcome_wizard:manufacturerimport_list"))
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:manufacturerimport_list"), headers={"HX-Request": "false"}
+        )
         self.assertHttpStatus(response, 403)
 
 
@@ -246,7 +250,9 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_devicetype_list(self):
         """Tests the DeviceTypeImport List View with correct pemissions."""
         self.add_permissions("welcome_wizard.view_devicetypeimport")
-        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:devicetypeimport_list"), headers={"HX-Request": "false"}
+        )
         self.assertHttpStatus(response, 200)
 
     @override_settings(
@@ -259,12 +265,16 @@ class DeviceTypeTestCase(TransactionTestCase, WizardTestCaseMixin):
     def test_devicetype_list_override(self):
         """Tests the DeviceTypeImport List View with enable_devicetype-library False."""
         self.add_permissions("welcome_wizard.view_devicetypeimport")
-        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:devicetypeimport_list"), headers={"HX-Request": "false"}
+        )
         self.assertHttpStatus(response, 200)
 
     def test_devicetype_list_permission_denied(self):
         """Tests the DeviceTypeImport List View with no pemissions."""
-        response = self.client.get(reverse("plugins:welcome_wizard:devicetypeimport_list"))
+        response = self.client.get(
+            reverse("plugins:welcome_wizard:devicetypeimport_list"), headers={"HX-Request": "false"}
+        )
         self.assertHttpStatus(response, 403)
 
 
@@ -282,7 +292,7 @@ class DashboardView(TransactionTestCase):
     def test_dashboard_view_no_entries(self):
         self.add_permissions("welcome_wizard.view_merlin")
         url = reverse("plugins:welcome_wizard:dashboard_list")
-        resp = self.client.get(url)
+        resp = self.client.get(url, headers={"HX-Request": "false"})
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
@@ -297,7 +307,7 @@ class DashboardView(TransactionTestCase):
         site, _ = LocationType.objects.get_or_create(name="Site")
         Location.objects.create(name="site01", location_type=site, status=self.active_status)
         url = reverse("plugins:welcome_wizard:dashboard_list")
-        resp = self.client.get(url)
+        resp = self.client.get(url, headers={"HX-Request": "false"})
         self.assertHttpStatus(resp, 200)
         self.assertContains(resp, "Dashboard")
         self.assertContains(resp, "mdi-wizard-hat", 2)
@@ -308,7 +318,7 @@ class DashboardView(TransactionTestCase):
     def test_dashboard_view_permission_denied(self):
         """Test failed connection."""
         url = reverse("plugins:welcome_wizard:dashboard_list")
-        resp = self.client.get(url)
+        resp = self.client.get(url, headers={"HX-Request": "false"})
         self.assertHttpStatus(resp, 403)
 
 
