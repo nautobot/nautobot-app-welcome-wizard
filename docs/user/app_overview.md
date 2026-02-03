@@ -18,7 +18,7 @@ The Welcome Wizard adds four (4) key features:
 
 ## Audience (User Personas) - Who should use this App?
 
-Anyone building a new instance of Nautobot who struggles with where to start when faced with an empty database. You might try to add a Device, only to find that you need to create a Device Type, Site, and Device Role. You go to add a Device Type and find you need a Manufacturer (which is not directly required for a Device). This app tries to alleviate some of these problems.
+Anyone building a new instance of Nautobot who struggles with where to start when faced with an empty database. You might try to add a Device, only to find that you need to create a Device Type, Location, and Device Role. You go to add a Device Type and find you need a Manufacturer (which is not directly required for a Device). This app tries to alleviate some of these problems.
 
 ## Authors and Maintainers
 
@@ -28,10 +28,10 @@ You can find the contributors on the [GitHub Contribution Graph](https://github.
 
 Welcome Wizard helps you import the following data types:
 
-- Sites
+- Locations
 - Manufacturers
 - Device Types
-- Device Roles
+- Roles
 - Circuit Types
 - Circuit Providers
 - RIRs
