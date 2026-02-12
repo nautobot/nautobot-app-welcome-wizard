@@ -4,7 +4,7 @@ from nautobot.apps.testing import TransactionTestCase, run_job_for_testing
 from nautobot.dcim.models import DeviceType, Manufacturer
 from nautobot.extras.models import Job, JobLogEntry
 
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImageImport, DeviceTypeImport, ManufacturerImport
 
 
 class TestWelcomeWizardJobs(TransactionTestCase):
@@ -45,6 +45,8 @@ class TestWelcomeWizardJobs(TransactionTestCase):
                 "model": "MX80",
                 "is_full_depth": True,
                 "u_height": 2,
+                "front_image": True,
+                "rear_image": True,
                 "interfaces": [
                     {"name": "fxp0", "type": "1000base-t", "mgmt_only": True},
                     {"name": "xe-0/0/0", "type": "10gbase-x-xfp"},
@@ -78,11 +80,22 @@ class TestWelcomeWizardJobs(TransactionTestCase):
             },
         )
 
+        # Create DeviceTypeImageImport entries for front image, but not for rear image to test error handling
+        DeviceTypeImageImport.objects.create(
+            name="juniper-mx80.front.png", image="devicetype-images/juniper-mx80.front.png"
+        )
+
         job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80.yaml")
-        device_type = DeviceType.objects.get(model="MX80")
-        self.assertIsNotNone(device_type)
+
         log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
         self.assertIn("Imported DeviceType MX80 successfully", log_entries)
+
+        device_type = DeviceType.objects.get(model="MX80")
+        self.assertIsNotNone(device_type)
+        self.assertIsNotNone(device_type.front_image)  # Test that front image was added
+        # Test that rear image was not added and an error was logged
+        # self.assertIsNone(device_type.rear_image)
+        self.assertIn("Rear image referenced in 'MX80.yaml' YAML configuration file is not found.", log_entries)
 
         interfaces = device_type.interface_templates.all()
         console_ports = device_type.console_port_templates.all()

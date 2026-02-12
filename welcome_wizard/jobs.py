@@ -20,7 +20,7 @@ from nautobot.dcim.models import (
     RearPortTemplate,
 )
 
-from welcome_wizard.models.importer import DeviceTypeImport
+from welcome_wizard.models.importer import DeviceTypeImageImport, DeviceTypeImport
 
 COMPONENTS = OrderedDict()
 COMPONENTS["console-ports"] = ConsolePortTemplate
@@ -38,6 +38,30 @@ STRIP_KEYWORDS = {
 }
 
 
+def add_devtype_images(devtype: DeviceType, filename: str, data: dict):
+    """Add front and rear images to a DeviceType if available."""
+    for face_type in ("front", "rear"):
+        if data.get(f"{face_type}_image"):
+            image_obtained = False
+            for suffix in ("png", "jpg"):
+                image_filename = f"{data['manufacturer']}-{filename.replace('.yaml' if '.yaml' in filename else '.yml', '')}.{face_type}.{suffix}".replace(
+                    " ", "-"
+                ).lower()
+                try:
+                    image = DeviceTypeImageImport.objects.get(name=image_filename)
+                    setattr(devtype, f"{face_type}_image", image.image)
+                    devtype.save()
+                    image_obtained = True
+                    break
+                except DeviceTypeImageImport.DoesNotExist:
+                    pass
+
+            if not image_obtained:
+                raise ValueError(
+                    f"{face_type.capitalize()} image referenced in '{filename}' YAML configuration file is not found."
+                )
+
+
 def import_device_type(data):
     """Import DeviceType."""
     manufacturer = Manufacturer.objects.get(name=data.get("manufacturer"))
@@ -47,6 +71,7 @@ def import_device_type(data):
         raise ValueError(
             f"Unable to import this device_type, a DeviceType with this model ({model}) and manufacturer ({manufacturer}) already exist."
         )
+
     dtif = DeviceTypeImportForm(data)
     devtype = dtif.save()
 
@@ -61,6 +86,7 @@ def import_device_type(data):
                 for item in data[key]
             ]
             component_class.objects.bulk_create(component_list)
+
     return devtype
 
 
@@ -105,7 +131,7 @@ class WelcomeWizardImportDeviceType(Job):
 
         device_type_data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
 
-        manufacturer = device_type_data.get("manufacturer")
+        manufacturer = device_type_data.get("manufacturer")  # type: ignore
         Manufacturer.objects.update_or_create(
             name=manufacturer,
         )
@@ -116,8 +142,15 @@ class WelcomeWizardImportDeviceType(Job):
             self.logger.error(str(exc))
             raise exc
 
+        if any([device_type_data.get("front_image"), device_type_data.get("rear_image")]):  # type: ignore
+            try:
+                add_devtype_images(devtype, filename, device_type_data)  # type: ignore
+            except ValueError as exc:
+                self.logger.warning(str(exc))
+
         self.logger.info(  # pylint: disable=logging-fstring-interpolation
-            f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype}
+            f"Imported DeviceType {device_type_data.get('model')} successfully",
+            extra={"object": devtype},  # type: ignore
         )
 
 
