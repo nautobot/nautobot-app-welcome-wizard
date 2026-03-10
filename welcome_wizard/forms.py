@@ -31,7 +31,7 @@ class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm
         ]
 
 
-class ManufacturerImportFilterForm(NautobotFilterForm):
+class ManufacturerImportFilterForm(NautobotFilterForm):  # pylint: disable=too-many-ancestors
     """Filter form to filter searches."""
 
     model = models.ManufacturerImport

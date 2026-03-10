@@ -6,7 +6,7 @@ from welcome_wizard import filters, models
 from welcome_wizard.tests import fixtures
 
 
-class ManufacturerImportFilterTestCase(FilterTestCases.FilterTestCase):
+class ManufacturerImportFilterTestCase(FilterTestCases.FilterTestCase):  # pylint: disable=too-many-ancestors
     """ManufacturerImport Filter Test Case."""
 
     queryset = models.ManufacturerImport.objects.all()
