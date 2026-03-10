@@ -6,8 +6,13 @@ from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImport
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
 
 
+<<<<<<< HEAD
 class ManufacturerTestCase(TestCase):
     """ManufacturerImport Filters."""
+=======
+class ManufacturerImportFilterTestCase(FilterTestCases.FilterTestCase):  # pylint: disable=too-many-ancestors
+    """ManufacturerImport Filter Test Case."""
+>>>>>>> ad7d0d5 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 
     queryset = ManufacturerImport.objects.all()
     filterset = ManufacturerImportFilterSet

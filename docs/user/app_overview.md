@@ -7,6 +7,7 @@ This document provides an overview of the App including critical information and
 
 ## Description
 
+<<<<<<< HEAD
 The Welcome Wizard is an open-source Nautobot app with the goal to assist users with the necessary initial steps in populating data within Nautobot.
 
 The Welcome Wizard adds four (4) key features:
@@ -15,6 +16,10 @@ The Welcome Wizard adds four (4) key features:
 - Welcome Wizard includes by default the **[DeviceType-library](https://github.com/nautobot/devicetype-library)**, but this can be disabled and a custom library can be used instead.
 - Welcome Wizard includes **banners** in forms to alert the user when required form fields have no associated resources in Nautobot.
 - The Welcome Wizard **Dashboard** contains a list of common Nautobot Data Models that many other Nautobot models require. This page allows ease of adding items to Nautobot or, if supported, importing them.
+=======
+![Main Page](../media/ss_main_page_light.png#only-light)
+![Main Page](../media/ss_main_page_dark.png#only-dark)
+>>>>>>> ad7d0d5 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 
 ## Audience (User Personas) - Who should use this App?
 
