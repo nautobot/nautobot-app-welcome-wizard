@@ -1,10 +1,6 @@
 [tool.poetry]
 name = "nautobot-welcome-wizard"
-<<<<<<< HEAD
 version = "3.0.1a0"
-=======
-version = "0.1.0a0"
->>>>>>> ad7d0d5 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 description = "Nautobot's Getting Started Wizard"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"

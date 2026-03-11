@@ -24,11 +24,7 @@
             "pull_request_strategy": "create",
             "post_actions": [],
             "draft": false,
-<<<<<<< HEAD
-            "baked_commit_ref": "ad3cb6aab197960967b362aca089600e7e675a26",
-=======
             "baked_commit_ref": "6e6c90a2072b372fb899d55b9dafd64d7b3fb266",
->>>>>>> ad7d0d5 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
             "drift_managed_branch": "develop"
         }
     }

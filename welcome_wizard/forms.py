@@ -6,33 +6,6 @@ from nautobot.apps.forms import BootstrapMixin, DynamicModelMultipleChoiceField,
 from welcome_wizard import models
 
 
-<<<<<<< HEAD
-=======
-class ManufacturerImportForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
-    """ManufacturerImport creation/edit form."""
-
-    class Meta:
-        """Meta attributes."""
-
-        model = models.ManufacturerImport
-        fields = "__all__"
-
-
-class ManufacturerImportBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
-    """ManufacturerImport bulk edit form."""
-
-    pk = forms.ModelMultipleChoiceField(queryset=models.ManufacturerImport.objects.all(), widget=forms.MultipleHiddenInput)
-    description = forms.CharField(required=False, max_length=CHARFIELD_MAX_LENGTH)
-
-    class Meta:
-        """Meta attributes."""
-
-        nullable_fields = [
-            "description",
-        ]
-
-
->>>>>>> ad7d0d5 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 class ManufacturerImportFilterForm(NautobotFilterForm):  # pylint: disable=too-many-ancestors
     """Filter form to filter searches."""
 
