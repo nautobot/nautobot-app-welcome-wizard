@@ -14,6 +14,20 @@ We will continue to support the previous major release for users of Nautobot LTM
 
 <!-- towncrier release notes start -->
 
+## [v3.0.1 (2026-04-10)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.1)
+
+### Documentation
+
+- [#163](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/163) - Updated Welcome Wizard documentation to include 3.0 screenshots.
+
+### Housekeeping
+
+- [#164](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/164) - Updated `CODEOWNERS` file to include only the Nautobot Apps team.
+- [#165](https://github.com/nautobot/nautobot-app-welcome-wizard/issues/165) - Fixed tests failing in Nautobot v3.1.
+- Rebaked from the cookie `nautobot-app-v3.0.0`.
+- Rebaked from the cookie `nautobot-app-v3.1.2`.
+- Rebaked from the cookie `nautobot-app-v3.1.3`.
+
 ## [v3.0.0 (2025-11-17)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v3.0.0)
 
 ### Added
