@@ -77,6 +77,11 @@ class DeviceTypeTestCase(TestCase):
         params = {"manufacturer": ["Acme"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
+        # NaturalKeyOrPKMultipleChoiceFilter also supports filtering by primary key.
+        test = ManufacturerImport.objects.get(name="Test")
+        params = {"manufacturer": [test.pk]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
     def test_search(self):
         """Test the search ability."""
         params = {"q": "test"}
