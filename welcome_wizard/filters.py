@@ -34,7 +34,7 @@ class DeviceTypeImportFilterSet(NautobotFilterSet):  # pylint: disable=too-many-
     manufacturer = NaturalKeyOrPKMultipleChoiceFilter(
         to_field_name="name",
         queryset=models.ManufacturerImport.objects.all(),
-        field_name="manufacturer__name",
+        field_name="manufacturer",
         label="Manufacturer",
     )
 
