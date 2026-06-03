@@ -1,0 +1,1 @@
+Fixed the manufacturer filter on the Device Types import list returning no results when filtering by manufacturer name.
