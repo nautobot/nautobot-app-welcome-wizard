@@ -67,12 +67,15 @@ class DeviceTypeTestCase(TestCase):
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
 
     def test_manufacturer(self):
-        """Test filtering by Manufacturer."""
-        manufacturers = ManufacturerImport.objects.all()[:2]
-        params = {"manufacturer_id": [manufacturers[0].pk, manufacturers[1].pk]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
-        params = {"manufacturers": [manufacturers[0].name, manufacturers[1].name]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
+        """Test filtering by Manufacturer name.
+
+        Regression test: filtering by manufacturer name returned an empty list because the
+        filter's `field_name` was `manufacturer__name` instead of the FK field `manufacturer`.
+        """
+        params = {"manufacturer": ["Test"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+        params = {"manufacturer": ["Acme"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
     def test_search(self):
         """Test the search ability."""
