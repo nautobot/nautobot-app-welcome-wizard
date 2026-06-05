@@ -1,6 +1,7 @@
 """Test Welcome Wizard Filters."""
 
 from django.test import TestCase
+from nautobot.apps.testing import TestCase as NautobotTestCase
 
 from welcome_wizard.filters import DeviceTypeImportFilterSet, ManufacturerImportFilterSet
 from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
@@ -30,7 +31,7 @@ class ManufacturerTestCase(TestCase):
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
 
 
-class DeviceTypeTestCase(TestCase):
+class DeviceTypeTestCase(NautobotTestCase):
     """DeviceTypeImport Filters."""
 
     queryset = DeviceTypeImport.objects.all()
@@ -72,15 +73,24 @@ class DeviceTypeTestCase(TestCase):
         Regression test: filtering by manufacturer name returned an empty list because the
         filter's `field_name` was `manufacturer__name` instead of the FK field `manufacturer`.
         """
-        params = {"manufacturer": ["Test"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-        params = {"manufacturer": ["Acme"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+        self.assertQuerysetEqualAndNotEmpty(
+            self.filterset({"manufacturer": ["Test"]}, self.queryset).qs,
+            self.queryset.filter(manufacturer__name="Test"),
+            ordered=False,
+        )
+        self.assertQuerysetEqualAndNotEmpty(
+            self.filterset({"manufacturer": ["Acme"]}, self.queryset).qs,
+            self.queryset.filter(manufacturer__name="Acme"),
+            ordered=False,
+        )
 
         # NaturalKeyOrPKMultipleChoiceFilter also supports filtering by primary key.
         test = ManufacturerImport.objects.get(name="Test")
-        params = {"manufacturer": [test.pk]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+        self.assertQuerysetEqualAndNotEmpty(
+            self.filterset({"manufacturer": [test.pk]}, self.queryset).qs,
+            self.queryset.filter(manufacturer=test),
+            ordered=False,
+        )
 
     def test_search(self):
         """Test the search ability."""
