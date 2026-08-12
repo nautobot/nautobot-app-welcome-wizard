@@ -3,6 +3,7 @@
 import contextlib
 from collections import OrderedDict
 
+from django.db import IntegrityError
 from nautobot.apps.jobs import Job, StringVar
 from nautobot.core.celery import register_jobs
 from nautobot.dcim.forms import DeviceTypeImportForm
@@ -33,12 +34,47 @@ COMPONENTS["front-ports"] = FrontPortTemplate
 COMPONENTS["device-bays"] = DeviceBayTemplate
 COMPONENTS["module-bays"] = ModuleBayTemplate
 
-STRIP_KEYWORDS = {
-    "interfaces": ["poe_mode", "poe_type"],
-}
+
+def import_components(device_type: DeviceType, data: dict):
+    """Import components for a given device type."""
+    for key, component_class in COMPONENTS.items():
+        if key in data:
+            component_list = []
+
+            for item in data[key]:
+                item_data = {k: v for k, v in item.items() if hasattr(component_class, k)}
+
+                if key == "power-outlets" and "power_port" in item:
+                    # Special case for PowerOutletTemplate to handle the FK to PowerPortTemplate
+                    try:
+                        item_data["power_port_template"] = PowerPortTemplate.objects.get(
+                            device_type=device_type, name=item["power_port"]
+                        )
+                    except PowerPortTemplate.DoesNotExist as exc:
+                        raise ValueError(
+                            f"PowerPortTemplate with name '{item['power_port']}' does not exist for DeviceType '{device_type}'."
+                        ) from exc
+
+                elif key == "front-ports" and "rear_port" in item:
+                    # Special case for FrontPortTemplate to handle the FK to RearPortTemplate
+                    try:
+                        item_data["rear_port_template"] = RearPortTemplate.objects.get(
+                            device_type=device_type, name=item["rear_port"]
+                        )
+                    except RearPortTemplate.DoesNotExist as exc:
+                        raise ValueError(
+                            f"RearPortTemplate with name '{item['rear_port']}' does not exist for DeviceType '{device_type}'."
+                        ) from exc
+
+                component_list.append(component_class(device_type=device_type, **item_data))
+
+            try:
+                component_class.objects.bulk_create(component_list)
+            except IntegrityError as exc:
+                raise ValueError(f"Failed to create {component_class.__name__} component(s): {str(exc)}") from exc
 
 
-def import_device_type(data):
+def import_device_type(data: dict) -> None:
     """Import DeviceType."""
     manufacturer = Manufacturer.objects.get(name=data.get("manufacturer"))
     model = data.get("model")
@@ -51,17 +87,7 @@ def import_device_type(data):
     devtype = dtif.save()
 
     # Import All Components
-    for key, component_class in COMPONENTS.items():
-        if key in data:
-            component_list = [
-                component_class(
-                    device_type=devtype,
-                    **{k: v for k, v in item.items() if k not in STRIP_KEYWORDS.get(key, [])},
-                )
-                for item in data[key]
-            ]
-            component_class.objects.bulk_create(component_list)
-    return devtype
+    import_components(devtype, data)
 
 
 name = "Welcome Wizard"  # pylint: disable=invalid-name
@@ -100,24 +126,24 @@ class WelcomeWizardImportDeviceType(Job):
 
     def run(self, filename):  # pylint: disable=arguments-differ
         """Tries to import the selected Device Type into Nautobot."""
-        # device_type = data.get("device_type_filename", "none.yaml")
         device_type = filename if filename else "none.yaml"
-
         device_type_data = DeviceTypeImport.objects.filter(filename=device_type)[0].device_type_data
-
         manufacturer = device_type_data.get("manufacturer")
-        Manufacturer.objects.update_or_create(
-            name=manufacturer,
-        )
+        model = device_type_data.get("model")
 
+        Manufacturer.objects.update_or_create(name=manufacturer)
+
+        self.logger.info(  # pylint: disable=logging-fstring-interpolation
+            f"Importing {manufacturer} DeviceType {model}", extra={"object": device_type_data}
+        )
         try:
-            devtype = import_device_type(device_type_data)
-        except ValueError as exc:
+            import_device_type(device_type_data)
+        except (ValueError, IntegrityError) as exc:
             self.logger.error(str(exc))
             raise exc
 
         self.logger.info(  # pylint: disable=logging-fstring-interpolation
-            f"Imported DeviceType {device_type_data.get('model')} successfully", extra={"object": devtype}
+            f"Imported {manufacturer} DeviceType {model} successfully"
         )
 
 
