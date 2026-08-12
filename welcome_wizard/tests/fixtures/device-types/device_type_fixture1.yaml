@@ -6,6 +6,8 @@ part_number: "C9500-32QC"
 u_height: 1
 is_full_depth: true
 comments: "Comments Here"
+front_image: true
+rear_image: true
 console-ports:
   - name: "con 0"
     type: "rj-45"

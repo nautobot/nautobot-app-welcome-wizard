@@ -1,6 +1,6 @@
 """Tests for Welcome Wizard Datasources."""
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, Mock, mock_open, patch
 
 from django.conf import settings
 from django.test import override_settings
@@ -10,9 +10,10 @@ from nautobot.extras.models import JobResult
 from welcome_wizard.datasources import (
     get_manufacturer_name,
     refresh_git_import_wizard,
+    retrieve_device_type_images_from_filesystem,
     retrieve_device_types_from_filesystem,
 )
-from welcome_wizard.models.importer import DeviceTypeImport, ManufacturerImport
+from welcome_wizard.models.importer import DeviceTypeImageImport, DeviceTypeImport, ManufacturerImport
 
 
 class TestDatasources(TransactionTestCase):
@@ -38,6 +39,8 @@ class TestDatasources(TransactionTestCase):
                     {"name": "FortyGigabitEthernet1/0/1", "type": "40gbase-x-qsfpp"},
                     {"name": "FortyGigabitEthernet1/0/2"},
                 ],
+                "front_image": True,
+                "rear_image": True,
             },
             "device_type_fixture2.yaml": {
                 "manufacturer": "cIsCo",
@@ -97,6 +100,8 @@ class TestDatasources(TransactionTestCase):
                     {"name": "FortyGigabitEthernet1/0/1", "type": "40gbase-x-qsfpp"},
                     {"name": "FortyGigabitEthernet1/0/2"},
                 ],
+                "front_image": True,
+                "rear_image": True,
             },
             "device_type_fixture2.yaml": {
                 "manufacturer": "CiScO",
@@ -145,6 +150,23 @@ class TestDatasources(TransactionTestCase):
         self.assertEqual({"CISCO", "CiScO"}, manufacturers)
         self.assertEqual(device_types_data, device_types)
 
+    @patch("pathlib.Path")
+    @patch("builtins.open", new_callable=mock_open, read_data=b"fake image data")
+    @patch("django.core.files.uploadedfile.InMemoryUploadedFile")
+    def test_retrieve_device_type_images_from_filesystem(self, mock_inmemoryuploadedfile, mock_file, mock_path_class):
+        """Test retrieval of device type images."""
+        fake_image = Mock()
+        fake_image.suffix = ".png"
+        mock_path_instance = Mock()
+        mock_path_instance.rglob.return_value = [fake_image]
+        mock_path_class.return_value = mock_path_instance
+
+        images = retrieve_device_type_images_from_filesystem("fake/path")
+
+        self.assertEqual(mock_file.call_count, 1)
+        self.assertEqual(mock_inmemoryuploadedfile.call_count, 1)
+        self.assertEqual(len(images), 1)
+
     def test_refresh_git_import_wizard_without_manufacturer_transformation(self):
         repository_record = MagicMock()
         repository_record.filesystem_path = "welcome_wizard/tests/fixtures"
@@ -171,6 +193,10 @@ class TestDatasources(TransactionTestCase):
         device_type = DeviceTypeImport.objects.get(name="Catalyst 9700-34QC")
         self.assertIsNotNone(manufacturer)
         self.assertIsNotNone(device_type)
+
+        for image_name in ("juniper-mx80.front.png", "juniper-mx80.rear.png"):
+            devtype_image = DeviceTypeImageImport.objects.get(name=image_name)
+            self.assertIsNotNone(devtype_image)
 
     def test_refresh_git_import_wizard_with_manufacturer_transformation(self):
         repository_record = MagicMock()
@@ -203,6 +229,10 @@ class TestDatasources(TransactionTestCase):
         device_type = DeviceTypeImport.objects.get(name="Catalyst 9700-34QC")
         self.assertIsNotNone(manufacturer)
         self.assertIsNotNone(device_type)
+
+        for image_name in ("juniper-mx80.front.png", "juniper-mx80.rear.png"):
+            devtype_image = DeviceTypeImageImport.objects.get(name=image_name)
+            self.assertIsNotNone(devtype_image)
 
     @override_settings(
         PLUGINS_CONFIG={

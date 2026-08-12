@@ -48,3 +48,19 @@ class DeviceTypeImport(BaseModel):
     def __str__(self):
         """Return name for string method."""
         return self.name
+
+
+class DeviceTypeImageImport(BaseModel):
+    """Store Device Type Image files available for import."""
+
+    name = models.CharField(max_length=100, unique=True)
+    image = models.ImageField(upload_to="devicetype-images", blank=True)
+
+    class Meta:
+        """Meta for DeviceTypeImageImport."""
+
+        ordering = ("name",)
+
+    def __str__(self):
+        """Return name for string method."""
+        return self.name
