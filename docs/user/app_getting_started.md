@@ -21,7 +21,7 @@ From the dashboard, you can click on the green Add button in the Locations role 
 
 ### Import Manufacturers
 
-You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nautobot. If the [Git Repository](git_datasource.md) 
+You can browse to the `Import Manufacturers` page to easily import selected manufacturers into Nautobot. If the [Git Repository](git_datasource.md)
 has not yet been synced, this page will initially be blank but the repository will be automatically synced (and created if necessary). Once the repository sync has completed, you can refresh the page to see the manufacturers.
 
 ![Import Manufacturers](../images/merlin_import_manufacturers_light.png#only-light){ .on-glb }
@@ -57,7 +57,7 @@ Navigating to Manufacturers inside Nautobot will confirm these manufacturers wer
 
 ### Import Device Types
 
-You can browse to the `Import Device Types` page to easily import selected device types into Nautobot.  If the [Git Repository](git_datasource.md) 
+You can browse to the `Import Device Types` page to easily import selected device types into Nautobot.  If the [Git Repository](git_datasource.md)
 has not yet been synced, this page will initially be blank but the repository will be automatically synced (and created if necessary). Once the repository sync has completed, you can refresh the page to see the device types.
 
 ![Import Device Types](../images/merlin_import_device_type_dark.png#only-dark){ .on-glb }
@@ -68,6 +68,15 @@ Importing Device Types happens the same way as Manufacturers. Device Types can a
 
 ![Device Type Filtered](../images/merlin_import_device_type_filtered_light.png#only-light){ .on-glb }
 ![Device Type Filtered](../images/merlin_import_device_type_filtered_dark.png#only-dark){ .on-glb }
+
+Some Device Type component fields in the imported YAML use different names than the corresponding fields on the Nautobot template models. The importer renames these fields automatically, and where the field is a reference to another component on the same Device Type, resolves the referenced name to that component's template object:
+
+| Component       | YAML field   | Nautobot field       | Resolved against    | If not found                                      |
+| ---------------- | ------------ | --------------------- | -------------------- | --------------------------------------------------- |
+| `power-outlets` | `power_port` | `power_port_template` | `PowerPortTemplate` | Imported with a null `power_port_template`          |
+| `front-ports`    | `rear_port`  | `rear_port_template`  | `RearPortTemplate`  | Import fails with an error for that Device Type    |
+
+`rear-ports` require no renaming: `rear_port` is only ever defined on `front-ports`, referencing the rear port it connects to.
 
 ## What are the next steps?
 

@@ -101,3 +101,114 @@ class TestWelcomeWizardJobs(TransactionTestCase):
             "Unable to import this device_type, a DeviceType with this model (MX80) and manufacturer (Juniper) already exist.",
             log_entries,
         )
+
+    def test_welcome_wizard_import_devicetype_resolves_front_and_rear_ports(self):
+        """Front-ports resolve `rear_port` to the matching RearPortTemplate on the same DeviceType."""
+        manufacturer = ManufacturerImport.objects.create(name="Juniper")
+        Manufacturer.objects.create(name="Juniper")
+        DeviceTypeImport.objects.create(
+            name="MX80-Ports",
+            filename="MX80-Ports.yaml",
+            manufacturer=manufacturer,
+            device_type_data={
+                "manufacturer": "Juniper",
+                "model": "MX80-Ports",
+                "is_full_depth": True,
+                "u_height": 2,
+                "power-ports": [{"name": "PEM0", "type": "iec-60320-c14"}],
+                "power-outlets": [{"name": "Outlet0", "type": "iec-60320-c13", "power_port": "PEM0"}],
+                "rear-ports": [{"name": "Rear1", "type": "mpo", "positions": 24}],
+                "front-ports": [
+                    {"name": "Front1", "type": "lc", "rear_port": "Rear1", "rear_port_position": 1},
+                ],
+            },
+        )
+
+        job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80-Ports.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn("Imported DeviceType MX80-Ports successfully", log_entries)
+
+        device_type = DeviceType.objects.get(model="MX80-Ports")
+        power_port = device_type.power_port_templates.get(name="PEM0")
+        power_outlet = device_type.power_outlet_templates.get(name="Outlet0")
+        rear_port = device_type.rear_port_templates.get(name="Rear1")
+        front_port = device_type.front_port_templates.get(name="Front1")
+
+        self.assertEqual(power_outlet.power_port_template, power_port)
+        self.assertEqual(front_port.rear_port_template, rear_port)
+        self.assertEqual(front_port.rear_port_position, 1)
+
+    def test_welcome_wizard_import_devicetype_power_outlet_unresolvable_power_port_is_null(self):
+        """A power-outlet referencing a power-port that doesn't exist saves with a null FK instead of erroring."""
+        manufacturer = ManufacturerImport.objects.create(name="Juniper")
+        Manufacturer.objects.create(name="Juniper")
+        DeviceTypeImport.objects.create(
+            name="MX80-BadOutlet",
+            filename="MX80-BadOutlet.yaml",
+            manufacturer=manufacturer,
+            device_type_data={
+                "manufacturer": "Juniper",
+                "model": "MX80-BadOutlet",
+                "is_full_depth": True,
+                "u_height": 2,
+                "power-outlets": [{"name": "Outlet0", "type": "iec-60320-c13", "power_port": "DoesNotExist"}],
+            },
+        )
+
+        job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80-BadOutlet.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn("Imported DeviceType MX80-BadOutlet successfully", log_entries)
+
+        device_type = DeviceType.objects.get(model="MX80-BadOutlet")
+        power_outlet = device_type.power_outlet_templates.get(name="Outlet0")
+        self.assertIsNone(power_outlet.power_port_template)
+
+    def test_welcome_wizard_import_devicetype_front_port_unresolvable_rear_port_is_hard_error(self):
+        """A front-port referencing a rear-port that doesn't exist fails the job instead of saving a null FK."""
+        manufacturer = ManufacturerImport.objects.create(name="Juniper")
+        Manufacturer.objects.create(name="Juniper")
+        DeviceTypeImport.objects.create(
+            name="MX80-BadFront",
+            filename="MX80-BadFront.yaml",
+            manufacturer=manufacturer,
+            device_type_data={
+                "manufacturer": "Juniper",
+                "model": "MX80-BadFront",
+                "is_full_depth": True,
+                "u_height": 2,
+                "front-ports": [
+                    {"name": "Front1", "type": "lc", "rear_port": "DoesNotExist", "rear_port_position": 1},
+                ],
+            },
+        )
+
+        job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80-BadFront.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn(
+            "Unable to import front-ports item on MX80-BadFront: no RearPortTemplate named 'DoesNotExist' found.",
+            log_entries,
+        )
+
+    def test_welcome_wizard_import_devicetype_front_port_missing_rear_port_is_hard_error(self):
+        """A front-port with no `rear_port` value at all fails the job instead of saving a null FK."""
+        manufacturer = ManufacturerImport.objects.create(name="Juniper")
+        Manufacturer.objects.create(name="Juniper")
+        DeviceTypeImport.objects.create(
+            name="MX80-MissingFront",
+            filename="MX80-MissingFront.yaml",
+            manufacturer=manufacturer,
+            device_type_data={
+                "manufacturer": "Juniper",
+                "model": "MX80-MissingFront",
+                "is_full_depth": True,
+                "u_height": 2,
+                "front-ports": [{"name": "Front1", "type": "lc", "rear_port_position": 1}],
+            },
+        )
+
+        job_result = run_job_for_testing(self.import_devicetype_job, dryrun=False, filename="MX80-MissingFront.yaml")
+        log_entries = [log_entry.message for log_entry in JobLogEntry.objects.filter(job_result=job_result)]
+        self.assertIn(
+            "Unable to import front-ports item on MX80-MissingFront: missing required 'rear_port_template' value.",
+            log_entries,
+        )

@@ -1,0 +1,4 @@
+Updates the power_port parameter to power_port_template in power-outlets component.
+Updates the rear_port parameter to rear_port_template in fornt-ports component.
+Updates the power-outlets component's power_port_template to reference a power_port_template object.
+Updates the front-port component's rear_port_template to reference a rear_port_template object.
