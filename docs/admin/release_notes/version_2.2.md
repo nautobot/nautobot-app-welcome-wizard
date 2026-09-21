@@ -8,6 +8,14 @@ This document describes all new features and changes in the release. The format 
 - Dropped support for Python versions 3.8 and 3.9.
 
 <!-- towncrier release notes start -->
+
+
+## [v2.2.1 (2026-09-21)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v2.2.1)
+
+### Housekeeping
+
+- Rebaked from the cookie `nautobot-app-v2.7.3`.
+
 ## [v2.2.0 (2025-12-05)](https://github.com/nautobot/nautobot-app-welcome-wizard/releases/tag/v2.2.0)
 
 ### Added
